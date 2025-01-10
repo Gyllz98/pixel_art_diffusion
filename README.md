@@ -18,13 +18,13 @@ The dataset structure provides multiple formats we can use:
 
 Specificly, we plan to use the following models:
 1. Conditional DDPM:
- - Input: 16x16x3 RGB images with label conditioning
- - Modified to respect the discrete nature of pixel art
- - Integrated with the label information for category-specific generation
+    - Input: 16x16x3 RGB images with label conditioning
+    - Modified to respect the discrete nature of pixel art
+    - Integrated with the label information for category-specific generation
 
 2. Conditional DDIM:
- - Faster sampling while maintaining category accuracy
- - Label-aware attention mechanisms
+    - Faster sampling while maintaining category accuracy
+    - Label-aware attention mechanisms
 
 ## Project structure
 
