@@ -10,7 +10,7 @@ We'll use HuggingFace Diffusers library with the following specific integrations
 - Docker containerization with support for numpy array processing
 - The framework will need to handle both the image files and their corresponding labels from labels.csv and sprites_labels.npy.
 
-The dataset structure provides multiple formats we can use:
+We are going to use the [Pixel Art] (https://www.kaggle.com/datasets/ebrahimelgazar/pixel-art/data) dataset. The dataset structure provides multiple formats we can use:
 - 89,000 16x16 JPEG images in the images directory
 - Labels in both CSV (labels.csv) and numpy format (sprites_labels.npy)
 - Pre-processed numpy array of sprites (sprites.npy) - 90MB total
