@@ -1,4 +1,5 @@
 # pixel_art_diffusion
+This repo is made as an exercise in MLOps for the course 02476 Machine learning operations at DTU.
 
 ## Project description
 Our project aims to create an MLOps pipeline for generating categorized pixel art using diffusion models. Initially, we will focus specifically on label 3 (items) from our dataset, which contains 35,000 diverse images. This focused approach will allow us to better tune our diffusion model and establish our MLOps practices before potentially expanding to other categories.
