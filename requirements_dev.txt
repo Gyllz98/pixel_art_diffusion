@@ -5,8 +5,10 @@ invoke==2.2.0
 pre-commit==3.5.0
 
 # testing
+
+coverage==7.6.10
 pytest==8.3.4
-coverage==7.6.9
+
 
 # linting
 ruff==0.1.3
