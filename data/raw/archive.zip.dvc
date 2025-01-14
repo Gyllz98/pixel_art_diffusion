@@ -1,0 +1,9 @@
+outs:
+- md5: fa4e44fff5d187fb75a7e9f0fb28ce96
+  size: 89907024
+  hash: md5
+  path: archive.zip
+  cloud:
+    remote_storage:
+      etag: 08e288ff938ef58a031001
+      version_id: '1736854214788194'
