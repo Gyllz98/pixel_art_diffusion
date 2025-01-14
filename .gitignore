@@ -176,9 +176,11 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# DVC
-/data
-*.dvc
+# data
+/data/*
+!data/raw
+/data/raw/*
+!data/raw/*.dvc
 .dvc/temp
 .dvc/tmp
 .dvc/cache
