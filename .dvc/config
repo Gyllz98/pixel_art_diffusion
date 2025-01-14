@@ -2,4 +2,3 @@
     remote = remote_storage
 ['remote "remote_storage"']
     url = gs://pixel-art-bucket/
-    version_aware = true
