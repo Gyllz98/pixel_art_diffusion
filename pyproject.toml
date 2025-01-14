@@ -7,7 +7,7 @@ name = "pixel_art_diffusion"
 version = "0.0.1"
 description = "Diffusion model for pixel art generation."
 authors = [
-  { name = "Gustav Toft", email = "your@email.com" },
+  { name = "Gustav Toft", email = "gtoft98@gmail.com" },
 ]
 license = { file = "LICENSE" }
 keywords = ["machine learning", "MLOps"]
