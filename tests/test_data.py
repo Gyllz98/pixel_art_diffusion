@@ -1,6 +1,6 @@
 from torch.utils.data import Dataset
 
-from pixel_art_diffusion.data import MyDataset
+from src.pixel_art_diffusion.data import MyDataset
 
 
 def test_my_dataset():
