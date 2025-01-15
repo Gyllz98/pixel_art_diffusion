@@ -1,10 +1,30 @@
-# See https://pre-commit.com for more information
-# See https://pre-commit.com/hooks.html for more hooks
-repos:
+﻿repos:
+# Basic pre-commit hooks
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v4.5.0
     hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-yaml
-    -   id: check-added-large-files
+    -   id: trailing-whitespace  # Removes trailing whitespace
+    -   id: end-of-file-fixer   # Ensures files end with newline
+    -   id: check-yaml          # Validates YAML files
+    -   id: check-added-large-files  # Prevents large files from being committed
+    -   id: check-json
+    -   id: debug-statements    # Checks for debugger imports and py37+ breakpoint()
+    -   id: requirements-txt-fixer  # Sorts requirements.txt
+
+# Ruff for Python linting (note: you have ruff listed twice)
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.7
+    hooks:
+    -   id: ruff
+        args: [--fix]
+    -   id: ruff-format
+
+# Type checking with mypy
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+    -   id: mypy
+        additional_dependencies:
+            - types-setuptools
+            - types-requests
+            - types-PyYAML
