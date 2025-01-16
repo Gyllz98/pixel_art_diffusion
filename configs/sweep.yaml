@@ -1,0 +1,42 @@
+# configs/sweep_bayes.yaml
+program: src/pixel_art_diffusion/train.py
+name: sweep_bayes
+project: pixel_art_diffusion
+entity: s233353-danmarks-tekniske-universitet-dtu
+
+# Define the optimization metric
+metric:
+  goal: minimize
+  name: validation_loss
+
+# Method specification
+method: bayes  # Explicitly specify Bayesian optimization
+
+# Parameters to optimize
+parameters:
+  learning_rate:
+    distribution: log_uniform  # Good for learning rates
+    min: 0.0001
+    max: 0.1
+
+  batch_size:
+    values: [16, 32, 64]
+
+  epochs:
+    values: [5, 10, 15]
+
+  # You might want to add other hyperparameters like:
+  # optimizer:
+  #   values: ['adam', 'sgd']
+  # weight_decay:
+  #   distribution: log_uniform
+  #   min: 1e-6
+  #   max: 1e-2
+
+# Maximum number of runs to try
+run_cap: 10
+
+# Optional but recommended settings
+early_terminate:
+  type: hyperband
+  min_iter: 3

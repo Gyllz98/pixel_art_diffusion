@@ -1,0 +1,57 @@
+name: DVC Data Sync
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'data/**'
+      - 'src/pixel_art_diffusion/data/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'data/**'
+      - 'src/pixel_art_diffusion/data/**'
+
+jobs:
+  run_data_checker:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        python-version: ["3.12", "3.11"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: setup.py
+
+      - name: Install dependencies
+        run: |
+          pip install dvc[gs]
+          pip list
+
+      - id: 'auth'
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Pull DVC data
+        run: |
+          dvc pull --no-run-cache
+
+      - name: Process data
+        run: |
+          python -m src.pixel_art_diffusion.data
