@@ -53,29 +53,29 @@ will check the repositories and the code to verify your answers.
 * [x] Create a dedicated environment for you project to keep track of your packages (M2)
 * [x] Create the initial file structure using cookiecutter with an appropriate template (M6)
 * [x] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6)
-* [ ] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
-* [ ] Remember to fill out the `requirements.txt` and `requirements_dev.txt` file with whatever dependencies that you
-    are using (M2+M6)
+* [x] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
+* [ ] Remember to fill out the `requirements.txt` and `requirements_dev.txt` file with whatever dependencies that you are using (M2+M6)
 * [x] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
 * [x] Do a bit of code typing and remember to document essential parts of your code (M7)
 * [x] Setup version control for your data or part of your data (M8)
 * [ ] Add command line interfaces and project commands to your code where it makes sense (M9)
-\\ Did train and evaluate command line interfaces, still need to to typer arg parser for train and evaluate
+\\ Gustav: Did train and evaluate command line interfaces, still need to to typer arg parser for train and evaluate
 * [ ] Construct one or multiple docker files for your code (M10)
-\\ Did the train dockerfile just needs some modifications after finishing the training loop
+\\ Balazs: Did the train dockerfile just needs some modifications after finishing the training loop
 * [ ] Build the docker files locally and make sure they work as intended (M10)
+\\ Balazs:
 * [ ] Write one or multiple configurations files for your experiments (M11)
-\\ Created 2 experiment file, have to fill out based on training loop
+\\ Balazs: Created 2 experiment file, have to fill out based on training loop
 * [ ] Used Hydra to load the configurations and manage your hyperparameters (M11)
 \\ Need to use hydra for importing
 * [ ] Use profiling to optimize your code (M12)
-\\ Need files first for profiling and checking performance.
+\\ Balazs: Need files first for profiling and checking performance.
 * [ ] Use logging to log important events in your code (M14)
-\\ Need it in the files, to be done
+\\ Gustav: Need it in the files, to be done
 * [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
-\\ need to add the model as an artifact, then do model registry
+\\ Gustav: need to add the model as an artifact, then do model registry
 * [ ] Consider running a hyperparameter optimization sweep (M14)
-\\ still have to modify stuff in it, but created sweep.yaml in configs/
+\\ Gustav: still have to modify stuff in it, but created sweep.yaml in configs/
 * [ ] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
 \\ still have to do just after model.
 
@@ -89,8 +89,9 @@ will check the repositories and the code to verify your answers.
 * [x] Add a linting step to your continuous integration (M17)
 * [x] Add pre-commit hooks to your version control setup (M18)
 * [x] Add a continues workflow that triggers when data changes (M19)
+
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
-* [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
+* [x] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
 * [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
 * [ ] Create a FastAPI application that can do inference using your model (M22)

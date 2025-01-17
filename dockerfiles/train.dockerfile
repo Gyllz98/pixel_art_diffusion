@@ -1,22 +1,23 @@
-# Base image
 FROM python:3.11-slim AS base
 
-RUN apt update && \
-    apt install --no-install-recommends -y build-essential gcc && \
-    apt clean && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
-COPY src src/
+# Install system dependencies with caching
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
+    build-essential gcc
+
+# Install Python dependencies with caching
+COPY requirements.txt requirements_dev.txt ./
+RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt -r requirements_dev.txt
+
+# Copy source code and other files
+COPY src/ src/
 COPY configs/ configs/
 COPY data/ data/
 COPY models/ models/
-COPY requirements.txt requirements.txt
-COPY requirements_dev.txt requirements_dev.txt
-COPY README.md README.md
-COPY pyproject.toml pyproject.toml
-
-RUN pip install -r requirements.txt --no-cache-dir --verbose
-RUN pip install --no-cache-dir --verbose -r requirements_dev.txt
-RUN pip install . --no-deps --no-cache-dir --verbose
+COPY README.md pyproject.toml ./
 
 ENV PYTHONPATH=/app
 
