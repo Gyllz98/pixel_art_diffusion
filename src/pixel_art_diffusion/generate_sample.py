@@ -4,6 +4,7 @@ from pathlib import Path
 from .model import PixelArtDiffusion
 from .visualize import visualize_samples
 import torch
+from diffusers import DDPMScheduler
 
 generate_app = typer.Typer()
 
@@ -69,24 +70,34 @@ def generate_samples(
         # Use the latest checkpoint if multiple exist
         checkpoint_path = sorted(possible_checkpoints)[-1]
 
-    # Determine device
-    if force_cpu:
-        device = torch.device("cpu")
-        print("Using CPU as requested")
-    else:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        if device.type == "cpu":
-            print("CUDA not available. Using CPU. This might be slow!")
-        else:
-            print("Using CUDA for generation")
-
     try:
-        # Initialize model with proper device
-        model = PixelArtDiffusion(device=device)
+        # Determine device
+        if force_cpu:
+            device = torch.device('cpu')
+            print("Using CPU as requested")
+        else:
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            if device.type == 'cpu':
+                print("CUDA not available. Using CPU. This might be slow!")
+            else:
+                print("Using CUDA for generation")
+
+        # Initialize model with correct device
+        model = PixelArtDiffusion(device=device.type)
         
-        # Load checkpoint
+        # Load checkpoint with explicit CPU mapping if needed
         print(f"Loading checkpoint from {checkpoint_path}")
-        model.load_checkpoint(str(checkpoint_path))
+        # Use a map function to ensure proper device mapping
+        if device.type == 'cpu':
+            # Force CPU mapping for non-CUDA systems
+            map_location = lambda storage, loc: storage
+        else:
+            # Use the device directly for CUDA systems
+            map_location = device
+            
+        checkpoint = torch.load(str(checkpoint_path), map_location=map_location)
+        model.model.load_state_dict(checkpoint['model_state_dict'])
+        model.noise_scheduler = DDPMScheduler.from_config(checkpoint['scheduler_config'])
 
         # Generate samples
         print(f"Generating {num_samples} samples...")
@@ -104,6 +115,9 @@ def generate_samples(
             print("1. Reducing the number of samples")
             print("2. Using --force-cpu option")
             print("3. Freeing up GPU memory from other applications")
+        elif "CUDA" in str(e):
+            print("\nError loading CUDA checkpoint on CPU system.")
+            print("Try using --force-cpu option to ensure proper CPU loading")
         else:
             print(f"\nError during generation: {str(e)}")
         raise typer.Exit(1)
