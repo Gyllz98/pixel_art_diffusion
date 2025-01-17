@@ -1,4 +1,14 @@
-fastapi==0.115.6
+diffusers==0.32.2
+invoke==2.2.0
+loguru==0.7.3
+Markdown==3.7
+matplotlib==3.10.0
+numpy==2.2.1
+pandas==2.2.3
+Pillow==11.1.0
+pydantic==2.10.5
 torch==2.5.1
+torchvision==0.20.1
+tqdm==4.67.1
 typer==0.15.1
-uvicorn==0.34.0
+wandb==0.19.4
