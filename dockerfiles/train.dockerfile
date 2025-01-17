@@ -19,6 +19,10 @@ COPY data/ data/
 COPY models/ models/
 COPY README.md pyproject.toml ./
 
+# Install the package in development mode
+RUN pip install -e .
+
 ENV PYTHONPATH=/app
 
-ENTRYPOINT ["python", "-u", "src/pixel_art_diffusion/train.py"]
+# Change to use Python module syntax
+ENTRYPOINT ["python", "-u", "-m", "pixel_art_diffusion.train"]

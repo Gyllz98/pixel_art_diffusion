@@ -9,8 +9,8 @@ from pathlib import Path
 import hydra
 from omegaconf import DictConfig
 import os
-from .data import PixelArtDataset
-from .model import PixelArtDiffusion
+from pixel_art_diffusion.data import PixelArtDataset
+from pixel_art_diffusion.model import PixelArtDiffusion
 
 train_app = typer.Typer()
 

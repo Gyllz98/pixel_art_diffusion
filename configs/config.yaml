@@ -5,6 +5,7 @@ defaults:
 
 # Training configs
 training:
+  device:
   batch_size: 256
   num_workers: 0
   clip_grad_norm: 1.0
@@ -48,5 +49,5 @@ data:
 # Logging configurations
 wandb:
   enabled: true
-  project: pixel-art-diffusion
+  project: pixel_art_diffusion
   log_batch_frequency: 100
