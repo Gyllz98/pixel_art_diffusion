@@ -60,9 +60,9 @@ will check the repositories and the code to verify your answers.
 * [x] Setup version control for your data or part of your data (M8)
 * [x] Add command line interfaces and project commands to your code where it makes sense (M9)
 \\ Gustav: Did train and evaluate command line interfaces, still need to to typer arg parser for train and evaluate
-* [ ] Construct one or multiple docker files for your code (M10)
+* [x] Construct one or multiple docker files for your code (M10)
 \\ Balazs: Did the train dockerfile just needs some modifications after finishing the training loop
-* [ ] Build the docker files locally and make sure they work as intended (M10)
+* [x] Build the docker files locally and make sure they work as intended (M10)
 \\ Balazs:
 * [x] Write one or multiple configurations files for your experiments (M11)
 \\ Balazs: Created 2 experiment file, have to fill out based on training loop
