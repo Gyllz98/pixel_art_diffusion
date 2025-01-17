@@ -7,6 +7,7 @@ import wandb
 from typing import Annotated, List
 from .data import PixelArtDataset
 from .model import PixelArtDiffusion
+from pathlib import Path
 
 train_app = typer.Typer()
 
@@ -36,9 +37,12 @@ def train_model(
         },
     )
 
+    project_root = Path(__file__).parent.parent.parent
+    data_path = project_root / "data" / "processed"
+
     model = PixelArtDiffusion()
     # First time setup - calculate statistics
-    dataset = PixelArtDataset(data_path="../data/processed", calculate_stats=True, label_subset=label_subset)
+    dataset = PixelArtDataset(data_path=str(data_path), calculate_stats=True, label_subset=label_subset)
 
     # Create dataloader
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=256, shuffle=True, num_workers=0)
