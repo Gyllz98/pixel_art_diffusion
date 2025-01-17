@@ -7,16 +7,7 @@ from torch.utils.data import Dataset
 import pandas as pd
 from torchvision import transforms
 from PIL import Image
-
-from pathlib import Path
-import zipfile
-import typer
-import numpy as np
-import torch
-from torch.utils.data import Dataset
-import pandas as pd
-from torchvision import transforms
-from PIL import Image
+from loguru import logger
 
 app = typer.Typer()
 
@@ -26,7 +17,6 @@ def get_data_dir():
 
 class PixelArtDataset(Dataset):
     """Dataset for pixel art sprites and their labels."""
-
     def __init__(self, 
                  data_path: Path,
                  transform=None,
@@ -42,10 +32,16 @@ class PixelArtDataset(Dataset):
             label_subset: Optional list of indices to include (0-4 for the 5 categories)
             calculate_stats: Whether to recalculate dataset statistics
         """
+        logger.info(f"Initializing PixelArtDataset from {data_path}")
+        if label_subset:
+            logger.debug(f"Using label subset: {label_subset}")
+
+        
         self.data_path = Path(data_path)
         self.transform = transform
         
         # Load labels from CSV
+        logger.info("Loading labels from CSV")
         self.labels_df = pd.read_csv(self.data_path / "labels.csv")
         
         # Convert string representation of arrays to numpy arrays
@@ -55,11 +51,12 @@ class PixelArtDataset(Dataset):
         
         # Filter by label subset if specified
         if label_subset is not None:
-            # For one-hot encoded labels, we need to check the specific indices
+            initial_len = len(self.labels_df)
             mask = self.labels_df['Label'].apply(
                 lambda x: any(x[i] == 1.0 for i in label_subset)
             )
             self.labels_df = self.labels_df[mask].reset_index(drop=True)
+            logger.info(f"Filtered dataset from {initial_len} to {len(self.labels_df)} samples based on label subset")
         
         # Build image paths - using Image Index to construct filenames
         # Update the image path construction in the __init__ method:
@@ -90,24 +87,32 @@ class PixelArtDataset(Dataset):
 
     def calculate_statistics(self):
         """Calculate dataset mean and std."""
-        print("Calculating dataset statistics...")
-        
-        pixel_sum = torch.zeros(3)
-        pixel_sq_sum = torch.zeros(3)
-        num_pixels = 0
+        logger.info("Calculating dataset statistics...")
+        try:
+            pixel_sum = torch.zeros(3)
+            pixel_sq_sum = torch.zeros(3)
+            num_pixels = 0
 
-        for img_path in self.image_paths:
-            img = Image.open(img_path)
-            img_tensor = transforms.ToTensor()(img)
+            for img_path in self.image_paths:
+                try:
+                    img = Image.open(img_path)
+                    img_tensor = transforms.ToTensor()(img)
+                    
+                    pixel_sum += img_tensor.sum(dim=[1, 2])
+                    pixel_sq_sum += (img_tensor ** 2).sum(dim=[1, 2])
+                    num_pixels += img_tensor.shape[1] * img_tensor.shape[2]
+                except Exception as e:
+                    logger.error(f"Error processing image {img_path}: {str(e)}")
+                    continue
+
+            mean = pixel_sum / num_pixels
+            std = torch.sqrt(pixel_sq_sum/num_pixels - mean**2)
             
-            pixel_sum += img_tensor.sum(dim=[1, 2])
-            pixel_sq_sum += (img_tensor ** 2).sum(dim=[1, 2])
-            num_pixels += img_tensor.shape[1] * img_tensor.shape[2]
-
-        mean = pixel_sum / num_pixels
-        std = torch.sqrt(pixel_sq_sum/num_pixels - mean**2)
-        
-        return mean.numpy(), std.numpy()
+            logger.success(f"Calculated dataset statistics - Mean: {mean}, Std: {std}")
+            return mean.numpy(), std.numpy()
+        except Exception as e:
+            logger.error(f"Failed to calculate dataset statistics: {str(e)}")
+            raise
 
     def __len__(self) -> int:
         """Return the length of the dataset."""

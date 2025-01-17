@@ -11,6 +11,7 @@ from omegaconf import DictConfig
 import os
 from pixel_art_diffusion.data import PixelArtDataset
 from pixel_art_diffusion.model import PixelArtDiffusion
+from loguru import logger
 
 train_app = typer.Typer()
 
@@ -25,10 +26,14 @@ def train_model_hydra(cfg: DictConfig) -> None:
     """
     Main training function with Hydra config
     """
+    logger.info("Starting training with Hydra configuration")
+    logger.debug(f"Configuration: {cfg}")
     # Get command line arguments from environment variables or use defaults
     run_name = os.getenv("TRAIN_RUN_NAME", "pixel_art_diffusion")
     num_epochs = int(os.getenv("TRAIN_NUM_EPOCHS", "100"))
     label_subset = [int(x) for x in os.getenv("TRAIN_LABEL_SUBSET", "3").split(",")]
+
+    logger.info(f"Training run: {run_name}, Epochs: {num_epochs}, Label subset: {label_subset}")
 
     # Set up paths
     models_dir = get_models_dir()
@@ -36,6 +41,7 @@ def train_model_hydra(cfg: DictConfig) -> None:
 
     # Initialize W&B
     if cfg.wandb.enabled:
+        logger.info("Initializing Weights & Biases")
         wandb.init(
             project=cfg.wandb.project,
             name=run_name,
@@ -49,6 +55,8 @@ def train_model_hydra(cfg: DictConfig) -> None:
         )
 
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    logger.info(f"Using device: {DEVICE}")
 
     model = PixelArtDiffusion(device=DEVICE)
     dataset = PixelArtDataset(
@@ -139,6 +147,7 @@ def train_model_hydra(cfg: DictConfig) -> None:
             if cfg.wandb.enabled:
                 wandb.save(str(checkpoint_path))
 
+    logger.success("Training completed successfully!")
     # Save final checkpoint
     final_checkpoint_path = models_dir / f"{run_name}-final.pt"
     model.save_checkpoint(str(final_checkpoint_path))
