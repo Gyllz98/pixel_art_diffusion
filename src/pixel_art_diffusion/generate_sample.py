@@ -3,6 +3,7 @@ from typing import Annotated
 from pathlib import Path
 from .model import PixelArtDiffusion
 from .visualize import visualize_samples
+import torch
 
 generate_app = typer.Typer()
 
@@ -38,7 +39,7 @@ def list_models():
         for checkpoint in sorted(checkpoints):
             print(f"  - {checkpoint.name}")
 
-@generate_app.command()
+@generate_app.command(name="generate")
 def generate_samples(
     model_name: Annotated[str, typer.Option(help="Name of the model")] = "pixel_art_diffusion",
     num_samples: Annotated[int, typer.Option(help="Number of samples to generate")] = 32,
@@ -64,8 +65,10 @@ def generate_samples(
         # Use the latest checkpoint if multiple exist
         checkpoint_path = str(sorted(possible_checkpoints)[-1])
     
+    DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     # Initialize model
-    model = PixelArtDiffusion()
+    model = PixelArtDiffusion(device=DEVICE)
     
     # Load checkpoint
     print(f"Loading checkpoint from {checkpoint_path}")

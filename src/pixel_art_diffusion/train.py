@@ -48,8 +48,9 @@ def train_model_hydra(cfg: DictConfig) -> None:
             },
         )
 
-    # Initialize model and dataset
-    model = PixelArtDiffusion()
+    DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    model = PixelArtDiffusion(device=DEVICE)
     dataset = PixelArtDataset(
         data_path=cfg.data.root_path, calculate_stats=cfg.data.calculate_stats, label_subset=label_subset
     )

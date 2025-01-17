@@ -7,6 +7,7 @@ class PixelArtDiffusion:
         image_size=16,
         num_channels=3,
         num_train_timesteps=500,
+        device="cpu",
     ):
         self.image_size = image_size
         self.num_channels = num_channels
@@ -31,7 +32,7 @@ class PixelArtDiffusion:
             clip_sample=True
         )
         
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = device
         self.model.to(self.device)
 
     def generate_samples(self, num_samples=16):

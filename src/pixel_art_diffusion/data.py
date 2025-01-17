@@ -8,6 +8,22 @@ import pandas as pd
 from torchvision import transforms
 from PIL import Image
 
+from pathlib import Path
+import zipfile
+import typer
+import numpy as np
+import torch
+from torch.utils.data import Dataset
+import pandas as pd
+from torchvision import transforms
+from PIL import Image
+
+app = typer.Typer()
+
+def get_data_dir():
+    """Helper function to get the data directory path"""
+    return Path(__file__).parent.parent.parent / "data"
+
 class PixelArtDataset(Dataset):
     """Dataset for pixel art sprites and their labels."""
 
@@ -125,28 +141,28 @@ class PixelArtDataset(Dataset):
             )
         ])
 
-    def preprocess(self, output_folder: Path = Path("data/processed")) -> None:
-        """Preprocess the raw data and save it to the output folder."""
-        # Create output folder if it doesn't exist
-        output_folder.mkdir(parents=True, exist_ok=True)
+@app.command()
+def extract():
+    """Extract the raw data and save it to the processed folder."""
+    raw_data_path = get_data_dir() / "raw"
+    output_folder = get_data_dir() / "processed"
 
-        # Unzip the archive
-        with zipfile.ZipFile(self.data_path / "archive.zip", "r") as zip_ref:
-            print(f"Extracting contents to {output_folder}")
-            zip_ref.extractall(output_folder)
+    print(f"Preprocessing data from {raw_data_path} to {output_folder}")
+    
+    # Create output folder if it doesn't exist
+    output_folder.mkdir(parents=True, exist_ok=True)
 
-        print("Extraction complete!")
-        # TODO: Add any additional preprocessing steps here
-        pass
+    # Check if archive exists
+    archive_path = raw_data_path / "archive.zip"
+    if not archive_path.exists():
+        raise FileNotFoundError(f"Archive not found at {archive_path}")
 
+    # Unzip the archive
+    with zipfile.ZipFile(archive_path, "r") as zip_ref:
+        print(f"Extracting contents to {output_folder}")
+        zip_ref.extractall(output_folder)
 
-def preprocess(raw_data_path: Path = Path("data/raw"), output_folder: Path = Path("data/processed")) -> None:
-    print("Preprocessing data...")
-    dataset = PixelArtDataset(raw_data_path)
-    dataset.preprocess(output_folder)
-
-    pass
-
+    print("Extraction complete!")
 
 if __name__ == "__main__":
-    typer.run(preprocess)
+    app()
