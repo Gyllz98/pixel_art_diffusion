@@ -1,0 +1,52 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+
+# Training configs
+training:
+  batch_size: 256
+  num_workers: 0
+  clip_grad_norm: 1.0
+
+# Optimizer configurations
+optimizer:
+  name: adamw
+  params:
+    lr: 1e-4
+    weight_decay: 0.01
+    eps: 1e-8
+
+# Learning rate scheduler
+scheduler:
+  name: cosine
+  num_warmup_steps: 1000
+
+# Model configurations
+model:
+  image_size: 16
+  num_channels: 3
+  num_train_timesteps: 500
+  unet:
+    layers_per_block: 2
+    block_out_channels: [64, 128]
+    down_block_types: ["DownBlock2D", "AttnDownBlock2D"]
+    up_block_types: ["AttnUpBlock2D", "UpBlock2D"]
+
+# Noise scheduler configurations
+noise_scheduler:
+  beta_start: 1e-4
+  beta_end: 0.02
+  beta_schedule: linear
+  clip_sample: true
+
+# Data configurations
+data:
+  root_path: ${hydra:runtime.cwd}/data/processed
+  calculate_stats: true
+
+# Logging configurations
+wandb:
+  enabled: true
+  project: pixel-art-diffusion
+  log_batch_frequency: 100
