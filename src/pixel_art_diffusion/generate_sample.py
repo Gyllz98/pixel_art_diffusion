@@ -40,8 +40,8 @@ def list_models():
 
 @generate_app.command()
 def generate_samples(
-    model_name: str,
-    num_samples: Annotated[int, typer.Option(help="Number of samples to generate")] = 16,
+    model_name: Annotated[str, typer.Option(help="Name of the model")] = "pixel_art_diffusion",
+    num_samples: Annotated[int, typer.Option(help="Number of samples to generate")] = 32,
     output_path: Annotated[str, typer.Option(help="Path to save the generated samples")] = "generated_samples.png",
     custom_checkpoint_path: Annotated[str, typer.Option(help="Optional: Full path to a checkpoint file")] = None,
 ):
