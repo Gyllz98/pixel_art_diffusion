@@ -5,58 +5,72 @@ from tqdm import tqdm
 import typer
 import wandb
 from typing import Annotated, List
+from pathlib import Path
+import hydra
+from omegaconf import DictConfig
+import os
 from .data import PixelArtDataset
 from .model import PixelArtDiffusion
-from pathlib import Path
 
 train_app = typer.Typer()
+
 
 def get_models_dir():
     """Helper function to get the models directory path"""
     return Path(__file__).parent.parent.parent / "models"
 
-@train_app.command()
-def train_model(
-    run_name: Annotated[str, typer.Option(help="Name for the training run")] = "pixel_art_diffusion",
-    num_epochs: Annotated[int, typer.Option(help="Number of training epochs")] = 100,
-    label_subset: Annotated[List[int], typer.Option(help="List of label indices to train on (0-4)")] = [3],
-):
+
+@hydra.main(version_base=None, config_path="../../configs", config_name="config")
+def train_model_hydra(cfg: DictConfig) -> None:
     """
-    Train the PixelArtDiffusion model
+    Main training function with Hydra config
     """
-    # Fixed hyperparameters
-    LEARNING_RATE = 1e-4
-    CHECKPOINT_FREQ = 10
+    # Get command line arguments from environment variables or use defaults
+    run_name = os.getenv("TRAIN_RUN_NAME", "pixel_art_diffusion")
+    num_epochs = int(os.getenv("TRAIN_NUM_EPOCHS", "100"))
+    label_subset = [int(x) for x in os.getenv("TRAIN_LABEL_SUBSET", "3").split(",")]
 
     # Set up paths
-    project_root = Path(__file__).parent.parent.parent
-    data_path = project_root / "data" / "processed"
     models_dir = get_models_dir()
-    models_dir.mkdir(exist_ok=True)  # Ensure models directory exists
+    models_dir.mkdir(exist_ok=True)
 
     # Initialize W&B
-    wandb.init(
-        project="pixel-art-diffusion",
-        name=run_name,
-        config={
-            "learning_rate": LEARNING_RATE,
-            "num_epochs": num_epochs,
-            "label_subset": label_subset,
-            "architecture": "PixelArtDiffusion",
-        },
+    if cfg.wandb.enabled:
+        wandb.init(
+            project=cfg.wandb.project,
+            name=run_name,
+            config={
+                "learning_rate": cfg.optimizer.params.lr,
+                "num_epochs": num_epochs,
+                "label_subset": label_subset,
+                "architecture": "PixelArtDiffusion",
+                **cfg.model,
+            },
+        )
+
+    # Initialize model and dataset
+    model = PixelArtDiffusion()
+    dataset = PixelArtDataset(
+        data_path=cfg.data.root_path, calculate_stats=cfg.data.calculate_stats, label_subset=label_subset
     )
 
-    model = PixelArtDiffusion()
-    # First time setup - calculate statistics
-    dataset = PixelArtDataset(data_path=str(data_path), calculate_stats=True, label_subset=label_subset)
-
     # Create dataloader
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=256, shuffle=True, num_workers=0)
+    dataloader = torch.utils.data.DataLoader(
+        dataset, batch_size=cfg.training.batch_size, shuffle=True, num_workers=cfg.training.num_workers
+    )
 
-    optimizer = torch.optim.AdamW(model.model.parameters(), lr=LEARNING_RATE, weight_decay=0.01, eps=1e-8)
+    # Setup optimizer
+    optimizer = torch.optim.AdamW(model.model.parameters(), **cfg.optimizer.params)
 
+    # Calculate total steps for scheduler
+    total_steps = len(dataloader) * num_epochs
+
+    # Setup scheduler
     lr_scheduler = get_scheduler(
-        name="cosine", optimizer=optimizer, num_warmup_steps=1000, num_training_steps=len(dataloader) * num_epochs
+        name=cfg.scheduler.name,
+        optimizer=optimizer,
+        num_warmup_steps=cfg.scheduler.num_warmup_steps,
+        num_training_steps=total_steps,
     )
 
     print(f"Starting training for {num_epochs} epochs...")
@@ -87,13 +101,13 @@ def train_model(
 
             # Optimization step
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.model.parameters(), 1.0)
+            torch.nn.utils.clip_grad_norm_(model.model.parameters(), cfg.training.clip_grad_norm)
             optimizer.step()
             lr_scheduler.step()
             optimizer.zero_grad()
 
             # Log batch metrics
-            if batch_idx % 100 == 0:  # Log every 100 batches
+            if cfg.wandb.enabled and batch_idx % cfg.wandb.log_batch_frequency == 0:
                 wandb.log(
                     {
                         "batch/loss": loss.item(),
@@ -107,30 +121,49 @@ def train_model(
         print(f"Epoch {epoch}: Average Loss = {avg_loss:.4f}")
 
         # Log epoch metrics
-        wandb.log(
-            {
-                "epoch/average_loss": avg_loss,
-                "epoch": epoch,
-            }
-        )
+        if cfg.wandb.enabled:
+            wandb.log(
+                {
+                    "epoch/average_loss": avg_loss,
+                    "epoch": epoch,
+                }
+            )
 
-        # Save intermediate checkpoint
-        if epoch % CHECKPOINT_FREQ == 0:
+        # Save checkpoint every 10 epochs
+        if epoch % 10 == 0:
             checkpoint_path = models_dir / f"{run_name}-checkpoint-epoch-{epoch}.pt"
             model.save_checkpoint(str(checkpoint_path))
             print(f"Saved checkpoint to {checkpoint_path}")
 
-            # Log checkpoint to W&B
-            wandb.save(str(checkpoint_path))
+            if cfg.wandb.enabled:
+                wandb.save(str(checkpoint_path))
 
     # Save final checkpoint
     final_checkpoint_path = models_dir / f"{run_name}-final.pt"
     model.save_checkpoint(str(final_checkpoint_path))
     print(f"Saved final checkpoint to {final_checkpoint_path}")
-    wandb.save(str(final_checkpoint_path))
 
-    # Close wandb run
-    wandb.finish()
+    if cfg.wandb.enabled:
+        wandb.save(str(final_checkpoint_path))
+        wandb.finish()
+
+
+@train_app.command()
+def train_model(
+    run_name: Annotated[str, typer.Option(help="Name for the training run")] = "pixel_art_diffusion",
+    num_epochs: Annotated[int, typer.Option(help="Number of training epochs")] = 100,
+    label_subset: Annotated[List[int], typer.Option(help="List of label indices to train on (0-4)")] = [3],
+):
+    """
+    CLI wrapper for the training function
+    """
+    # Set environment variables for Hydra function
+    os.environ["TRAIN_RUN_NAME"] = run_name
+    os.environ["TRAIN_NUM_EPOCHS"] = str(num_epochs)
+    os.environ["TRAIN_LABEL_SUBSET"] = ",".join(map(str, label_subset))
+
+    # Call the Hydra main function
+    train_model_hydra()
 
 
 if __name__ == "__main__":
