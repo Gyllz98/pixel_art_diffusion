@@ -5,8 +5,8 @@ from tqdm import tqdm
 import typer
 import wandb
 from typing import Annotated, List
-from data import PixelArtDataset
-from model import PixelArtDiffusion
+from .data import PixelArtDataset
+from .model import PixelArtDiffusion
 
 train_app = typer.Typer()
 
