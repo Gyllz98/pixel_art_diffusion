@@ -61,7 +61,7 @@ will check the repositories and the code to verify your answers.
 * [x] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
 * [x] Do a bit of code typing and remember to document essential parts of your code (M7)
 * [x] Setup version control for your data or part of your data (M8)
-* [ ] Add command line interfaces and project commands to your code where it makes sense (M9)
+* [x] Add command line interfaces and project commands to your code where it makes sense (M9)
 \\ Gustav: Did train and evaluate command line interfaces, still need to to typer arg parser for train and evaluate
 * [ ] Construct one or multiple docker files for your code (M10)
 \\ Balazs: Did the train dockerfile just needs some modifications after finishing the training loop
@@ -75,7 +75,7 @@ will check the repositories and the code to verify your answers.
 \\ Balazs: Need files first for profiling and checking performance.
 * [ ] Use logging to log important events in your code (M14)
 \\ Gustav: Need it in the files, to be done
-* [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
+* [x] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
 \\ Gustav: need to add the model as an artifact, then do model registry
 * [ ] Consider running a hyperparameter optimization sweep (M14)
 \\ Gustav: still have to modify stuff in it, but created sweep.yaml in configs/

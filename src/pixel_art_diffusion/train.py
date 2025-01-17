@@ -45,8 +45,9 @@ def train_model(
             "architecture": "PixelArtDiffusion",
         },
     )
+    DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = PixelArtDiffusion()
+    model = PixelArtDiffusion(device=DEVICE)
     # First time setup - calculate statistics
     dataset = PixelArtDataset(data_path=str(data_path), calculate_stats=True, label_subset=label_subset)
 
