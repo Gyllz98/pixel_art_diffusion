@@ -11,6 +11,9 @@ from pathlib import Path
 
 train_app = typer.Typer()
 
+def get_models_dir():
+    """Helper function to get the models directory path"""
+    return Path(__file__).parent.parent.parent / "models"
 
 @train_app.command()
 def train_model(
@@ -25,6 +28,12 @@ def train_model(
     LEARNING_RATE = 1e-4
     CHECKPOINT_FREQ = 10
 
+    # Set up paths
+    project_root = Path(__file__).parent.parent.parent
+    data_path = project_root / "data" / "processed"
+    models_dir = get_models_dir()
+    models_dir.mkdir(exist_ok=True)  # Ensure models directory exists
+
     # Initialize W&B
     wandb.init(
         project="pixel-art-diffusion",
@@ -36,9 +45,6 @@ def train_model(
             "architecture": "PixelArtDiffusion",
         },
     )
-
-    project_root = Path(__file__).parent.parent.parent
-    data_path = project_root / "data" / "processed"
 
     model = PixelArtDiffusion()
     # First time setup - calculate statistics
@@ -110,18 +116,18 @@ def train_model(
 
         # Save intermediate checkpoint
         if epoch % CHECKPOINT_FREQ == 0:
-            checkpoint_path = f"{run_name}-checkpoint-epoch-{epoch}.pt"
-            model.save_checkpoint(checkpoint_path)
+            checkpoint_path = models_dir / f"{run_name}-checkpoint-epoch-{epoch}.pt"
+            model.save_checkpoint(str(checkpoint_path))
             print(f"Saved checkpoint to {checkpoint_path}")
 
             # Log checkpoint to W&B
-            wandb.save(checkpoint_path)
+            wandb.save(str(checkpoint_path))
 
     # Save final checkpoint
-    final_checkpoint_path = f"{run_name}-final.pt"
-    model.save_checkpoint(final_checkpoint_path)
+    final_checkpoint_path = models_dir / f"{run_name}-final.pt"
+    model.save_checkpoint(str(final_checkpoint_path))
     print(f"Saved final checkpoint to {final_checkpoint_path}")
-    wandb.save(final_checkpoint_path)
+    wandb.save(str(final_checkpoint_path))
 
     # Close wandb run
     wandb.finish()
