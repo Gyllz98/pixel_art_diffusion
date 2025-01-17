@@ -70,7 +70,7 @@ will check the repositories and the code to verify your answers.
 \\ Need to use hydra for importing
 * [ ] Use profiling to optimize your code (M12)
 \\ Balazs: Need files first for profiling and checking performance.
-* [ ] Use logging to log important events in your code (M14)
+* [x] Use logging to log important events in your code (M14)
 \\ Gustav: Need it in the files, to be done
 * [x] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
 \\ Gustav: need to add the model as an artifact, then do model registry
