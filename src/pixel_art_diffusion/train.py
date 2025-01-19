@@ -1,16 +1,16 @@
 import torch
 import torch.nn as nn
-from diffusers.optimization import get_scheduler
-from tqdm import tqdm
 import typer
 import wandb
+import hydra
+import os
+from diffusers.optimization import get_scheduler
+from tqdm import tqdm
 from typing import Annotated, List
 from pathlib import Path
-import hydra
 from omegaconf import DictConfig
-import os
-from pixel_art_diffusion.data import PixelArtDataset
-from pixel_art_diffusion.model import PixelArtDiffusion
+from src.pixel_art_diffusion.data import PixelArtDataset
+from src.pixel_art_diffusion.model import PixelArtDiffusion # updated it to "src."
 from loguru import logger
 
 train_app = typer.Typer()
