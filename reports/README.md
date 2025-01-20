@@ -84,7 +84,7 @@ will check the repositories and the code to verify your answers.
 * [x] Write unit tests related to the data part of your code (M16)
 \\ Mickael: test_data.py is almost done
 * [x] Write unit tests related to model construction and or model training (M16)
-\\ Mickael: Unit test to model is complete. Working on model training. 
+\\ Mickael: Unit test to model is complete. Working on model training.
 * [x] Calculate the code coverage (M16)
 \\ Mickael: TODO
 * [x] Get some continuous integration running on the GitHub repository (M17)
@@ -131,18 +131,12 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 1 fill here ---
+MLOPS 41
 
 ### Question 2
 > **Enter the study number for each member in the group**
->
-> Example:
->
-> *sXXXXXX, sXXXXXX, sXXXXXX*
->
-> Answer:
 
---- question 2 fill here ---
+> *s233353,s195849, s180351*
 
 ### Question 3
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
