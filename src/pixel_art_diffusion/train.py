@@ -144,8 +144,8 @@ def train_model_hydra(cfg: DictConfig) -> None:
             model.save_checkpoint(str(checkpoint_path))
             print(f"Saved checkpoint to {checkpoint_path}")
 
-            if cfg.wandb.enabled:
-                wandb.save(str(checkpoint_path))
+            #if cfg.wandb.enabled:
+                #wandb.save(str(checkpoint_path))
 
     logger.success("Training completed successfully!")
     # Save final checkpoint
@@ -154,7 +154,7 @@ def train_model_hydra(cfg: DictConfig) -> None:
     print(f"Saved final checkpoint to {final_checkpoint_path}")
 
     if cfg.wandb.enabled:
-        wandb.save(str(final_checkpoint_path))
+        # wandb.save(str(final_checkpoint_path), base_path=str(models_dir))
         wandb.finish()
 
 
