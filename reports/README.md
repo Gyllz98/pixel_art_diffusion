@@ -83,7 +83,7 @@ will check the repositories and the code to verify your answers.
 
 * [x] Write unit tests related to the data part of your code (M16)
 \\ Mickael: test_data.py is almost done
-* [x] Write unit tests related to model construction and or model training (M16)
+* [ ] Write unit tests related to model construction and or model training (M16)
 \\ Mickael: Unit test to model is complete. Working on model training.
 * [x] Calculate the code coverage (M16)
 \\ Mickael: TODO
@@ -94,13 +94,20 @@ will check the repositories and the code to verify your answers.
 * [x] Add a continues workflow that triggers when data changes (M19)
 
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
+\\ TO DO
 * [x] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
+\\ BALAZS:
 * [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
+\\ GUSTAV: TO DO
 * [ ] Create a FastAPI application that can do inference using your model (M22)
+\\ MICKAEL: TO DO
 * [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
+\\ GUSTAV: TO DO
 * [ ] Write API tests for your application and setup continues integration for these (M24)
+\\ MICKAEL: TO DO
 * [ ] Load test your application (M24)
+\\ MICKAEL: TO DO
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
 * [ ] Create a frontend for your API (M26)
 
