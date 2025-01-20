@@ -139,7 +139,7 @@ def train_model_hydra(cfg: DictConfig) -> None:
             )
 
         # Save checkpoint every 10 epochs
-        if epoch % 10 == 0:
+        if epoch % 50 == 0:
             checkpoint_path = models_dir / f"{run_name}-checkpoint-epoch-{epoch}.pt"
             model.save_checkpoint(str(checkpoint_path))
             print(f"Saved checkpoint to {checkpoint_path}")
