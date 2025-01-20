@@ -9,8 +9,8 @@ from tqdm import tqdm
 from typing import Annotated, List
 from pathlib import Path
 from omegaconf import DictConfig
-from src.pixel_art_diffusion.data import PixelArtDataset
-from src.pixel_art_diffusion.model import PixelArtDiffusion # updated it to "src."
+from pixel_art_diffusion.data import PixelArtDataset
+from pixel_art_diffusion.model import PixelArtDiffusion # updated it to "src."
 from loguru import logger
 
 train_app = typer.Typer()
