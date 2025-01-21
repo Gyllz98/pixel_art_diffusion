@@ -95,20 +95,18 @@ will check the repositories and the code to verify your answers.
 * [x] Add a continues workflow that triggers when changes to the model registry is made (M19)
 * [x] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
 * [x] Create a trigger workflow for automatically building your docker images (M21)
-\\ GUSTAV:
-* [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
-\\ GUSTAV: TO DO, should be done today
-* [ ] Create a FastAPI application that can do inference using your model (M22)
+* [x] Get your model training in GCP using either the Engine or Vertex AI (M21)
+* [x] Create a FastAPI application that can do inference using your model (M22)
 \\ MICKAEL: TO DO, call model functions
-* [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
-\\ GUSTAV: TO DO,
+* [x] Deploy your model in GCP using either Functions or Run as the backend (M23)
+\\ GUSTAV: done but could be refined.
 * [ ] Write API tests for your application and setup continues integration for these (M24)
 \\ MICKAEL: TO DO, after FastAPI
 * [ ] Load test your application (M24)
 \\ MICKAEL: TO DO, after FastAPI
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
 \\ will see, depends on workload
-* [ ] Create a frontend for your API (M26)
+* [x]Create a frontend for your API (M26)
 \\ BALAZS: TO DO
 
 ### Week 3
@@ -119,6 +117,7 @@ will check the repositories and the code to verify your answers.
 * [ ] Instrument your API with a couple of system metrics (M28)
 * [ ] Setup cloud monitoring of your instrumented application (M28)
 * [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
+\\ Gustav: TODO
 * [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 * [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
 * [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
