@@ -1,12 +1,18 @@
 import torch
+import tempfile
+import os
+import numpy 
+from pathlib import Path
 from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import JSONResponse, FileResponse, StreamingResponse
 from http import HTTPStatus
 from contextlib import asynccontextmanager
 from typing import Optional
+from io import BytesIO
+from PIL import Image
 
-from pixel_art_diffusion.generate_sample import generate_samples
-
+from pixel_art_diffusion.cloud_function import load_model_from_cloud
+from pixel_art_diffusion.visualize import visualize_samples
 
 
 """
@@ -21,10 +27,27 @@ To run the API file: uvicorn pixel_art_diffusion.api:app --reload --port 8000
 
 """
 
+# Global variable to store the loaded model
+model = None
+path = Path(__file__).parent.parent.parent
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    ### Loads model on API startup ###
+    global model
+    try:
+        model = load_model_from_cloud()
+        print("Model from cloud is successfully loaded.")
+        yield
+    except Exception as e:
+        print("Failed to load model from cloud.")
+        raise RuntimeError(f"Startup (lifespan) failed: {e}")
+    
 app = FastAPI(
     title="Pixel Art Diffusion API",
     description="API for generating pixel art using diffusion models",
     version="1.0.0",
+    lifespan=lifespan
 )
 
 
@@ -34,27 +57,30 @@ async def root():
     return {
         "message": HTTPStatus.OK.phrase,
         "status-code": HTTPStatus.OK,
+        "model_status": "loaded" if model is not None else "not loaded"
     }
 
 @app.get("/model_info")
 async def get_model_info():
     ### Get information about the model ###
+    if model is None:
+        raise HTTPException(status_code=503, detail="Model not loaded")
     return {
-        "model_name": "pixel_art_diffusion",
+        "model_name": "Pixel Art Diffusion",
         "status": "loaded",
-        "version": "1.0.0"
+        "device": "CPU",
     }
 
 @app.post("/generate")
-async def generate_images(num_samples: Optional[int] = 32):
+async def generate_images(num_samples: Optional[int] = 16):
     ### Generate pixel art images using the generate_sample.py ###
+    if model is None:
+        raise HTTPException(status_code=503, detail="Model is not loaded.")
     try:
-        generate_samples(num_samples=num_samples)
-
-        return FileResponse(
-            media_type="image/png",
-            filename="generated_samples.png"
-        )
+        samples = model.generate_samples(num_samples=num_samples)
+        buffer = BytesIO() # Save the image to an in-memory buffer
+        visualize_samples(samples, save_path=None)
+        return StreamingResponse(buffer, media_type="image/png") # Return the image as a streaming response
     except Exception as e:
         raise HTTPException(
             status_code=500,
