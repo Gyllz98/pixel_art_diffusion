@@ -9,8 +9,8 @@ from tqdm import tqdm
 from typing import Annotated, List
 from pathlib import Path
 from omegaconf import DictConfig
-from src.pixel_art_diffusion.data import PixelArtDataset
-from src.pixel_art_diffusion.model import PixelArtDiffusion # updated it to "src."
+from pixel_art_diffusion.data import PixelArtDataset
+from pixel_art_diffusion.model import PixelArtDiffusion # updated it to "src."
 from loguru import logger
 
 train_app = typer.Typer()
@@ -139,13 +139,13 @@ def train_model_hydra(cfg: DictConfig) -> None:
             )
 
         # Save checkpoint every 10 epochs
-        if epoch % 10 == 0:
+        if epoch % 50 == 0:
             checkpoint_path = models_dir / f"{run_name}-checkpoint-epoch-{epoch}.pt"
             model.save_checkpoint(str(checkpoint_path))
             print(f"Saved checkpoint to {checkpoint_path}")
 
-            if cfg.wandb.enabled:
-                wandb.save(str(checkpoint_path))
+            #if cfg.wandb.enabled:
+                #wandb.save(str(checkpoint_path))
 
     logger.success("Training completed successfully!")
     # Save final checkpoint
@@ -154,7 +154,7 @@ def train_model_hydra(cfg: DictConfig) -> None:
     print(f"Saved final checkpoint to {final_checkpoint_path}")
 
     if cfg.wandb.enabled:
-        wandb.save(str(final_checkpoint_path))
+        # wandb.save(str(final_checkpoint_path), base_path=str(models_dir))
         wandb.finish()
 
 
