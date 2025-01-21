@@ -68,23 +68,22 @@ will check the repositories and the code to verify your answers.
 \\ Balazs: Created 2 experiment file, have to fill out based on training loop
 * [x] Used Hydra to load the configurations and manage your hyperparameters (M11)
 \\ Need to use hydra for importing
-* [ ] Use profiling to optimize your code (M12)
+* [x] Use profiling to optimize your code (M12)
 \\ Balazs: Need files first for profiling and checking performance.
 * [x] Use logging to log important events in your code (M14)
 \\ Gustav: Need it in the files, to be done
 * [x] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
 \\ Gustav: need to add the model as an artifact, then do model registry
 * [ ] Consider running a hyperparameter optimization sweep (M14)
-\\ Gustav: still have to modify stuff in it, but created sweep.yaml in configs/
+\\ if enough resources
 * [ ] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
-\\ still have to do just after model.
 
 ### Week 2
 
 * [x] Write unit tests related to the data part of your code (M16)
 \\ Mickael: test_data.py is almost done
 * [ ] Write unit tests related to model construction and or model training (M16)
-\\ Mickael: Unit test to model is complete. Working on model training.
+\\ Mickael: Working on model training after API.
 * [x] Calculate the code coverage (M16)
 \\ Mickael: TODO
 * [x] Get some continuous integration running on the GitHub repository (M17)
@@ -93,31 +92,32 @@ will check the repositories and the code to verify your answers.
 * [x] Add pre-commit hooks to your version control setup (M18)
 * [x] Add a continues workflow that triggers when data changes (M19)
 
-* [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
-\\ TO DO
+* [x] Add a continues workflow that triggers when changes to the model registry is made (M19)
 * [x] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
-* [ ] Create a trigger workflow for automatically building your docker images (M21)
-\\ BALAZS:
-* [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
-\\ GUSTAV: TO DO
-* [ ] Create a FastAPI application that can do inference using your model (M22)
-\\ MICKAEL: TO DO
-* [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
-\\ GUSTAV: TO DO
+* [x] Create a trigger workflow for automatically building your docker images (M21)
+* [x] Get your model training in GCP using either the Engine or Vertex AI (M21)
+* [x] Create a FastAPI application that can do inference using your model (M22)
+\\ MICKAEL: TO DO, call model functions
+* [x] Deploy your model in GCP using either Functions or Run as the backend (M23)
+\\ GUSTAV: done but could be refined.
 * [ ] Write API tests for your application and setup continues integration for these (M24)
-\\ MICKAEL: TO DO
+\\ MICKAEL: TO DO, after FastAPI
 * [ ] Load test your application (M24)
-\\ MICKAEL: TO DO
+\\ MICKAEL: TO DO, after FastAPI
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
-* [ ] Create a frontend for your API (M26)
+\\ will see, depends on workload
+* [x]Create a frontend for your API (M26)
+\\ BALAZS: TO DO
 
 ### Week 3
 
 * [ ] Check how robust your model is towards data drifting (M27)
+\\ Balazs: next, after frontend
 * [ ] Deploy to the cloud a drift detection API (M27)
 * [ ] Instrument your API with a couple of system metrics (M28)
 * [ ] Setup cloud monitoring of your instrumented application (M28)
 * [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
+\\ Gustav: TODO
 * [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 * [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
 * [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
