@@ -68,7 +68,7 @@ will check the repositories and the code to verify your answers.
 \\ Balazs: Created 2 experiment file, have to fill out based on training loop
 * [x] Used Hydra to load the configurations and manage your hyperparameters (M11)
 \\ Need to use hydra for importing
-* [ ] Use profiling to optimize your code (M12)
+* [x] Use profiling to optimize your code (M12)
 \\ Balazs: Need files first for profiling and checking performance.
 * [x] Use logging to log important events in your code (M14)
 \\ Gustav: Need it in the files, to be done
@@ -97,23 +97,24 @@ will check the repositories and the code to verify your answers.
 * [x] Create a trigger workflow for automatically building your docker images (M21)
 \\ GUSTAV:
 * [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
-\\ GUSTAV: TO DO
+\\ GUSTAV: TO DO, should be done today
 * [ ] Create a FastAPI application that can do inference using your model (M22)
-\\ MICKAEL: TO DO
+\\ MICKAEL: TO DO, call model functions
 * [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
-\\ GUSTAV: TO DO
+\\ GUSTAV: TO DO,
 * [ ] Write API tests for your application and setup continues integration for these (M24)
-\\ MICKAEL: TO DO
+\\ MICKAEL: TO DO, after FastAPI
 * [ ] Load test your application (M24)
-\\ MICKAEL: TO DO
+\\ MICKAEL: TO DO, after FastAPI
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
+\\ will see, depends on workload
 * [ ] Create a frontend for your API (M26)
 \\ BALAZS: TO DO
 
 ### Week 3
 
 * [ ] Check how robust your model is towards data drifting (M27)
-\\ Balazs: in time
+\\ Balazs: next, after frontend
 * [ ] Deploy to the cloud a drift detection API (M27)
 * [ ] Instrument your API with a couple of system metrics (M28)
 * [ ] Setup cloud monitoring of your instrumented application (M28)
