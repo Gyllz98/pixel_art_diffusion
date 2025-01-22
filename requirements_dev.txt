@@ -2,6 +2,8 @@
 types-requests
 types-Markdown
 types-invoke==2.0.0.10
+types-google-cloud-storage
+functions-framework-python[types]
 
 # testing
 coverage==7.6.10
