@@ -2,8 +2,6 @@
 types-requests
 types-Markdown
 types-invoke==2.0.0.10
-types-google-cloud-functions-v1
-types-google-cloud-storage
 functions-framework
 
 # testing
