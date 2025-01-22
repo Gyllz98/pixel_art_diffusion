@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
 from tests import _PATH_DATA_PROCESSED
-from pixel_art_diffusion.data import PixelArtDataset
+from src.pixel_art_diffusion.data import PixelArtDataset
 
 
 PATH = Path(_PATH_DATA_PROCESSED)
@@ -11,7 +11,12 @@ PATH = Path(_PATH_DATA_PROCESSED)
 pytestmark = pytest.mark.skipif(
     not (PATH / "labels.csv").exists(),
     reason="labels1.csv not found",
+pytestmark = pytest.mark.skipif(
+    not (PATH / "labels.csv").exists(),
+    reason="labels1.csv not found",
 )
+
+dataset = PixelArtDataset(PATH)  # Set up path + dataset
 
 dataset = PixelArtDataset(PATH)  # Set up path + dataset
 
@@ -24,9 +29,11 @@ def test_dataset_init():
     print(" Correctly initialized")
 
 
+
 def test_data_format():
     ### Are the first item from the dataset in the correct format? ###
     item = dataset[0]
+    assert isinstance(item, dict), "Dataset item should be a dictionary"
     assert isinstance(item, dict), "Dataset item should be a dictionary"
     assert "pixel_values" in item, "Item should contain pixel_values"
     assert "label" in item, "Item should contain label"
@@ -35,4 +42,4 @@ def test_data_format():
     label = item["label"]
     assert label.shape == (5,), f"Label should be one-hot encoded with 5 categories, got shape {label.shape}"
     assert label.sum() == 1, "One-hot encoded label should sum to 1"
-    print(" Correct dataset format.") 
+    print(" Correct dataset format.")
