@@ -35,3 +35,7 @@ line-length = 120
 
 [tool.coverage.run]
 omit = ["tests/*"]
+
+[tool.mypy]
+files = ["pixel_art_diffusion", "tests"]
+ignore_missing_imports = true
