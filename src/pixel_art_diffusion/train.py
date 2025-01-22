@@ -6,7 +6,7 @@ import hydra
 import os
 from diffusers.optimization import get_scheduler
 from tqdm import tqdm
-from typing import Annotated, List, Optional, Dict, Any, Union
+from typing import Annotated, List, Dict, Any, Union
 from typing_extensions import TypeAlias
 from pathlib import Path
 from omegaconf import DictConfig

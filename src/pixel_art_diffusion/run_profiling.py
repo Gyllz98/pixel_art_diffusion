@@ -1,5 +1,5 @@
 import typer
-from typing import List, Dict, Optional, Union, Any, Callable
+from typing import List, Dict, Optional, Union, Any
 from typing_extensions import TypeAlias
 import torch
 import torch.nn as nn

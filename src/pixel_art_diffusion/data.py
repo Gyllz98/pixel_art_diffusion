@@ -1,6 +1,6 @@
 from pathlib import Path
 import zipfile
-from typing import Dict, List, Optional, Tuple, Any
+from typing import Dict, List, Optional, Tuple
 import typer
 import numpy as np
 import torch
