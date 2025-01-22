@@ -1,5 +1,4 @@
 import pytest
-import torch
 from pathlib import Path
 from tests import _PATH_MODELS
 from src.pixel_art_diffusion.model import PixelArtDiffusion # Model
