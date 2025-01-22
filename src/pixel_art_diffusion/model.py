@@ -132,3 +132,48 @@ class PixelArtDiffusion:
         checkpoint = torch.load(path)
         self.model.load_state_dict(checkpoint['model_state_dict'])
         self.noise_scheduler = DDPMScheduler.from_config(checkpoint['scheduler_config'])
+
+class PixelArtDiffusion2(PixelArtDiffusion):
+    def __init__(
+        self,
+        image_size=16,
+        num_channels=3,
+        num_train_timesteps=500,
+        base_channels=128,
+    ):
+        self.image_size = image_size
+        self.num_channels = num_channels
+        
+        # Enhanced UNet configuration
+        self.model = UNet2DModel(
+            sample_size=image_size,
+            in_channels=num_channels,
+            out_channels=num_channels,
+            layers_per_block=3,  # More layers per block
+            block_out_channels=(base_channels, base_channels*2, base_channels*4),  # Progressive scaling
+            down_block_types=(
+                "DownBlock2D",
+                "AttnDownBlock2D",  # Added attention
+                "AttnDownBlock2D",  # Added attention
+            ),
+            up_block_types=(
+                "AttnUpBlock2D",  # Added attention
+                "AttnUpBlock2D",   # Added attention
+                "UpBlock2D",
+            ),
+            dropout=0.1,  # Added dropout for regularization
+        )
+        
+        # Enhanced noise scheduler
+        self.noise_scheduler = DDPMScheduler(
+            num_train_timesteps=num_train_timesteps,
+            beta_start=1e-4,
+            beta_end=0.02,
+            beta_schedule="scaled_linear",  # Better schedule
+            clip_sample=True,
+            prediction_type="epsilon",
+        )
+        
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        print(f"Using device: {self.device}")
+        self.model.to(self.device)

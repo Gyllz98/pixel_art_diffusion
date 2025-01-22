@@ -21,7 +21,7 @@ def get_models_dir():
     return Path(__file__).parent.parent.parent / "models"
 
 
-@hydra.main(version_base=None, config_path="../../configs", config_name="config")
+@hydra.main(version_base=None, config_path="../../configs", config_name="config2")
 def train_model_hydra(cfg: DictConfig) -> None:
     """
     Main training function with Hydra config
