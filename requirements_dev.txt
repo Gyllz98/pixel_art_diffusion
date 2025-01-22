@@ -2,7 +2,7 @@
 types-requests
 types-Markdown
 types-invoke==2.0.0.10
-types-google-cloud-storage
+types-google-cloud
 functions-framework
 google-cloud-functions-v1
 
