@@ -100,9 +100,9 @@ will check the repositories and the code to verify your answers.
 \\ MICKAEL: TO DO, call model functions
 * [x] Deploy your model in GCP using either Functions or Run as the backend (M23)
 \\ GUSTAV: done but could be refined.
-* [ ] Write API tests for your application and setup continues integration for these (M24)
+* [x] Write API tests for your application and setup continues integration for these (M24)
 \\ MICKAEL: TO DO, after FastAPI
-* [ ] Load test your application (M24)  
+* [x] Load test your application (M24)  
 \\ MICKAEL: TO DO, after FastAPI
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
 \\ will see, depends on workload
@@ -112,15 +112,15 @@ will check the repositories and the code to verify your answers.
 ### Week 3
 
 * [ ] Check how robust your model is towards data drifting (M27)
-\\ Balazs: next, after frontend - can set up, but will not show anything
+\\ Balazs: next, after frontend - can set up, but will not show anything - ON IT
 * [ ] Deploy to the cloud a drift detection API (M27)
 \\ BALAZS + GUSTAV: Basic version 
 * [ ] Instrument your API with a couple of system metrics (M28)
 \\ MICKAEL: TODO - Application stats, track usage
 * [ ] Setup cloud monitoring of your instrumented application (M28)
-\\ BIG maybe...
+\\ GUSTAV + MICKAEL: TODO
 * [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
-\\ Gustav: TODO - Requires the metrics
+\\ GUSTAV: TODO - Requires the metrics
 * [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 \\ Redundant - load time is 10sec. 
 * [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
