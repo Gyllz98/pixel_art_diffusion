@@ -1,7 +1,11 @@
+# type stubs
+types-requests
+types-Markdown
+types-invoke==2.0.0.10
 
 # testing
-
 coverage==7.6.10
+
 # commands
 invoke==2.2.0
 
