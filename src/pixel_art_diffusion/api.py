@@ -10,9 +10,11 @@ from contextlib import asynccontextmanager
 from typing import Optional
 from io import BytesIO
 from PIL import Image
+from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
 
 from pixel_art_diffusion.cloud_function import load_model_from_cloud
 from pixel_art_diffusion.visualize import visualize_samples
+
 
 
 """
@@ -49,6 +51,7 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan
 )
+app.mount("/metrics", make_asgi_app()) # Monitoring
 
 
 @app.get("/")
