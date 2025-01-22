@@ -30,10 +30,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install -U pip setuptools wheel
-          pip install -e .
+          pip install -e .  # Install your package
           pip install -r requirements_dev.txt
-          mypy --install-types --non-interactive
-          pip list
+
+      - name: Install missing type stubs
+        run: |
+          # Manually install any required types for missing stubs
+          pip install types-requests types-setuptools
+
+      - name: Run mypy
+        run: mypy .
 
       - name: Run tests & coverage
         run: |
