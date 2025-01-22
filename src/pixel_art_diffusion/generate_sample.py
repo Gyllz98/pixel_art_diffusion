@@ -1,3 +1,4 @@
+# type: ignore
 import typer
 from typing import Annotated, Dict, List, Optional, Callable, Any, Union
 from pathlib import Path

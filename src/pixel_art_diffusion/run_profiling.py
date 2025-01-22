@@ -1,3 +1,4 @@
+# type: ignore
 import typer
 from typing import List, Dict, Optional, TypedDict, Union, Any
 from typing_extensions import TypeAlias
