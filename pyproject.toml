@@ -39,3 +39,4 @@ omit = ["tests/*"]
 [tool.mypy]
 files = ["pixel_art_diffusion", "tests"]
 ignore_missing_imports = true
+install_types = false
