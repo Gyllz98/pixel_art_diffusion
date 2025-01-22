@@ -158,7 +158,7 @@ class PixelArtDataset(Dataset):
             image = self.transform(image)
         
         return {
-            "pixel_values": image,
+            "pixel_values": torch.as_tensor(image),
             "label": label
         }
 
