@@ -1,34 +1,41 @@
 import matplotlib.pyplot as plt
 from torchvision.utils import make_grid
+import numpy as np
 
-def visualize_samples(samples, save_path=None):
+
+def visualize_samples(samples, save_path=None, api=False):
     """
     Visualize and optionally save generated samples in a grid
-    
+
     Args:
         samples: Tensor of shape (batch_size, channels, height, width)
         save_path: Optional path to save the visualization
+        api: Boolean to determine if function is called from API
     """
-    
     # Ensure the samples are in CPU and correct range
     samples = samples.cpu()
-    
+
     # Create a grid of images
-    grid = make_grid(samples, nrow=4, normalize=True, value_range=(-1, 1))
-    
+    grid = make_grid(samples, nrow=8, normalize=True, value_range=(-1, 1))
+
     # Convert to numpy and transpose to correct format (H,W,C)
     grid = grid.permute(1, 2, 0).numpy()
-    
+
     # Invert the images (unnegative)
     grid = 1.0 - grid
-    
-    # Display using matplotlib
-    plt.figure(figsize=(10, 10))
-    plt.imshow(grid)
-    plt.axis('off')
-    
-    if save_path:
-        plt.savefig(save_path, bbox_inches='tight', pad_inches=0)
-        print(f"Saved visualization to {save_path}")
-    
-    plt.show()
+
+    # Convert to uint8 format (required for PIL)
+    grid = (grid * 255).astype(np.uint8)
+
+    if not api:
+        plt.figure(figsize=(10, 10))
+        plt.imshow(grid)
+        plt.axis("off")
+
+        if save_path:
+            plt.savefig(save_path, bbox_inches="tight", pad_inches=0)
+            print(f"Saved visualization to {save_path}")
+
+        plt.show()
+    else:
+        return grid

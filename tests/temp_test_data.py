@@ -32,4 +32,4 @@ def test_data_format():
     label = item["label"]
     assert label.shape == (5,), f"Label should be one-hot encoded with 5 categories, got shape {label.shape}"
     assert label.sum() == 1, "One-hot encoded label should sum to 1"
-    print(" Correct dataset format.") 
+    print(" Correct dataset format.")
