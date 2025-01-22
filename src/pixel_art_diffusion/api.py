@@ -33,25 +33,37 @@ To run the API file: uvicorn pixel_art_diffusion.api:app --reload --port 8000
         http://localhost:8000/redoc -  provides automatic API documentation using the ReDoc (Reference Documentation) format
         http://localhost:8000/predict - Make predictions by sending POST requests
         http://localhost:8000/openapi.json - JSON file of overall specifications of your program
+        http://
 
 """
 
 # Initialize Prometheus metrics
 GENERATE_REQUESTS = Counter(
     'pixel_art_generate_requests_total',
-    'Total number of image generation requests'
+    'Total number of image generation requests:'
 )
 
 MEMORY_USAGE = Gauge(
     'pixel_art_memory_usage_bytes',
-    'Memory usage of the application'
+    'Memory usage of the application:'
+)
+
+CURRENT_NUM_SAMPLES = Gauge(
+    'pixel_art_current_num_samples',
+    'Number of samples generated in the last request:'
+)
+
+CURRENT_GENERATION_TIME = Gauge(
+    'pixel_art_current_generation_time_seconds',
+    'Time taken to generate the last batch of images (seconds):'
 )
 
 GENERATION_TIME = Histogram(
     'pixel_art_generation_time_seconds',
-    'Time taken to generate images',
-    buckets=[0.1, 0.5, 1.0, 2.0, 5.0, 10.0, float("inf")]  # Buckets in seconds
+    'Time taken to generate images:',
+    buckets=[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, float("inf")]  # Buckets in seconds
 )
+
 
 # Function to update memory usage
 def update_memory_usage():
@@ -121,9 +133,11 @@ async def generate_images(num_samples: Optional[int] = 4) -> StreamingResponse:
         logger.info(f"Generating {num_samples} samples...")
 
         # Start the metrics
-        GENERATE_REQUESTS.inc()
-        update_memory_usage()
-        start_time = time.time()
+        GENERATE_REQUESTS.inc()                         # Update image generation calls
+        update_memory_usage()                           # Start memory usage
+        start_time = time.time()                        # Start time
+
+        logger.info(f"Generating {num_samples} samples...")
 
         samples = model.generate_samples(num_samples=num_samples)
         logger.info(f"Samples generated. Shape: {samples.shape if samples is not None else None}")
@@ -136,9 +150,13 @@ async def generate_images(num_samples: Optional[int] = 4) -> StreamingResponse:
         grid_array = visualize_samples(samples, api=True)
         logger.info(f"Grid array shape: {grid_array.shape}")
         # Record the generation time + Update memory usage after generation
-        generation_time = time.time() - start_time
-        GENERATION_TIME.observe(generation_time)
-        update_memory_usage()
+        generation_time = time.time() - start_time      # Calculate generation time
+        GENERATION_TIME.observe(generation_time)        # Update histogram
+        CURRENT_GENERATION_TIME.set(generation_time)    # Show generation time for current sample(s)
+        CURRENT_NUM_SAMPLES.set(num_samples)            # Number of samples for current generation
+        update_memory_usage()                           # Update memory usage
+
+        logger.info(f"Grid array shape: {grid_array.shape}")
 
         # Convert to PIL Image and then to bytes
         image = Image.fromarray(grid_array)
