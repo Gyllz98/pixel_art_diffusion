@@ -18,7 +18,15 @@ from pixel_art_diffusion.data import PixelArtDataset
 
 # Type aliases
 ProfilerActivities: TypeAlias = List[ProfilerActivity]
-ProfilingStats: TypeAlias = Dict[str, Union[str, Dict[str, Union[int, float, Dict[str, str]]]]]
+PhaseStats = Dict[str, Union[
+    int,  # for steps
+    float,  # for times
+    Dict[str, str]  # for memory_stats
+]]
+ProfilingStats: TypeAlias = Dict[str, Union[
+    str,  # for device
+    PhaseStats  # for training and inference stats
+]]
 BatchType: TypeAlias = Dict[str, torch.Tensor]
 
 def create_profiler(
@@ -81,9 +89,10 @@ def profile_pipeline(
     # Setup directories
     timestamp: int = int(time.time())
     writer: Optional[SummaryWriter] = None
+    run_dir: Optional[Path] = None
     
     if output_dir:
-        run_dir: Path = output_dir / f"profile_run_{timestamp}"
+        run_dir = output_dir / f"profile_run_{timestamp}"
         train_dir: Path = run_dir / "train"
         inference_dir: Path = run_dir / "inference"
         for dir in [train_dir, inference_dir]:
@@ -91,8 +100,6 @@ def profile_pipeline(
 
         # Add TensorBoard writer for additional metrics
         writer = SummaryWriter(str(run_dir))
-    else:
-        run_dir = None
 
     # Configure profiler activities
     activities: ProfilerActivities = [ProfilerActivity.CPU]
@@ -142,7 +149,7 @@ def profile_pipeline(
             if batch_idx >= num_train_steps:
                 break
 
-            start_time: float = time.perf_counter()
+            train_start_time: float = time.perf_counter()
 
             clean_images: torch.Tensor = batch["pixel_values"].to(device)
             noise: torch.Tensor = torch.randn_like(clean_images)
@@ -166,8 +173,8 @@ def profile_pipeline(
             if device == "cuda":
                 torch.cuda.synchronize()
 
-            end_time: float = time.perf_counter()
-            train_times.append(end_time - start_time)
+            train_end_time: float = time.perf_counter()
+            train_times.append(train_end_time - train_start_time)
 
             if writer:
                 writer.add_scalar("Train/Loss", loss.item(), batch_idx)
@@ -185,14 +192,14 @@ def profile_pipeline(
 
         with torch.no_grad():
             for i in tqdm(range(num_inference_steps)):
-                start_time: float = time.perf_counter()
+                inference_start_time: float = time.perf_counter()
                 model.generate_samples(1)
 
                 if device == "cuda":
                     torch.cuda.synchronize()
 
-                end_time: float = time.perf_counter()
-                inference_times.append(end_time - start_time)
+                inference_end_time: float = time.perf_counter()
+                inference_times.append(inference_end_time - inference_start_time)
 
                 if writer:
                     writer.add_scalar("Inference/Step_Time", inference_times[-1], i)
@@ -200,40 +207,46 @@ def profile_pipeline(
                 prof.step()
 
     # Compile detailed results
+    training_stats: PhaseStats = {
+        "steps": num_train_steps,
+        "avg_step_time": sum(train_times) / len(train_times) if train_times else 0,
+        "min_step_time": min(train_times) if train_times else 0,
+        "max_step_time": max(train_times) if train_times else 0,
+        "memory_stats": {
+            "cpu_memory": str(train_prof.key_averages().table(
+                sort_by="self_cpu_memory_usage",
+                row_limit=10
+            ))
+        }
+    }
+
+    inference_stats: PhaseStats = {
+        "steps": num_inference_steps,
+        "avg_step_time": sum(inference_times) / len(inference_times) if inference_times else 0,
+        "min_step_time": min(inference_times) if inference_times else 0,
+        "max_step_time": max(inference_times) if inference_times else 0,
+        "memory_stats": {
+            "cpu_memory": str(inference_prof.key_averages().table(
+                sort_by="self_cpu_memory_usage",
+                row_limit=10
+            ))
+        }
+    }
+
     profiling_results.update({
-        "training": {
-            "steps": num_train_steps,
-            "avg_step_time": sum(train_times) / len(train_times) if train_times else 0,
-            "min_step_time": min(train_times) if train_times else 0,
-            "max_step_time": max(train_times) if train_times else 0,
-            "memory_stats": {
-                "cpu_memory": str(train_prof.key_averages().table(
-                    sort_by="self_cpu_memory_usage",
-                    row_limit=10
-                ))
-            },
-        },
-        "inference": {
-            "steps": num_inference_steps,
-            "avg_step_time": sum(inference_times) / len(inference_times) if inference_times else 0,
-            "min_step_time": min(inference_times) if inference_times else 0,
-            "max_step_time": max(inference_times) if inference_times else 0,
-            "memory_stats": {
-                "cpu_memory": str(inference_prof.key_averages().table(
-                    sort_by="self_cpu_memory_usage",
-                    row_limit=10
-                ))
-            },
-        },
+        "training": training_stats,
+        "inference": inference_stats,
     })
 
     if device == "cuda":
-        profiling_results["training"]["memory_stats"]["cuda_memory"] = str(
-            train_prof.key_averages().table(sort_by="self_cuda_memory_usage", row_limit=10)
-        )
-        profiling_results["inference"]["memory_stats"]["cuda_memory"] = str(
-            inference_prof.key_averages().table(sort_by="self_cuda_memory_usage", row_limit=10)
-        )
+        if isinstance(profiling_results["training"], dict):
+            profiling_results["training"]["memory_stats"]["cuda_memory"] = str(
+                train_prof.key_averages().table(sort_by="self_cuda_memory_usage", row_limit=10)
+            )
+        if isinstance(profiling_results["inference"], dict):
+            profiling_results["inference"]["memory_stats"]["cuda_memory"] = str(
+                inference_prof.key_averages().table(sort_by="self_cuda_memory_usage", row_limit=10)
+            )
 
     # Save results
     if run_dir:
@@ -265,20 +278,26 @@ def main(cfg: DictConfig) -> None:
 
         # Print summary
         logger.info("\nProfiling Summary:")
-        logger.info(f"Device: {stats['device']}")
+        device = stats.get("device", "unknown")
+        logger.info(f"Device: {device}")
 
         for phase in ["training", "inference"]:
-            logger.info(f"\n{phase.capitalize()} Profile:")
-            logger.info(f"Steps: {stats[phase]['steps']}")
-            logger.info(f"Average step time: {stats[phase]['avg_step_time']:.4f}s")
-            logger.info(f"Min step time: {stats[phase]['min_step_time']:.4f}s")
-            logger.info(f"Max step time: {stats[phase]['max_step_time']:.4f}s")
-            logger.info(f"\nTop CPU Memory Usage ({phase.capitalize()}):")
-            logger.info(stats[phase]["memory_stats"]["cpu_memory"])
-
-            if "cuda_memory" in stats[phase]["memory_stats"]:
-                logger.info(f"\nTop CUDA Memory Usage ({phase.capitalize()}):")
-                logger.info(stats[phase]["memory_stats"]["cuda_memory"])
+            phase_stats = stats.get(phase, {})
+            if isinstance(phase_stats, dict):
+                logger.info(f"\n{phase.capitalize()} Profile:")
+                logger.info(f"Steps: {phase_stats.get('steps', 0)}")
+                logger.info(f"Average step time: {phase_stats.get('avg_step_time', 0):.4f}s")
+                logger.info(f"Min step time: {phase_stats.get('min_step_time', 0):.4f}s")
+                logger.info(f"Max step time: {phase_stats.get('max_step_time', 0):.4f}s")
+                
+                memory_stats = phase_stats.get("memory_stats", {})
+                if isinstance(memory_stats, dict):
+                    logger.info(f"\nTop CPU Memory Usage ({phase.capitalize()}):")
+                    logger.info(memory_stats.get("cpu_memory", ""))
+                    
+                    if "cuda_memory" in memory_stats:
+                        logger.info(f"\nTop CUDA Memory Usage ({phase.capitalize()}):")
+                        logger.info(memory_stats.get("cuda_memory", ""))
 
     except Exception as e:
         logger.error(f"Error during profiling: {str(e)}")
