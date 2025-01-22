@@ -140,6 +140,7 @@ class PixelArtDiffusion2(PixelArtDiffusion):
         num_channels=3,
         num_train_timesteps=500,
         base_channels=128,
+        device="cpu",
     ):
         self.image_size = image_size
         self.num_channels = num_channels
@@ -174,6 +175,5 @@ class PixelArtDiffusion2(PixelArtDiffusion):
             prediction_type="epsilon",
         )
         
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        print(f"Using device: {self.device}")
+        self.device = device
         self.model.to(self.device)

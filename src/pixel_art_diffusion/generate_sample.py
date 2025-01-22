@@ -1,7 +1,7 @@
 import typer
 from typing import Annotated
 from pathlib import Path
-from pixel_art_diffusion.model import PixelArtDiffusion
+from pixel_art_diffusion.model import PixelArtDiffusion2
 from pixel_art_diffusion.visualize import visualize_samples
 import torch
 from diffusers import DDPMScheduler
@@ -90,7 +90,7 @@ def generate_samples(
                 print("Using CUDA for generation")
 
         # Initialize model with correct device
-        model = PixelArtDiffusion(device=device.type)
+        model = PixelArtDiffusion2(device=device.type)
 
         # Load checkpoint with explicit CPU mapping if needed
         print(f"Loading checkpoint from {checkpoint_path}")
