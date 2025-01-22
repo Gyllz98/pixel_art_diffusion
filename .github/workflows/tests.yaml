@@ -35,7 +35,11 @@ jobs:
           pip list
 
 
-      - name: Run tests & coverage
+      - name: Run tests
+        run: pytest tests/
+
+      - name: Generate coverage report
+        continue-on-error: true  # This allows the workflow to continue even if coverage fails
         run: |
           coverage run -m pytest tests/
           coverage report -m
