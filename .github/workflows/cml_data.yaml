@@ -54,4 +54,4 @@ jobs:
 
       - name: Process data
         run: |
-          python -m src.pixel_art_diffusion.data
+          python -m pixel_art_diffusion.data

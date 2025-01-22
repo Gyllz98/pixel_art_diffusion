@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
 from tests import _PATH_DATA_PROCESSED
-from src.pixel_art_diffusion.data import PixelArtDataset
+from pixel_art_diffusion.data import PixelArtDataset
 
 
 PATH = Path(_PATH_DATA_PROCESSED)
