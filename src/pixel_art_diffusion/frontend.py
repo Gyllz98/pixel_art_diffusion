@@ -13,7 +13,7 @@ def generate_image(num_samples: int = 4):
         response = requests.post(
             generate_url,
             params={"num_samples": num_samples},  # Add num_samples as query parameter
-            timeout=60,  # Longer timeout since generation might take time
+            timeout=300,  # Longer timeout since generation might take time
         )
         if response.status_code == 200:
             # Convert the response bytes to an image
@@ -36,7 +36,7 @@ def main() -> None:
 
     # Add number of samples input
     num_samples = st.number_input(
-        "Number of Samples", min_value=1, max_value=16, value=4, help="Number of images to generate in the grid"
+        "Number of Samples", min_value=1, max_value=64, value=64, help="Number of images to generate in the grid"
     )
 
     # Generate button
