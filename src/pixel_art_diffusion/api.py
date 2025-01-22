@@ -1,3 +1,9 @@
+import torch
+import tempfile
+import os
+import numpy 
+import psutil
+import time
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
@@ -9,16 +15,52 @@ from PIL import Image
 import logging
 import traceback
 import uvicorn
+from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
+
 
 from pixel_art_diffusion.cloud_function import load_model_from_cloud
 from pixel_art_diffusion.visualize import visualize_samples
+from pixel_art_diffusion.model import PixelArtDiffusion 
 
-# Add type for the model
-from pixel_art_diffusion.model import PixelArtDiffusion  # Import your model class
 
-# Global variable with type annotation
-model: Optional[PixelArtDiffusion] = None
-path: Path = Path(__file__).parent.parent.parent
+
+"""
+FastAPI for our model. 
+To run the API file: uvicorn pixel_art_diffusion.api:app --reload --port 8000
+    Launches a server: http://localhost:8000/
+    Checkout these as well:
+        http://localhost:8000/docs - Use the interactive docs 
+        http://localhost:8000/redoc -  provides automatic API documentation using the ReDoc (Reference Documentation) format
+        http://localhost:8000/predict - Make predictions by sending POST requests
+        http://localhost:8000/openapi.json - JSON file of overall specifications of your program
+
+"""
+
+# Initialize Prometheus metrics
+GENERATE_REQUESTS = Counter(
+    'pixel_art_generate_requests_total',
+    'Total number of image generation requests'
+)
+
+MEMORY_USAGE = Gauge(
+    'pixel_art_memory_usage_bytes',
+    'Memory usage of the application'
+)
+
+GENERATION_TIME = Histogram(
+    'pixel_art_generation_time_seconds',
+    'Time taken to generate images',
+    buckets=[0.1, 0.5, 1.0, 2.0, 5.0, 10.0, float("inf")]  # Buckets in seconds
+)
+
+# Function to update memory usage
+def update_memory_usage():
+    process = psutil.Process(os.getpid())
+    MEMORY_USAGE.set(process.memory_info().rss)
+
+# Global variable to store the loaded model
+model = None
+path = Path(__file__).parent.parent.parent
 
 
 @asynccontextmanager
@@ -41,6 +83,7 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+app.mount("/metrics", make_asgi_app())
 
 
 @app.get("/")
@@ -77,6 +120,11 @@ async def generate_images(num_samples: Optional[int] = 4) -> StreamingResponse:
     try:
         logger.info(f"Generating {num_samples} samples...")
 
+        # Start the metrics
+        GENERATE_REQUESTS.inc()
+        update_memory_usage()
+        start_time = time.time()
+
         samples = model.generate_samples(num_samples=num_samples)
         logger.info(f"Samples generated. Shape: {samples.shape if samples is not None else None}")
 
@@ -87,6 +135,10 @@ async def generate_images(num_samples: Optional[int] = 4) -> StreamingResponse:
         logger.info("Visualizing samples...")
         grid_array = visualize_samples(samples, api=True)
         logger.info(f"Grid array shape: {grid_array.shape}")
+        # Record the generation time + Update memory usage after generation
+        generation_time = time.time() - start_time
+        GENERATION_TIME.observe(generation_time)
+        update_memory_usage()
 
         # Convert to PIL Image and then to bytes
         image = Image.fromarray(grid_array)
