@@ -16,7 +16,7 @@ def visualize_samples(samples, save_path=None, api=False):
     samples = samples.cpu()
 
     # Create a grid of images
-    grid = make_grid(samples, nrow=4, normalize=True, value_range=(-1, 1))
+    grid = make_grid(samples, nrow=8, normalize=True, value_range=(-1, 1))
 
     # Convert to numpy and transpose to correct format (H,W,C)
     grid = grid.permute(1, 2, 0).numpy()
