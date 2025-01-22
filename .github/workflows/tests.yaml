@@ -32,8 +32,8 @@ jobs:
           python -m pip install -U pip setuptools wheel
           pip install -e .
           pip install -r requirements_dev.txt
+          mypy --install-types --non-interactive
           pip list
-
 
       - name: Run tests & coverage
         run: |
