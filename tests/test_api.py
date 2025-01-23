@@ -17,7 +17,7 @@ def test_read_root():
             "status-code": 200,
             "model_status": "loaded"
         }
-        print("\n API has started as intended.")
+        print(" API has started as intended.")
 
 
 def test_load():
@@ -26,7 +26,7 @@ def test_load():
         for _ in range(10):  # Send 10 consecutive requests
             response = client.get("/")
             assert response.status_code == 200
-    print("\n API load test completed.")
+    print(" API load test completed.")
 
 def test_generate_default():
     ## Test image generation with default parameters ### 
@@ -37,4 +37,4 @@ def test_generate_default():
         # Verify we got actual image data
         image_data = response.content
         assert len(image_data) > 0
-    print("\n API generated image correctly.")
+    print(" API generated image correctly.")
