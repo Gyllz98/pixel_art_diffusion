@@ -115,7 +115,7 @@ async def get_stored_samples(limit: Optional[int] = 10):
 
 
 @app.post("/generate")
-async def generate_images(background_tasks: BackgroundTasks, num_samples: Optional[float] = 4) -> StreamingResponse:
+async def generate_images(background_tasks: BackgroundTasks, num_samples: float = 4) -> StreamingResponse:
     if model is None:
         logger.error("Model not loaded")
         raise HTTPException(status_code=503, detail="Model is not loaded.")
