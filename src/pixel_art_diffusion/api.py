@@ -161,6 +161,7 @@ async def get_drift_analysis():
     """Endpoint to perform and return drift analysis"""
     try:
         logger.info("Starting drift analysis")
+        logger.info("Extra data...")
 
         reports_dir = Path("drift_reports")
         reports_dir.mkdir(exist_ok=True)
@@ -194,6 +195,7 @@ def load_or_create_reference_data():
         with open(REFERENCE_DATA_PATH, "rb") as f:
             return pickle.load(f)
 
+    logger.info("Getting data")
     reference_data = create_image_dataframe("data/processed/images/images")
     with open(REFERENCE_DATA_PATH, "wb") as f:
         pickle.dump(reference_data, f)
