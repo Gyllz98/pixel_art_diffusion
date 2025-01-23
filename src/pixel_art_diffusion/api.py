@@ -4,6 +4,12 @@ import time
 import logging
 import traceback
 import uvicorn
+import os
+import psutil
+import time
+import logging
+import traceback
+import uvicorn
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
@@ -12,24 +18,18 @@ from contextlib import asynccontextmanager
 from typing import Optional, Dict, Any, AsyncGenerator
 from io import BytesIO
 from PIL import Image
-import logging
-import traceback
-import uvicorn
 from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
-
 
 from pixel_art_diffusion.cloud_function import load_model_from_cloud
 from pixel_art_diffusion.visualize import visualize_samples
-from pixel_art_diffusion.model import PixelArtDiffusion 
-
 
 
 """
-FastAPI for our model. 
+FastAPI for our model.
 To run the API file: uvicorn pixel_art_diffusion.api:app --reload --port 8000
     Launches a server: http://localhost:8000/
     Checkout these as well:
-        http://localhost:8000/docs - Use the interactive docs 
+        http://localhost:8000/docs - Use the interactive docs
         http://localhost:8000/redoc -  provides automatic API documentation using the ReDoc (Reference Documentation) format
         http://localhost:8000/predict - Make predictions by sending POST requests
         http://localhost:8000/openapi.json - JSON file of overall specifications of your program
@@ -83,6 +83,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 app.mount("/metrics", make_asgi_app())
+app.mount("/metrics", make_asgi_app())
 
 
 @app.get("/")
@@ -117,8 +118,6 @@ async def generate_images(num_samples: Optional[int] = 4) -> StreamingResponse:
         raise HTTPException(status_code=503, detail="Model is not loaded.")
 
     try:
-        logger.info(f"Generating {num_samples} samples...")
-
         # Start the metrics
         GENERATE_REQUESTS.inc()  # Update image generation calls
         update_memory_usage()  # Start memory usage
@@ -127,6 +126,7 @@ async def generate_images(num_samples: Optional[int] = 4) -> StreamingResponse:
         logger.info(f"Generating {num_samples} samples...")
 
         samples = model.generate_samples(num_samples=num_samples)
+
         logger.info(f"Samples generated. Shape: {samples.shape if samples is not None else None}")
 
         if samples is None:
@@ -135,7 +135,7 @@ async def generate_images(num_samples: Optional[int] = 4) -> StreamingResponse:
 
         logger.info("Visualizing samples...")
         grid_array = visualize_samples(samples, api=True)
-        logger.info(f"Grid array shape: {grid_array.shape}")
+
         # Record the generation time + Update memory usage after generation
         generation_time = time.time() - start_time  # Calculate generation time
         GENERATION_TIME.observe(generation_time)  # Update histogram
