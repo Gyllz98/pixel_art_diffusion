@@ -9,8 +9,7 @@ PATH = Path(_PATH_DATA_PROCESSED)
 # pytestmark = pytest.mark.skipif(not (PATH_RAW / "archive.zip.dvc").exists(), reason="archive.zip.dvc not found")
 pytestmark = pytest.mark.skipif(not (PATH / "labels.csv").exists(), reason="label.csv not found")
 
-
-dataset = PixelArtDataset()  # Set up path + dataset
+dataset = PixelArtDataset(Path(PATH))  # Set up path + dataset
 
 
 def test_dataset_init():
