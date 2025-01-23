@@ -19,8 +19,6 @@ from evidently.metric_preset import (
 from evidently.report import Report
 import pickle
 import uvicorn
-import hydra
-from omegaconf import DictConfig
 
 from pixel_art_diffusion.cloud_function import (
     load_model_from_cloud,
@@ -30,7 +28,6 @@ from pixel_art_diffusion.cloud_function import (
 )
 from pixel_art_diffusion.visualize import visualize_samples
 from pixel_art_diffusion.data_drift import create_generated_dataframe, create_image_dataframe
-from pixel_art_diffusion.data import extract
 
 # Global variables
 GENERATE_REQUESTS = Counter("pixel_art_generate_requests_total", "Total number of image generation requests")
@@ -158,13 +155,14 @@ async def generate_images(background_tasks: BackgroundTasks, num_samples: Option
         logger.error(f"Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")
 
+
 @app.get("/data_drift")
 async def get_drift_analysis():
     """Endpoint to perform and return drift analysis"""
     try:
         logger.info("Starting drift analysis")
         logger.info("Extra data...")
-        
+
         reports_dir = Path("drift_reports")
         reports_dir.mkdir(exist_ok=True)
 

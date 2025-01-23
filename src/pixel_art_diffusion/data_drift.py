@@ -14,6 +14,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 def create_image_dataframe(image_dir):
     """Convert directory of images to dataframe with pixel statistics"""
     image_path = Path(image_dir)
