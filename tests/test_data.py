@@ -43,11 +43,11 @@ def test_data_format():
     print("\nCorrect dataset format")
 
 
-if __name__ == "__main__":
-    print("Current working directory:", Path.cwd())
-    print("ROOT", PROJECT_ROOT)
-    print("_PATH_DATA_RAW:", PATH_RAW)
-    print("_PATH_DATA_PROCESSED:", PATH_PROC)
-    print("Resolved PATH_RAW:", PATH_RAW.resolve())
-    print("Resolved PATH_PROC:", PATH_PROC.resolve())
-    print("Does labels.csv exist?", (PATH_PROC / "labels.csv").exists())
+# if __name__ == "__main__":
+#     print("Current working directory:", Path.cwd())
+#     print("ROOT", PROJECT_ROOT)
+#     print("_PATH_DATA_RAW:", PATH_RAW)
+#     print("_PATH_DATA_PROCESSED:", PATH_PROC)
+#     print("Resolved PATH_RAW:", PATH_RAW.resolve())
+#     print("Resolved PATH_PROC:", PATH_PROC.resolve())
+#     print("Does labels.csv exist?", (PATH_PROC / "labels.csv").exists())
