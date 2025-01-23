@@ -10,7 +10,7 @@ PATH = Path(_PATH_DATA_PROCESSED)
 pytestmark = pytest.mark.skipif(not (PATH / "labels.csv").exists(), reason="label.csv not found")
 
 
-dataset = PixelArtDataset(PATH)  # Set up path + dataset
+dataset = PixelArtDataset()  # Set up path + dataset
 
 
 def test_dataset_init():
