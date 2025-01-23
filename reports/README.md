@@ -102,10 +102,9 @@ will check the repositories and the code to verify your answers.
 \\ GUSTAV: done but could be refined.
 * [x] Write API tests for your application and setup continues integration for these (M24)
 \\ MICKAEL: TO DO, after FastAPI
-* [x] Load test your application (M24)  
+* [x] Load test your application (M24)
 \\ MICKAEL: TO DO, after FastAPI
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
-\\ will see, depends on workload
 * [x] Create a frontend for your API (M26)
 \\ BALAZS: TO DO
 
@@ -114,28 +113,28 @@ will check the repositories and the code to verify your answers.
 * [ ] Check how robust your model is towards data drifting (M27)
 \\ Balazs: next, after frontend - can set up, but will not show anything - ON IT
 * [ ] Deploy to the cloud a drift detection API (M27)
-\\ BALAZS + GUSTAV: Basic version 
-* [ ] Instrument your API with a couple of system metrics (M28)
+\\ BALAZS + GUSTAV: Basic version
+* [x] Instrument your API with a couple of system metrics (M28)
 \\ MICKAEL: TODO - Application stats, track usage
 * [ ] Setup cloud monitoring of your instrumented application (M28)
-\\ GUSTAV + MICKAEL: TODO
+\\ Mickael + Gustav: TODO
 * [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
 \\ GUSTAV: TODO - Requires the metrics
 * [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
-\\ Redundant - load time is 10sec. 
-* [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
-\\ Might be interesting 
-* [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
-\\ We need more understanding of quantization. 
+\\ Redundant - load time is 10sec.
+* [x] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
+\\ Might be interesting
+* [x] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
+\\ We need more understanding of quantization.
 
 ### Extra
 
 * [ ] Write some documentation for your application (M32)
 * [ ] Publish the documentation to GitHub Pages (M32)
-* [ ] Revisit your initial project description. Did the project turn out as you wanted?
+* [x] Revisit your initial project description. Did the project turn out as you wanted?
 * [ ] Create an architectural diagram over your MLOps pipeline
-* [ ] Make sure all group members have an understanding about all parts of the project
-* [ ] Uploaded all your code to GitHub
+* [x] Make sure all group members have an understanding about all parts of the project
+* [x] Uploaded all your code to GitHub
 
 ## Group information
 
