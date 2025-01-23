@@ -2,7 +2,7 @@ import pytest
 from pathlib import Path
 from pixel_art_diffusion.data import PixelArtDataset
 
-PROJECT_ROOT = Path(__file__).parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PATH_RAW = PROJECT_ROOT / "data" / "raw"
 PATH_PROC = PROJECT_ROOT / "data" / "processed"
 
