@@ -6,7 +6,6 @@ from tests import _PATH_DATA_PROCESSED
 PATH = Path(_PATH_DATA_PROCESSED)
 
 # Skips tests if the data files does not exist
-# pytestmark = pytest.mark.skipif(not (PATH_RAW / "archive.zip.dvc").exists(), reason="archive.zip.dvc not found")
 pytestmark = pytest.mark.skipif(not (PATH / "labels.csv").exists(), reason="label.csv not found")
 
 dataset = PixelArtDataset(Path(PATH))  # Set up path + dataset
