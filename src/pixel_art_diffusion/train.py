@@ -11,7 +11,7 @@ from typing_extensions import TypeAlias
 from pathlib import Path
 from omegaconf import DictConfig
 from pixel_art_diffusion.data import PixelArtDataset
-from pixel_art_diffusion.model import PixelArtDiffusion 
+from pixel_art_diffusion.model import PixelArtDiffusion
 from loguru import logger
 
 # Type aliases
@@ -21,26 +21,28 @@ OptimizerParamsType: TypeAlias = Dict[str, Any]
 
 train_app = typer.Typer()
 
+
 def get_models_dir() -> Path:
     """
     Helper function to get the models directory path
-    
+
     Returns:
         Path to the models directory
     """
     return Path(__file__).parent.parent.parent / "models"
 
+
 @hydra.main(version_base=None, config_path="../../configs", config_name="config")
 def train_model_hydra(cfg: DictConfig) -> None:
     """
     Main training function with Hydra config
-    
+
     Args:
         cfg: Hydra configuration object containing training parameters
     """
     logger.info("Starting training with Hydra configuration")
     logger.debug(f"Configuration: {cfg}")
-    
+
     # Get command line arguments from environment variables or use defaults
     run_name: str = os.getenv("TRAIN_RUN_NAME", "pixel_art_diffusion")
     num_epochs: int = int(os.getenv("TRAIN_NUM_EPOCHS", "100"))
@@ -73,25 +75,17 @@ def train_model_hydra(cfg: DictConfig) -> None:
 
     model: PixelArtDiffusion = PixelArtDiffusion(device=DEVICE)
     dataset: PixelArtDataset = PixelArtDataset(
-        data_path=cfg.data.root_path,
-        calculate_stats=cfg.data.calculate_stats,
-        label_subset=label_subset
+        data_path=cfg.data.root_path, calculate_stats=cfg.data.calculate_stats, label_subset=label_subset
     )
 
     # Create dataloader
     dataloader: torch.utils.data.DataLoader = torch.utils.data.DataLoader(
-        dataset,
-        batch_size=cfg.training.batch_size,
-        shuffle=True,
-        num_workers=cfg.training.num_workers
+        dataset, batch_size=cfg.training.batch_size, shuffle=True, num_workers=cfg.training.num_workers
     )
 
     # Setup optimizer
     optimizer_params: OptimizerParamsType = cfg.optimizer.params
-    optimizer: torch.optim.AdamW = torch.optim.AdamW(
-        model.model.parameters(),
-        **optimizer_params
-    )
+    optimizer: torch.optim.AdamW = torch.optim.AdamW(model.model.parameters(), **optimizer_params)
 
     # Calculate total steps for scheduler
     total_steps: int = len(dataloader) * num_epochs
@@ -117,18 +111,11 @@ def train_model_hydra(cfg: DictConfig) -> None:
             # Sample noise and timesteps
             noise: torch.Tensor = torch.randn_like(clean_images)
             timesteps: torch.Tensor = torch.randint(
-                0,
-                model.noise_scheduler.config.num_train_timesteps,
-                (clean_images.shape[0],),
-                device=model.device
+                0, model.noise_scheduler.config.num_train_timesteps, (clean_images.shape[0],), device=model.device
             )
 
             # Add noise according to schedule
-            noisy_images: torch.Tensor = model.noise_scheduler.add_noise(
-                clean_images,
-                noise,
-                timesteps
-            )
+            noisy_images: torch.Tensor = model.noise_scheduler.add_noise(clean_images, noise, timesteps)
 
             # Predict noise
             noise_pred: torch.Tensor = model.model(noisy_images, timesteps).sample
@@ -139,10 +126,7 @@ def train_model_hydra(cfg: DictConfig) -> None:
 
             # Optimization step
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(
-                model.model.parameters(),
-                cfg.training.clip_grad_norm
-            )
+            torch.nn.utils.clip_grad_norm_(model.model.parameters(), cfg.training.clip_grad_norm)
             optimizer.step()
             lr_scheduler.step()
             optimizer.zero_grad()
@@ -183,6 +167,7 @@ def train_model_hydra(cfg: DictConfig) -> None:
     if cfg.wandb.enabled:
         wandb.finish()
 
+
 @train_app.command()
 def train_model(
     run_name: Annotated[str, typer.Option(help="Name for the training run")] = "pixel_art_diffusion",
@@ -191,7 +176,7 @@ def train_model(
 ) -> None:
     """
     CLI wrapper for the training function
-    
+
     Args:
         run_name: Name for the training run
         num_epochs: Number of training epochs
@@ -204,6 +189,7 @@ def train_model(
 
     # Call the Hydra main function
     train_model_hydra()
+
 
 if __name__ == "__main__":
     train_app()

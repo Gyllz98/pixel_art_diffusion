@@ -20,9 +20,11 @@ from pixel_art_diffusion.data import PixelArtDataset
 # Type aliases and TypedDict definitions
 ProfilerActivities: TypeAlias = List[ProfilerActivity]
 
+
 class MemoryStats(TypedDict):
     cpu_memory: str
     cuda_memory: str
+
 
 class PhaseStats(TypedDict):
     steps: int
@@ -31,12 +33,15 @@ class PhaseStats(TypedDict):
     max_step_time: float
     memory_stats: MemoryStats
 
+
 class ProfilingResults(TypedDict):
     device: str
     training: PhaseStats
     inference: PhaseStats
 
+
 BatchType: TypeAlias = Dict[str, torch.Tensor]
+
 
 def create_profiler(
     activities: ProfilerActivities,
@@ -44,11 +49,11 @@ def create_profiler(
     logdir: Union[str, Path],
     skip_first: int = 0,
     wait: int = 1,
-    warmup: int = 1
+    warmup: int = 1,
 ) -> profile:
     """
     Create a PyTorch profiler with specified settings.
-    
+
     Args:
         activities: List of profiler activities to monitor
         num_steps: Number of steps to profile
@@ -56,7 +61,7 @@ def create_profiler(
         skip_first: Number of initial steps to skip
         wait: Number of steps to wait between traces
         warmup: Number of warmup steps
-    
+
     Returns:
         Configured PyTorch profiler
     """
@@ -71,6 +76,7 @@ def create_profiler(
         on_trace_ready=tensorboard_trace_handler(str(logdir)),
     )
 
+
 def profile_pipeline(
     cfg: DictConfig,
     num_train_steps: int = 100,
@@ -80,14 +86,14 @@ def profile_pipeline(
 ) -> ProfilingResults:
     """
     Profile both training and inference pipeline with improved metrics.
-    
+
     Args:
         cfg: Hydra configuration object
         num_train_steps: Number of training steps to profile
         num_inference_steps: Number of inference steps to profile
         output_dir: Directory to save profiling results
         device: Device to run profiling on ('cuda' or 'cpu')
-    
+
     Returns:
         Dictionary containing profiling statistics
     """
@@ -99,7 +105,7 @@ def profile_pipeline(
     timestamp: int = int(time.time())
     writer: Optional[SummaryWriter] = None
     run_dir: Optional[Path] = None
-    
+
     if output_dir:
         run_dir = output_dir / f"profile_run_{timestamp}"
         train_dir: Path = run_dir / "train"
@@ -123,39 +129,29 @@ def profile_pipeline(
             "avg_step_time": 0.0,
             "min_step_time": 0.0,
             "max_step_time": 0.0,
-            "memory_stats": {"cpu_memory": "", "cuda_memory": ""}
+            "memory_stats": {"cpu_memory": "", "cuda_memory": ""},
         },
         "inference": {
             "steps": 0,
             "avg_step_time": 0.0,
             "min_step_time": 0.0,
             "max_step_time": 0.0,
-            "memory_stats": {"cpu_memory": "", "cuda_memory": ""}
-        }
+            "memory_stats": {"cpu_memory": "", "cuda_memory": ""},
+        },
     }
 
     # Model and dataset setup
     logger.info(f"Setting up model and dataset on {device}")
     model: PixelArtDiffusion = PixelArtDiffusion(device=device)
-    dataset: PixelArtDataset = PixelArtDataset(
-        data_path=cfg.data.root_path,
-        calculate_stats=False,
-        label_subset=[3]
-    )
+    dataset: PixelArtDataset = PixelArtDataset(data_path=cfg.data.root_path, calculate_stats=False, label_subset=[3])
 
     dataloader: torch.utils.data.DataLoader = torch.utils.data.DataLoader(
-        dataset,
-        batch_size=cfg.training.batch_size,
-        shuffle=True,
-        num_workers=cfg.training.num_workers
+        dataset, batch_size=cfg.training.batch_size, shuffle=True, num_workers=cfg.training.num_workers
     )
 
     # Optimizer setup
-    optimizer: torch.optim.AdamW = torch.optim.AdamW(
-        model.model.parameters(),
-        **cfg.optimizer.params
-    )
-    
+    optimizer: torch.optim.AdamW = torch.optim.AdamW(model.model.parameters(), **cfg.optimizer.params)
+
     lr_scheduler: Any = get_scheduler(
         name=cfg.scheduler.name,
         optimizer=optimizer,
@@ -180,10 +176,7 @@ def profile_pipeline(
             clean_images: torch.Tensor = batch["pixel_values"].to(device)
             noise: torch.Tensor = torch.randn_like(clean_images)
             timesteps: torch.Tensor = torch.randint(
-                0,
-                model.noise_scheduler.config.num_train_timesteps,
-                (clean_images.shape[0],),
-                device=device
+                0, model.noise_scheduler.config.num_train_timesteps, (clean_images.shape[0],), device=device
             )
 
             noisy_images: torch.Tensor = model.noise_scheduler.add_noise(clean_images, noise, timesteps)
@@ -239,12 +232,9 @@ def profile_pipeline(
         "min_step_time": min(train_times) if train_times else 0.0,
         "max_step_time": max(train_times) if train_times else 0.0,
         "memory_stats": {
-            "cpu_memory": str(train_prof.key_averages().table(
-                sort_by="self_cpu_memory_usage",
-                row_limit=10
-            )),
-            "cuda_memory": ""
-        }
+            "cpu_memory": str(train_prof.key_averages().table(sort_by="self_cpu_memory_usage", row_limit=10)),
+            "cuda_memory": "",
+        },
     }
 
     inference_stats: PhaseStats = {
@@ -253,12 +243,9 @@ def profile_pipeline(
         "min_step_time": min(inference_times) if inference_times else 0.0,
         "max_step_time": max(inference_times) if inference_times else 0.0,
         "memory_stats": {
-            "cpu_memory": str(inference_prof.key_averages().table(
-                sort_by="self_cpu_memory_usage",
-                row_limit=10
-            )),
-            "cuda_memory": ""
-        }
+            "cpu_memory": str(inference_prof.key_averages().table(sort_by="self_cpu_memory_usage", row_limit=10)),
+            "cuda_memory": "",
+        },
     }
 
     profiling_results["training"] = training_stats
@@ -286,6 +273,7 @@ def profile_pipeline(
 
     return profiling_results
 
+
 @hydra.main(version_base=None, config_path="../../configs", config_name="config")
 def main(cfg: DictConfig) -> None:
     """Profile model training and inference pipeline."""
@@ -312,11 +300,11 @@ def main(cfg: DictConfig) -> None:
             logger.info(f"Average step time: {phase_stats['avg_step_time']:.4f}s")
             logger.info(f"Min step time: {phase_stats['min_step_time']:.4f}s")
             logger.info(f"Max step time: {phase_stats['max_step_time']:.4f}s")
-            
+
             memory_stats = phase_stats["memory_stats"]
             logger.info(f"\nTop CPU Memory Usage ({phase.capitalize()}):")
             logger.info(memory_stats["cpu_memory"])
-            
+
             if "cuda_memory" in memory_stats and memory_stats["cuda_memory"]:
                 logger.info(f"\nTop CUDA Memory Usage ({phase.capitalize()}):")
                 logger.info(memory_stats["cuda_memory"])
@@ -324,6 +312,7 @@ def main(cfg: DictConfig) -> None:
     except Exception as e:
         logger.error(f"Error during profiling: {str(e)}")
         raise typer.Exit(1)
+
 
 if __name__ == "__main__":
     main()

@@ -10,7 +10,7 @@
 
 # @pytest.fixture
 # def mock_config():
-#     ### Create a mock configuration for testing ### 
+#     ### Create a mock configuration for testing ###
 #     return DictConfig({
 #         'wandb': {'enabled': False, 'project': 'test', 'log_batch_frequency': 10},
 #         'optimizer': {'params': {'lr': 0.001}},
@@ -32,7 +32,7 @@
 
 # @pytest.fixture
 # def mock_dataset():
-#     ### Create a minimal mock dataset for testing ### 
+#     ### Create a minimal mock dataset for testing ###
 #     mock = Mock()
 #     mock.__len__.return_value = 4
 #     mock.get_label_distribution.return_value = [1, 1, 1, 1, 1]
@@ -43,7 +43,7 @@
 #     with patch('src.pixel_art_diffusion.train.PixelArtDataset') as mock_dataset_class:
 #         # Create a properly configured mock dataset with magic methods
 #         mock_dataset = Mock(spec=torch.utils.data.Dataset)
-        
+
 #         # Configure the magic methods during Mock creation
 #         mock_dataset.configure_mock(**{
 #             '__len__.return_value': 4,
@@ -52,10 +52,10 @@
 #                 "label": torch.tensor([0, 0, 0, 0, 1])
 #             }
 #         })
-        
+
 #         # Add other required methods
 #         mock_dataset.get_label_distribution.return_value = [1, 1, 1, 1, 1]
-        
+
 #         # Set the mock dataset as the return value
 #         mock_dataset_class.return_value = mock_dataset
 
@@ -63,7 +63,7 @@
 #         os.environ["TRAIN_RUN_NAME"] = "test_run"
 #         os.environ["TRAIN_NUM_EPOCHS"] = "1"
 #         os.environ["TRAIN_LABEL_SUBSET"] = "3"
-        
+
 #         # Mock the model as well to avoid actual computation
 #         with patch('src.pixel_art_diffusion.model.PixelArtDiffusion') as mock_model_class:
 #             # Configure mock model
@@ -74,7 +74,7 @@
 #             mock_model.noise_scheduler = Mock()
 #             mock_model.noise_scheduler.config.num_train_timesteps = 1000
 #             mock_model_class.return_value = mock_model
-            
+
 #             # Verify no exception is raised during setup
 #             try:
 #                 train_model_hydra(mock_config)
@@ -82,5 +82,5 @@
 #             except Exception as e:
 #                 setup_successful = False
 #                 pytest.fail(f"Training setup failed with error: {str(e)}")
-            
+
 #             assert setup_successful, "Training setup should complete without errors"

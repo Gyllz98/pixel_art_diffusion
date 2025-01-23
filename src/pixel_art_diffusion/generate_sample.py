@@ -16,22 +16,25 @@ MapLocationCallable = Callable[[StorageType, str], StorageType]
 
 generate_app = typer.Typer()
 
+
 def get_models_dir() -> Path:
     """Helper function to get the models directory path"""
     return Path(__file__).parent.parent.parent / "models"
 
+
 def cpu_map_location(storage: StorageType, loc: str) -> StorageType:
     """
     Map CUDA storage to CPU storage.
-    
+
     Args:
         storage: PyTorch storage object
         loc: Original location string
-        
+
     Returns:
         Mapped storage object
     """
     return storage
+
 
 @generate_app.command(name="list")
 def list_models() -> None:
@@ -61,12 +64,15 @@ def list_models() -> None:
         for checkpoint in sorted(checkpoint_list):
             print(f"  - {checkpoint.name}")
 
+
 @generate_app.command(name="generate")
 def generate_samples(
     model_name: Annotated[str, typer.Option(help="Name of the model")] = "pixel_art_diffusion",
     num_samples: Annotated[int, typer.Option(help="Number of samples to generate")] = 32,
     output_path: Annotated[Optional[str], typer.Option(help="Path to save the generated samples")] = None,
-    custom_checkpoint_path: Annotated[Optional[str], typer.Option(help="Optional: Full path to a checkpoint file")] = None,
+    custom_checkpoint_path: Annotated[
+        Optional[str], typer.Option(help="Optional: Full path to a checkpoint file")
+    ] = None,
     force_cpu: Annotated[bool, typer.Option(help="Force CPU usage even if CUDA is available")] = False,
 ) -> None:
     """Generate samples from a trained PixelArtDiffusion model"""
@@ -149,6 +155,7 @@ def generate_samples(
     except Exception as e:
         print(f"\nUnexpected error: {str(e)}")
         raise typer.Exit(1)
+
 
 if __name__ == "__main__":
     generate_app()

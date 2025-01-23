@@ -87,7 +87,7 @@ async def generate_images(num_samples: Optional[int] = 4) -> StreamingResponse:
 
         # Convert to PIL Image and then to bytes
         image = Image.fromarray(grid_array)
-        
+
         # Create a new BytesIO object for saving the image
         img_byte_arr = BytesIO()
         image.save(img_byte_arr, format="PNG")

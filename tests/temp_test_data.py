@@ -15,6 +15,7 @@ pytestmark = pytest.mark.skipif(
 
 dataset = PixelArtDataset(PATH)  # Set up path + dataset
 
+
 def test_dataset_init():
     ### Is the dataset initialized correctly?\n ###
     assert len(dataset) == 89400, f"Dataset ({len(dataset)} images) should contain 89400 images."

@@ -36,8 +36,8 @@ line-length = 120
 [tool.coverage.run]
 omit = [
   "tests/*",
-  "*/_remote_module_non_scriptable.py", 
-  "*/var/folders/*", 
+  "*/_remote_module_non_scriptable.py",
+  "*/var/folders/*",
 ]
 
 [tool.mypy]
