@@ -148,7 +148,7 @@ async def generate_images(background_tasks: BackgroundTasks, num_samples: Option
         image.save(img_byte_arr, format="PNG")
         img_byte_arr.seek(0)  # Reset the pointer to the start
 
-        return StreamingResponse(BytesIO(img_byte_arr), media_type="image/png")
+        return StreamingResponse(BytesIO(img_byte_arr.getvalue()), media_type="image/png")
 
     except Exception as e:
         logger.error(f"Error in generate_images: {str(e)}")
