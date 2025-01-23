@@ -1,17 +1,16 @@
 import pytest
 from pathlib import Path
 from pixel_art_diffusion.data import PixelArtDataset
-from tests import _PATH_DATA_RAW, _PATH_DATA_PROCESSED
+from tests import _PATH_DATA_PROCESSED
 
-PATH_RAW = Path(_PATH_DATA_RAW)
-PATH_PROC = Path(_PATH_DATA_PROCESSED)
+PATH = Path(_PATH_DATA_PROCESSED)
 
 # Skips tests if the data files does not exist
-pytestmark = pytest.mark.skipif(not (PATH_RAW / "archive.zip.dvc").exists(), reason="archive.zip.dvc not found")
-pytestmark = pytest.mark.skipif(not (PATH_PROC / "labels.csv").exists(), reason="label.csv not found")
+# pytestmark = pytest.mark.skipif(not (PATH_RAW / "archive.zip.dvc").exists(), reason="archive.zip.dvc not found")
+pytestmark = pytest.mark.skipif(not (PATH / "labels.csv").exists(), reason="label.csv not found")
 
 
-dataset = PixelArtDataset(Path(PATH_PROC))  # Set up path + dataset
+dataset = PixelArtDataset(PATH)  # Set up path + dataset
 
 
 def test_dataset_init():
