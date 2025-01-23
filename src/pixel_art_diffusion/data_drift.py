@@ -8,7 +8,11 @@ import base64
 from io import BytesIO
 import subprocess
 from pathlib import Path
+from pixel_art_diffusion.data import extract
+import logging
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def create_image_dataframe(image_dir):
     """Convert directory of images to dataframe with pixel statistics"""
@@ -16,8 +20,10 @@ def create_image_dataframe(image_dir):
 
     # Check if directory exists and has JPEG files
     if not image_path.exists() or not any(f.endswith(".JPEG") for f in os.listdir(image_dir)):
+        logging.info("Extracting data...")
         try:
             subprocess.run(["dvc", "pull"], check=True)
+            extract()
         except subprocess.CalledProcessError as e:
             raise RuntimeError(f"Failed to pull data with DVC: {e}")
 
