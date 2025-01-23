@@ -102,7 +102,7 @@ will check the repositories and the code to verify your answers.
 \\ GUSTAV: done but could be refined.
 * [x] Write API tests for your application and setup continues integration for these (M24)
 \\ MICKAEL: TO DO, after FastAPI
-* [x] Load test your application (M24)  
+* [x] Load test your application (M24)
 \\ MICKAEL: TO DO, after FastAPI
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
 * [x] Create a frontend for your API (M26)
