@@ -82,7 +82,7 @@ will check the repositories and the code to verify your answers.
 
 * [x] Write unit tests related to the data part of your code (M16)
 \\ Mickael: test_data.py is almost done
-* [ ] Write unit tests related to model construction and or model training (M16)
+* [x] Write unit tests related to model construction and or model training (M16)
 \\ Mickael: Working on model training after API.
 * [x] Calculate the code coverage (M16)
 \\ Mickael: TODO
