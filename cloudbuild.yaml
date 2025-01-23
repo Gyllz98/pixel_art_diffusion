@@ -1,15 +1,12 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  id: 'Build container image'
   env:
     - 'DOCKER_BUILDKIT=1'
   args: [
     'build',
-    '.',
-    '-t',
-    'europe-docker.pkg.dev/$PROJECT_ID/pixel-art-repo/pixel-art-api:latest',
-    '-f',
-    'dockerfiles/api.dockerfile'
+    '--cache-from', 'europe-docker.pkg.dev/$PROJECT_ID/pixel-art-repo/pixel-art-api:latest',
+    '-t', 'europe-docker.pkg.dev/$PROJECT_ID/pixel-art-repo/pixel-art-api:latest',
+    '.'
   ]
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container image'
