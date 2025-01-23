@@ -11,11 +11,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for caching
-COPY ../requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code
-COPY ../src/pixel_art_diffusion /app/pixel_art_diffusion/
+COPY src/pixel_art_diffusion /app/pixel_art_diffusion/
 
 # Set environment variables
 ENV PORT=8080

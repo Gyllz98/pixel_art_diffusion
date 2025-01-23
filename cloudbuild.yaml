@@ -3,11 +3,11 @@ steps:
   id: 'Build container image'
   args: [
     'build',
-    '.',
     '-t',
     'europe-west1-docker.pkg.dev/rare-mechanic-447712-n4/pixel-art-repo/pixel-art-api:latest',
     '-f',
-    'dockerfiles/api.dockerfile'
+    'dockerfiles/api.dockerfile',
+    '.'
   ]
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container image'
