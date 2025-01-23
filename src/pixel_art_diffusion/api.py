@@ -142,7 +142,7 @@ async def generate_images(background_tasks: BackgroundTasks, num_samples: Option
         generation_time = time.time() - start_time
         GENERATION_TIME.observe(generation_time)
         CURRENT_GENERATION_TIME.set(generation_time)
-        CURRENT_NUM_SAMPLES.set(num_samples)
+        CURRENT_NUM_SAMPLES.set(float(num_samples))
         update_memory_usage()
 
         logger.info(f"Grid array shape: {grid_array.shape}")
