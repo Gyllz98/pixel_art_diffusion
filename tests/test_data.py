@@ -3,10 +3,7 @@ import os
 from pathlib import Path
 from pixel_art_diffusion.data import PixelArtDataset
 
-if "GITHUB_WORKSPACE" in os.environ:
-    PROJECT_ROOT = Path(os.environ["GITHUB_WORKSPACE"])
-else:
-    PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = Path(os.environ["GITHUB_WORKSPACE"])
 PATH_RAW = PROJECT_ROOT / "data" / "raw"
 PATH_PROC = PROJECT_ROOT / "data" / "processed"
 
