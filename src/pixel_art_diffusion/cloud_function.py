@@ -10,6 +10,7 @@ from datetime import datetime
 from PIL import Image
 import numpy as np
 import json
+from typing import Union
 
 CLOUD_URL_MODEL = "https://europe-west1-rare-mechanic-447712-n4.cloudfunctions.net/function-4-pixel-art"
 CLOUD_URL_DATA = "https://europe-west1-rare-mechanic-447712-n4.cloudfunctions.net/pure-chaos"
@@ -64,7 +65,7 @@ def get_images_from_cloud():
         raise RuntimeError(f"Invalid response format: {str(e)}")
 
 
-def visualize_single_sample(sample_data: np.ndarray) -> np.ndarray:
+def visualize_single_sample(sample_data: Union[np.ndarray, torch.Tensor]) -> np.ndarray:
     """Convert a single sample to a viewable image"""
     # Ensure correct shape and scaling
     if isinstance(sample_data, torch.Tensor):
