@@ -4,18 +4,12 @@ from pixel_art_diffusion.data import PixelArtDataset
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-PATH_RAW = PROJECT_ROOT / "data"
-PATH_PROC = PROJECT_ROOT / "processed"
+PATH_RAW = Path(PROJECT_ROOT / "data")
+PATH_PROC = Path(PROJECT_ROOT / "processed")
 
 # Skips tests if the data files does not exist
-pytestmark = pytest.mark.skipif(
-    not (PATH_RAW / "archive.zip.dvc").exists(),
-    reason="archive.zip.dvc not found",
-)
-# pytestmark = pytest.mark.skipif(
-#     not (PATH_PROC / "labels.csv").exists(),
-#     reason="label.csv not found",
-# )
+pytestmark = pytest.mark.skipif(not (PATH_RAW / "archive.zip.dvc").exists(), reason="archive.zip.dvc not found")
+pytestmark = pytest.mark.skipif(not (PATH_PROC / "labels.csv").exists(), reason="label.csv not found")
 
 
 dataset = PixelArtDataset(PATH_PROC)  # Set up path + dataset
