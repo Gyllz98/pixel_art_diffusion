@@ -4,7 +4,7 @@ steps:
   args: [
     'build',
     '-t',
-    'europe-west1-docker.pkg.dev/rare-mechanic-447712-n4/pixel-art-repo/pixel-art-api:latest',
+    'europe-docker.pkg.dev/rare-mechanic-447712-n4/pixel-art-repo/pixel-art-api:latest',
     '-f',
     'dockerfiles/api.dockerfile',
     '.'
@@ -13,7 +13,7 @@ steps:
   id: 'Push container image'
   args: [
     'push',
-    'europe-west1-docker.pkg.dev/rare-mechanic-447712-n4/pixel-art-repo/pixel-art-api:latest'
+    'europe-docker.pkg.dev/rare-mechanic-447712-n4/pixel-art-repo/pixel-art-api:latest'
   ]
 - name: 'gcr.io/cloud-builders/gcloud'
   id: 'Deploy to Cloud Run'
@@ -22,7 +22,7 @@ steps:
     'deploy',
     'pixel-art-api',
     '--image',
-    'europe-west1-docker.pkg.dev/rare-mechanic-447712-n4/pixel-art-repo/pixel-art-api:latest',
+    'europe-docker.pkg.dev/rare-mechanic-447712-n4/pixel-art-repo/pixel-art-api:latest',
     '--region',
     'europe-west1',
     '--platform',
