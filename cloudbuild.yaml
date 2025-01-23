@@ -7,7 +7,7 @@ steps:
     'build',
     '.',
     '-t',
-    'eu.gcr.io/$PROJECT_ID/pixel-art-api:latest',
+    'europe-docker.pkg.dev/$PROJECT_ID/pixel-art-repo/pixel-art-api:latest',
     '-f',
     'dockerfiles/api.dockerfile'
   ]
@@ -15,7 +15,7 @@ steps:
   id: 'Push container image'
   args: [
     'push',
-    'eu.gcr.io/$PROJECT_ID/pixel-art-api:latest'
+    'europe-docker.pkg.dev/$PROJECT_ID/pixel-art-repo/pixel-art-api:latest'
   ]
 options:
   logging: CLOUD_LOGGING_ONLY
