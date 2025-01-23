@@ -6,10 +6,21 @@ from PIL import Image
 import os
 import base64
 from io import BytesIO
+import subprocess
+from pathlib import Path
 
 
 def create_image_dataframe(image_dir):
     """Convert directory of images to dataframe with pixel statistics"""
+    image_path = Path(image_dir)
+
+    # Check if directory exists and has JPEG files
+    if not image_path.exists() or not any(f.endswith(".JPEG") for f in os.listdir(image_dir)):
+        try:
+            subprocess.run(["dvc", "pull"], check=True)
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"Failed to pull data with DVC: {e}")
+
     data = []
     for img_file in os.listdir(image_dir):
         if img_file.endswith(".JPEG"):
@@ -17,16 +28,11 @@ def create_image_dataframe(image_dir):
             img = Image.open(img_path)
             img_array = np.array(img)
 
-            # Calculate image statistics
-            stats = {
-                "mean_r": img_array[:, :, 0].mean(),
-                "mean_g": img_array[:, :, 1].mean(),
-                "mean_b": img_array[:, :, 2].mean(),
-                "std_r": img_array[:, :, 0].std(),
-                "std_g": img_array[:, :, 1].std(),
-                "std_b": img_array[:, :, 2].std(),
-            }
+            stats = calculate_image_stats(img_array)
             data.append(stats)
+
+    if not data:
+        raise RuntimeError(f"No JPEG images found in {image_dir} after DVC pull")
 
     return pd.DataFrame(data)
 
