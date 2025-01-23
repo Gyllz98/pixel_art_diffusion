@@ -1,21 +1,17 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Build container image'
-  env:
-    - 'DOCKER_BUILDKIT=1'
   args: [
     'build',
     '.',
     '-t',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/pixel-art-repo/pixel-art-api:latest',
-    '--cache-from',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/pixel-art-repo/pixel-art-api:latest'
+    'europe-west1-docker.pkg.dev/rare-mechanic-447712-n4/pixel-art-repo/pixel-art-api:latest'
   ]
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container image'
   args: [
     'push',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/pixel-art-repo/pixel-art-api:latest'
+    'europe-west1-docker.pkg.dev/rare-mechanic-447712-n4/pixel-art-repo/pixel-art-api:latest'
   ]
 - name: 'gcr.io/cloud-builders/gcloud'
   id: 'Deploy to Cloud Run'
@@ -24,7 +20,7 @@ steps:
     'deploy',
     'pixel-art-api',
     '--image',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/pixel-art-repo/pixel-art-api:latest',
+    'europe-west1-docker.pkg.dev/rare-mechanic-447712-n4/pixel-art-repo/pixel-art-api:latest',
     '--region',
     'europe-west1',
     '--platform',
