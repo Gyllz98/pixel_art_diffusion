@@ -2,8 +2,9 @@ import pytest
 import os
 from pathlib import Path
 from pixel_art_diffusion.data import PixelArtDataset
+from test import _PROJECT_ROOT
 
-PROJECT_ROOT = Path(os.environ["GITHUB_WORKSPACE"])
+PROJECT_ROOT = Path(_PROJECT_ROOT)
 PATH_RAW = PROJECT_ROOT / "data" / "raw"
 PATH_PROC = PROJECT_ROOT / "data" / "processed"
 
@@ -42,9 +43,9 @@ def test_data_format():
     assert label.sum() == 1, "One-hot encoded label should sum to 1"
     print("\nCorrect dataset format")
 
-
 if __name__ == "__main__":
     print("Current working directory:", Path.cwd())
+    print("ROOT", PROJECT_ROOT)
     print("_PATH_DATA_RAW:", PATH_RAW)
     print("_PATH_DATA_PROCESSED:", PATH_PROC)
     print("Resolved PATH_RAW:", PATH_RAW.resolve())
