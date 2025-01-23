@@ -1,8 +1,6 @@
 import pytest
-import os
 from pathlib import Path
 from pixel_art_diffusion.data import PixelArtDataset
-from test import _PROJECT_ROOT
 
 
 ROOT = Path(__file__).resolve().parent.parent.parent
@@ -43,6 +41,7 @@ def test_data_format():
     assert label.shape == (5,), f"Label should be one-hot encoded with 5 categories, got shape {label.shape}"
     assert label.sum() == 1, "One-hot encoded label should sum to 1"
     print("\nCorrect dataset format")
+
 
 if __name__ == "__main__":
     print("Current working directory:", Path.cwd())
