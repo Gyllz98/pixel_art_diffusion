@@ -1,11 +1,10 @@
 import pytest
 from pathlib import Path
 from pixel_art_diffusion.data import PixelArtDataset
+from tests import _PATH_DATA_RAW, _PATH_DATA_PROCESSED
 
-
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-PATH_RAW = Path(PROJECT_ROOT / "data")
-PATH_PROC = Path(PROJECT_ROOT / "processed")
+PATH_RAW = Path(_PATH_DATA_RAW)
+PATH_PROC = Path(_PATH_DATA_PROCESSED)
 
 # Skips tests if the data files does not exist
 pytestmark = pytest.mark.skipif(not (PATH_RAW / "archive.zip.dvc").exists(), reason="archive.zip.dvc not found")
@@ -35,13 +34,3 @@ def test_data_format():
     assert label.shape == (5,), f"Label should be one-hot encoded with 5 categories, got shape {label.shape}"
     assert label.sum() == 1, "One-hot encoded label should sum to 1"
     print("\nCorrect dataset format")
-
-
-# if __name__ == "__main__":
-#     print("Current working directory:", Path.cwd())
-#     print("ROOT", PROJECT_ROOT)
-#     print("_PATH_DATA_RAW:", PATH_RAW)
-#     print("_PATH_DATA_PROCESSED:", PATH_PROC)
-#     print("Resolved PATH_RAW:", PATH_RAW.resolve())
-#     print("Resolved PATH_PROC:", PATH_PROC.resolve())
-#     print("Does labels.csv exist?", (PATH_PROC / "labels.csv").exists())
