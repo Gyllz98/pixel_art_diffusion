@@ -60,8 +60,7 @@ CURRENT_GENERATION_TIME = Gauge(
 
 GENERATION_TIME = Histogram(
     'pixel_art_generation_time_seconds',
-    'Time taken to generate images:',
-    buckets=[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, float("inf")]  # Buckets in seconds
+    'Time taken to generate images (seconds):'
 )
 
 
