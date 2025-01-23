@@ -24,13 +24,14 @@ path: Path = Path(__file__).parent.parent.parent
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     global model
     try:
+        logging.info("Starting model loading from cloud...")
         model = load_model_from_cloud()
-        print("Model from cloud is successfully loaded.")
+        logging.info("Model loaded successfully")
         yield
     except Exception as e:
-        print("Failed to load model from cloud.")
-        raise RuntimeError(f"Startup (lifespan) failed: {e}")
-
+        logging.error(f"Model loading failed: {str(e)}")
+        logging.error(f"Traceback: {traceback.format_exc()}")
+        raise RuntimeError(f"Startup failed: {str(e)}")
 
 app = FastAPI(
     title="Pixel Art Diffusion API",
