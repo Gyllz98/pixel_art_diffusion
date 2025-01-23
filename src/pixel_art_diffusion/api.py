@@ -8,6 +8,7 @@ from io import BytesIO
 from PIL import Image
 import logging
 import traceback
+import uvicorn
 
 from pixel_art_diffusion.cloud_function import load_model_from_cloud
 from pixel_art_diffusion.visualize import visualize_samples
@@ -102,3 +103,6 @@ async def generate_images(num_samples: Optional[int] = 4) -> StreamingResponse:
         logger.error(f"Error in generate_images: {str(e)}")
         logger.error(f"Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}\nTraceback: {traceback.format_exc()}")
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8080)
