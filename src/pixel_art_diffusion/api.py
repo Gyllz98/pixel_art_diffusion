@@ -33,6 +33,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         logging.error(f"Traceback: {traceback.format_exc()}")
         raise RuntimeError(f"Startup failed: {str(e)}")
 
+
 app = FastAPI(
     title="Pixel Art Diffusion API",
     description="API for generating pixel art using diffusion models",
