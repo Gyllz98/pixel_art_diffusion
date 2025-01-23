@@ -1,11 +1,10 @@
 import pytest
 from pathlib import Path
-from tests import _PATH_DATA_RAW, _PATH_DATA_PROCESSED
 from pixel_art_diffusion.data import PixelArtDataset
 
-
-PATH_RAW = Path(_PATH_DATA_RAW)
-PATH_PROC = Path(_PATH_DATA_PROCESSED)
+PROJECT_ROOT = Path(__file__).parent.parent
+PATH_RAW = PROJECT_ROOT / "data" / "raw"
+PATH_PROC = PROJECT_ROOT / "data" / "processed"
 
 # Skips tests if the data files does not exist
 # pytestmark = pytest.mark.skipif(not (PATH / "labels1.csv").exists(), reason="labels.csv not found")
