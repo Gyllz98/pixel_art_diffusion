@@ -21,6 +21,7 @@ def test_dataset_init():
     assert label_distribution[3] == 35000, f"Expected 35000 images in label 3, got {label_distribution[3]}"
     print("\nCorrectly initialized")
 
+
 def test_data_format():
     ### Are the first item from the dataset in the correct format? ###
     item = dataset[0]
