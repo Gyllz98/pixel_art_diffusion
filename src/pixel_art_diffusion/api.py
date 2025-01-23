@@ -12,19 +12,13 @@ from contextlib import asynccontextmanager
 from typing import Optional, Dict, Any, AsyncGenerator
 from io import BytesIO
 from PIL import Image
-import logging
-import traceback
-import time
-import psutil
 from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
-import os
 from evidently.metric_preset import (
     DataDriftPreset,
     DataQualityPreset,
 )
 from evidently.report import Report
 import pickle
-import uvicorn
 
 from pixel_art_diffusion.cloud_function import (
     load_model_from_cloud,
@@ -147,7 +141,7 @@ async def generate_images(background_tasks: BackgroundTasks, num_samples: Option
 
         generation_time = time.time() - start_time
         GENERATION_TIME.observe(generation_time)
-        CURRENT_GENERATION_TIME.set(generation_time)  
+        CURRENT_GENERATION_TIME.set(generation_time)
         CURRENT_NUM_SAMPLES.set(num_samples)
         update_memory_usage()
 
