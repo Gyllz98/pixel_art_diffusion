@@ -106,26 +106,22 @@ will check the repositories and the code to verify your answers.
 \\ MICKAEL: TO DO, after FastAPI
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
 * [x] Create a frontend for your API (M26)
-\\ BALAZS: TO DO
 
 ### Week 3
 
-* [ ] Check how robust your model is towards data drifting (M27)
-\\ Balazs: next, after frontend - can set up, but will not show anything - ON IT
-* [ ] Deploy to the cloud a drift detection API (M27)
+* [x] Check how robust your model is towards data drifting (M27)
+\\ Balazs: next, after frontend - can set up, but will not show anything
+* [x] Deploy to the cloud a drift detection API (M27)
 \\ BALAZS + GUSTAV: Basic version
 * [x] Instrument your API with a couple of system metrics (M28)
 \\ MICKAEL: TODO - Application stats, track usage
-* [ ] Setup cloud monitoring of your instrumented application (M28)
-\\ GUSTAV + MICKAEL: TODO
-* [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
-\\ GUSTAV: TODO - Requires the metrics
+* [x] Setup cloud monitoring of your instrumented application (M28)
+\\ Mickael + Gustav: TODO
+* [x] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
+\\ Gustav: TODO - Requires the metrics
 * [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
-\\ Redundant - load time is 10sec.
 * [x] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
-\\ Might be interesting
 * [x] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
-\\ We need more understanding of quantization.
 
 ### Extra
 
