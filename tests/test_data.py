@@ -3,9 +3,9 @@ from pathlib import Path
 from pixel_art_diffusion.data import PixelArtDataset
 
 
-ROOT = Path(__file__).resolve().parent.parent.parent
-PATH_RAW = ROOT / "data"
-PATH_PROC = ROOT / "processed"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+PATH_RAW = PROJECT_ROOT / "data"
+PATH_PROC = PROJECT_ROOT / "processed"
 
 # Skips tests if the data files does not exist
 pytestmark = pytest.mark.skipif(
