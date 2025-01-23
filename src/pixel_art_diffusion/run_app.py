@@ -35,26 +35,6 @@ def run_app():
         repo_root = get_repo_root()
         frontend_path = repo_root / "src" / "pixel_art_diffusion" / "frontend.py"
 
-        logger.info(f"Repository root: {repo_root}")
-        logger.info(f"Frontend path: {frontend_path}")
-
-        # Start the FastAPI backend
-        logger.info("Starting backend server...")
-        backend = subprocess.Popen(
-            ["uvicorn", "pixel_art_diffusion.api:app", "--reload", "--port", "8000"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-
-        # Wait for backend to be ready
-        if not wait_for_server("http://localhost:8000"):
-            logger.error("Backend failed to start")
-            backend.terminate()
-            sys.exit(1)
-
-        logger.info("Backend is ready!")
-
-        # Start Streamlit frontend
         logger.info("Starting frontend...")
         frontend = subprocess.Popen(
             ["streamlit", "run", str(frontend_path), "--server.headless", "true"],
@@ -62,43 +42,29 @@ def run_app():
             stderr=subprocess.PIPE,
         )
 
-        # Wait for frontend to be ready
         if not wait_for_server("http://localhost:8501"):
             logger.error("Frontend failed to start")
-            backend.terminate()
             frontend.terminate()
             sys.exit(1)
 
         logger.info("Frontend is ready!")
         webbrowser.open("http://localhost:8501")
 
-        logger.info("Both servers are running!")
-        logger.info("Frontend is at: http://localhost:8501")
-        logger.info("Backend is at: http://localhost:8000")
-
         try:
             while True:
-                # Check if either process has terminated
-                if backend.poll() is not None:
-                    logger.error("Backend server stopped unexpectedly")
-                    break
                 if frontend.poll() is not None:
                     logger.error("Frontend server stopped unexpectedly")
                     break
                 time.sleep(1)
         except KeyboardInterrupt:
-            logger.info("Shutting down servers...")
+            logger.info("Shutting down server...")
         finally:
-            backend.terminate()
             frontend.terminate()
-            backend.wait()
             frontend.wait()
-            logger.info("Servers shut down successfully")
+            logger.info("Server shut down successfully")
 
     except Exception as e:
         logger.error(f"Error occurred: {str(e)}")
-        if "backend" in locals():
-            backend.terminate()
         if "frontend" in locals():
             frontend.terminate()
         sys.exit(1)
