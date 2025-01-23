@@ -34,4 +34,13 @@ dev = {file = ['requirements_dev.txt']}
 line-length = 120
 
 [tool.coverage.run]
-omit = ["tests/*"]
+omit = [
+  "tests/*",
+  "*/_remote_module_non_scriptable.py",
+  "*/var/folders/*",
+]
+
+[tool.mypy]
+files = ["pixel_art_diffusion", "tests"]
+ignore_missing_imports = true
+install_types = false

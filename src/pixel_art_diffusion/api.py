@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from http import HTTPStatus
 from contextlib import asynccontextmanager
-from typing import Optional
+from typing import Optional, Dict, Any, AsyncGenerator
 from io import BytesIO
 from PIL import Image
 import logging
@@ -12,27 +12,16 @@ import traceback
 from pixel_art_diffusion.cloud_function import load_model_from_cloud
 from pixel_art_diffusion.visualize import visualize_samples
 
+# Add type for the model
+from pixel_art_diffusion.model import PixelArtDiffusion  # Import your model class
 
-"""
-FastAPI for our model.
-To run the API file: uvicorn pixel_art_diffusion.api:app --reload --port 8000
-    Launches a server: http://localhost:8000/
-    Checkout these as well:
-        http://localhost:8000/docs - Use the interactive docs
-        http://localhost:8000/redoc -  provides automatic API documentation using the ReDoc (Reference Documentation) format
-        http://localhost:8000/predict - Make predictions by sending POST requests
-        http://localhost:8000/openapi.json - JSON file of overall specifications of your program
-
-"""
-
-# Global variable to store the loaded model
-model = None
-path = Path(__file__).parent.parent.parent
+# Global variable with type annotation
+model: Optional[PixelArtDiffusion] = None
+path: Path = Path(__file__).parent.parent.parent
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
-    ### Loads model on API startup ###
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     global model
     try:
         model = load_model_from_cloud()
@@ -52,8 +41,7 @@ app = FastAPI(
 
 
 @app.get("/")
-async def root():
-    ### Health check endpoint ###
+async def root() -> Dict[str, Any]:
     return {
         "message": HTTPStatus.OK.phrase,
         "status-code": HTTPStatus.OK,
@@ -62,8 +50,7 @@ async def root():
 
 
 @app.get("/model_info")
-async def get_model_info():
-    ### Get information about the model ###
+async def get_model_info() -> Dict[str, str]:
     if model is None:
         raise HTTPException(status_code=503, detail="Model not loaded")
     return {
@@ -79,7 +66,7 @@ logger = logging.getLogger(__name__)
 
 
 @app.post("/generate")
-async def generate_images(num_samples: Optional[int] = 4):
+async def generate_images(num_samples: Optional[int] = 4) -> StreamingResponse:
     if model is None:
         logger.error("Model not loaded")
         raise HTTPException(status_code=503, detail="Model is not loaded.")
@@ -101,12 +88,13 @@ async def generate_images(num_samples: Optional[int] = 4):
         # Convert to PIL Image and then to bytes
         image = Image.fromarray(grid_array)
 
+        # Create a new BytesIO object for saving the image
         img_byte_arr = BytesIO()
         image.save(img_byte_arr, format="PNG")
-        img_byte_arr = img_byte_arr.getvalue()
+        img_byte_arr.seek(0)  # Reset the pointer to the start
 
-        # Use StreamingResponse for better memory handling with large images
-        return StreamingResponse(BytesIO(img_byte_arr), media_type="image/png")
+        # Return the StreamingResponse directly with the BytesIO object
+        return StreamingResponse(img_byte_arr, media_type="image/png")
 
     except Exception as e:
         logger.error(f"Error in generate_images: {str(e)}")

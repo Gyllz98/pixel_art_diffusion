@@ -1,5 +1,6 @@
 from pathlib import Path
 import zipfile
+from typing import Dict, List, Optional, Tuple
 import typer
 import numpy as np
 import torch
@@ -8,24 +9,37 @@ import pandas as pd
 from torchvision import transforms
 from PIL import Image
 from loguru import logger
+from numpy.typing import NDArray
+from torch import Tensor
 
 app = typer.Typer()
 
-def get_data_dir():
+
+def get_data_dir() -> Path:
     """Helper function to get the data directory path"""
     return Path(__file__).parent.parent.parent / "data"
 
+
 class PixelArtDataset(Dataset):
     """Dataset for pixel art sprites and their labels."""
-    def __init__(self, 
-                 data_path: Path,
-                 transform=None,
-                 label_subset=None,  # Optional: filter for specific label indices
-                 calculate_stats=False
-                ) -> None:
+
+    data_path: Path
+    transform: Optional[transforms.Compose]
+    labels_df: pd.DataFrame
+    image_paths: List[Path]
+    mean: Optional[NDArray[np.float32]]
+    std: Optional[NDArray[np.float32]]
+
+    def __init__(
+        self,
+        data_path: Path,
+        transform: Optional[transforms.Compose] = None,
+        label_subset: Optional[List[int]] = None,
+        calculate_stats: bool = False,
+    ) -> None:
         """
         Initialize the dataset.
-        
+
         Args:
             data_path: Path to the data folder containing labels.csv and images/images/*.jpg
             transform: Optional transforms to be applied on images
@@ -36,43 +50,40 @@ class PixelArtDataset(Dataset):
         if label_subset:
             logger.debug(f"Using label subset: {label_subset}")
 
-        
         self.data_path = Path(data_path)
         self.transform = transform
-        
+        self.mean = None
+        self.std = None
+
         # Load labels from CSV
         logger.info("Loading labels from CSV")
         self.labels_df = pd.read_csv(self.data_path / "labels.csv")
-        
+
         # Convert string representation of arrays to numpy arrays
-        self.labels_df['Label'] = self.labels_df['Label'].apply(
-            lambda x: np.array([float(n) for n in x.strip('[]').split()])
+        self.labels_df["Label"] = self.labels_df["Label"].apply(
+            lambda x: np.array([float(n) for n in x.strip("[]").split()], dtype=np.float32)
         )
-        
+
         # Filter by label subset if specified
         if label_subset is not None:
             initial_len = len(self.labels_df)
-            mask = self.labels_df['Label'].apply(
-                lambda x: any(x[i] == 1.0 for i in label_subset)
-            )
+            mask = self.labels_df["Label"].apply(lambda x: any(x[i] == 1.0 for i in label_subset))
             self.labels_df = self.labels_df[mask].reset_index(drop=True)
             logger.info(f"Filtered dataset from {initial_len} to {len(self.labels_df)} samples based on label subset")
-        
-        # Build image paths - using Image Index to construct filenames
-        # Update the image path construction in the __init__ method:
+
+        # Build image paths
         self.image_paths = [
-            self.data_path / "images" / "images" / f"image_{idx-1}.JPEG"
-            for idx in self.labels_df['Image Index']
+            self.data_path / "images" / "images" / f"image_{idx-1}.JPEG" for idx in self.labels_df["Image Index"]
         ]
-        
+
         # Calculate statistics if needed
         if calculate_stats:
             self.mean, self.std = self.calculate_statistics()
-        
+
         # Set default transform if none provided
         if self.transform is None:
             self.transform = self.get_default_transforms()
-            
+
         # Print dataset info
         print(f"Loaded dataset with {len(self.image_paths)} sprites")
         label_counts = self.get_label_distribution()
@@ -80,13 +91,18 @@ class PixelArtDataset(Dataset):
         for idx, count in enumerate(label_counts):
             print(f"Category {idx}: {count} images")
 
-    def get_label_distribution(self):
+    def get_label_distribution(self) -> NDArray[np.int64]:
         """Calculate the distribution of labels in the dataset."""
         # Sum up one-hot vectors to get counts for each category
-        return np.sum(np.stack(self.labels_df['Label'].values), axis=0)
+        return np.sum(np.stack(self.labels_df["Label"].values), axis=0)
 
-    def calculate_statistics(self):
-        """Calculate dataset mean and std."""
+    def calculate_statistics(self) -> Tuple[NDArray[np.float32], NDArray[np.float32]]:
+        """
+        Calculate dataset mean and std.
+
+        Returns:
+            Tuple containing (mean, std) arrays for the dataset
+        """
         logger.info("Calculating dataset statistics...")
         try:
             pixel_sum = torch.zeros(3)
@@ -97,17 +113,17 @@ class PixelArtDataset(Dataset):
                 try:
                     img = Image.open(img_path)
                     img_tensor = transforms.ToTensor()(img)
-                    
+
                     pixel_sum += img_tensor.sum(dim=[1, 2])
-                    pixel_sq_sum += (img_tensor ** 2).sum(dim=[1, 2])
+                    pixel_sq_sum += (img_tensor**2).sum(dim=[1, 2])
                     num_pixels += img_tensor.shape[1] * img_tensor.shape[2]
                 except Exception as e:
                     logger.error(f"Error processing image {img_path}: {str(e)}")
                     continue
 
             mean = pixel_sum / num_pixels
-            std = torch.sqrt(pixel_sq_sum/num_pixels - mean**2)
-            
+            std = torch.sqrt(pixel_sq_sum / num_pixels - mean**2)
+
             logger.success(f"Calculated dataset statistics - Mean: {mean}, Std: {std}")
             return mean.numpy(), std.numpy()
         except Exception as e:
@@ -118,42 +134,52 @@ class PixelArtDataset(Dataset):
         """Return the length of the dataset."""
         return len(self.image_paths)
 
-    def __getitem__(self, index: int):
-        """Return a given sample from the dataset."""
+    def __getitem__(self, index: int) -> Dict[str, Tensor]:
+        """
+        Return a given sample from the dataset.
+
+        Args:
+            index: Index of the sample to retrieve
+
+        Returns:
+            Dictionary containing:
+                - pixel_values: The processed image tensor
+                - label: The one-hot encoded label tensor
+        """
         # Load image
         img_path = self.image_paths[index]
         image = Image.open(img_path)
-        
+
         # Get one-hot encoded label
-        label = torch.tensor(self.labels_df.iloc[index]['Label'], dtype=torch.float)
-        
+        label = torch.tensor(self.labels_df.iloc[index]["Label"], dtype=torch.float)
+
         # Apply transforms if specified
         if self.transform:
             image = self.transform(image)
-        
-        return {
-            "pixel_values": image,
-            "label": label
-        }
 
-    def get_default_transforms(self):
+        return {"pixel_values": torch.as_tensor(image), "label": label}
+
+    def get_default_transforms(self) -> transforms.Compose:
         """Return transforms using calculated dataset statistics."""
-        return transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize(
-                mean=self.mean if hasattr(self, 'mean') else [0.5, 0.5, 0.5],
-                std=self.std if hasattr(self, 'std') else [0.5, 0.5, 0.5]
-            )
-        ])
+        return transforms.Compose(
+            [
+                transforms.ToTensor(),
+                transforms.Normalize(
+                    mean=self.mean if self.mean is not None else [0.5, 0.5, 0.5],
+                    std=self.std if self.std is not None else [0.5, 0.5, 0.5],
+                ),
+            ]
+        )
+
 
 @app.command()
-def extract():
+def extract() -> None:
     """Extract the raw data and save it to the processed folder."""
     raw_data_path = get_data_dir() / "raw"
     output_folder = get_data_dir() / "processed"
 
     print(f"Preprocessing data from {raw_data_path} to {output_folder}")
-    
+
     # Create output folder if it doesn't exist
     output_folder.mkdir(parents=True, exist_ok=True)
 
@@ -168,6 +194,7 @@ def extract():
         zip_ref.extractall(output_folder)
 
     print("Extraction complete!")
+
 
 if __name__ == "__main__":
     app()
