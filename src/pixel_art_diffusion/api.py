@@ -104,5 +104,6 @@ async def generate_images(num_samples: Optional[int] = 4) -> StreamingResponse:
         logger.error(f"Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}\nTraceback: {traceback.format_exc()}")
 
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8080)
