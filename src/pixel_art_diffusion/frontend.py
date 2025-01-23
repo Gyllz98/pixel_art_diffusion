@@ -6,7 +6,7 @@ from PIL import Image
 
 def generate_image(num_samples: int = 4):
     """Send a request to the backend to generate an image."""
-    backend_url = "http://localhost:8000"
+    backend_url = "https://pixel-art-api-146224029275.europe-west1.run.app"
     generate_url = f"{backend_url}/generate"
 
     try:

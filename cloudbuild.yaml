@@ -1,21 +1,32 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Build container image'
-  env:
-    - 'DOCKER_BUILDKIT=1'
   args: [
     'build',
-    '.',
     '-t',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/pixel-art-diffuser/train:lattest',
+    'europe-docker.pkg.dev/rare-mechanic-447712-n4/pixel-art-repo/pixel-art-api:latest',
     '-f',
-    'dockerfiles/train.dockerfile'
+    'dockerfiles/api.dockerfile',
+    '.'
   ]
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container image'
   args: [
     'push',
-    'europe-west1-docker.pkg.dev/$PROJECT_ID/pixel-art-diffuser/train:lattest'
+    'europe-docker.pkg.dev/rare-mechanic-447712-n4/pixel-art-repo/pixel-art-api:latest'
+  ]
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: 'Deploy to Cloud Run'
+  args: [
+    'run',
+    'deploy',
+    'pixel-art-api',
+    '--image',
+    'europe-docker.pkg.dev/rare-mechanic-447712-n4/pixel-art-repo/pixel-art-api:latest',
+    '--region',
+    'europe-west1',
+    '--platform',
+    'managed'
   ]
 options:
   logging: CLOUD_LOGGING_ONLY
