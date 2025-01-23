@@ -143,7 +143,7 @@ async def generate_images(background_tasks: BackgroundTasks, num_samples: Option
         logger.info(f"Grid array shape: {grid_array.shape}")
 
         image = Image.fromarray(grid_array)
-        # Create a new BytesIO object for saving the image
+
         img_byte_arr = BytesIO()
         image.save(img_byte_arr, format="PNG")
         img_byte_arr.seek(0)  # Reset the pointer to the start
