@@ -4,7 +4,7 @@ steps:
     - 'DOCKER_BUILDKIT=1'
   args: [
     'build',
-    '--cache-from', 'europe-docker.pkg.dev/$PROJECT_ID/pixel-art-repo/pixel-art-api:latest',
+     'europe-docker.pkg.dev/$PROJECT_ID/pixel-art-repo/pixel-art-api:latest',
     '-t', 'europe-docker.pkg.dev/$PROJECT_ID/pixel-art-repo/pixel-art-api:latest',
     '.'
   ]
