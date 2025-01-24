@@ -103,8 +103,8 @@ will check the repositories and the code to verify your answers.
 
 ### Extra
 
-* [ ] Write some documentation for your application (M32)
-* [ ] Publish the documentation to GitHub Pages (M32)
+* [x] Write some documentation for your application (M32)
+* [x] Publish the documentation to GitHub Pages (M32)
 * [x] Revisit your initial project description. Did the project turn out as you wanted?
 * [ ] Create an architectural diagram over your MLOps pipeline
 * [x] Make sure all group members have an understanding about all parts of the project
@@ -619,8 +619,23 @@ This would have enabled us to track model performance degradation, resource util
 > *Whenever we commit code and push to GitHub, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
+>The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
+Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
+>From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
 
---- question 29 fill here ---
+>For the training flow:
+
+T>he training pipeline pulls data using DVC from Cloud Storage Runs the training with configurations from Hydra Logs metrics and model artifacts to Weights & Biases Model artifacts are stored back in Cloud Storage.
+
+>For the serving flow:
+
+>Cloud Run pulls the latest Docker image from Container Registry
+It runs the FastAPI backend service
+The Streamlit frontend interacts with this backend
+When users generate images, they're stored back in Cloud Storage
+The entire service is monitored through Cloud Monitoring with alerts set up
+
+>All components are connected through GCP, with Cloud Storage acting as a central hub for data, models, and generated images, while Cloud Run handles the serving infrastructure and Cloud Monitoring keeps track of system health.
 
 ### Question 30
 
@@ -634,7 +649,7 @@ This would have enabled us to track model performance degradation, resource util
 >
 > Answer:
 
---- question 30 fill here ---
+> This project the toughes challenge we faced was deploying it to the cloud. We had to spend an exorbitant amount of time in cloud pulling, pushing and deploying the trigger when we pushed to main. This was due not being able to access stuff beacause of policies. Also setting up code-checks and other workflows slowed down the development process quite a bit. Also if these failed it meant a 10 minute setback each time. 
 
 ### Question 31
 
@@ -652,4 +667,4 @@ This would have enabled us to track model performance degradation, resource util
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
---- question 31 fill here ---
+> Student s233353 was in charge of building the docker images both for training and the api, integrating configuration experiments, profiling, setting up CI workflows for the git repo (pre-commit, code-check, dvc code sync, unittests), building the front end, data drift analysis and some parts of deploying it to cloud.
