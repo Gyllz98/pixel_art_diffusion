@@ -453,7 +453,17 @@ The flexibility of Compute Engine allowed us to implement features like automate
 >
 > Answer:
 
---- question 23 fill here ---
+We implemented a comprehensive API using FastAPI for our pixel art generation model. The API (api.py) features several key endpoints: /generate for creating new pixel art images, /samples for retrieving stored samples, /model_info for model status, and /data_drift for monitoring data quality.
+
+We enhanced the API with production-ready features:
+
+- Prometheus metrics tracking generation requests, memory usage, and latency
+- Background task handling for storing generated samples
+- Proper error handling and logging
+- Data drift monitoring using Evidently AI
+- Async context manager for model loading
+- Streaming responses for image delivery
+- Health check endpoint
 
 ### Question 24
 
@@ -469,7 +479,26 @@ The flexibility of Compute Engine allowed us to implement features like automate
 >
 > Answer:
 
---- question 24 fill here ---
+We successfully deployed our API using Google Cloud Run for scalable, serverless deployment. The deployment process is automated through our cloudbuild.yaml pipeline, which:
+1. Builds the Docker container from api.dockerfile
+2. Pushes it to Google Container Registry 
+3. Deploys to Cloud Run with automatic scaling
+
+The API is accessible at https://pixel-art-api-146224029275.europe-west1.run.app. Users can interact with it through:
+
+1. Web Interface (Streamlit):
+```bash
+pixel-art-app
+```
+2. Direct API calls:
+```bash
+# Generate 4 pixel art images
+curl -X POST "https://pixel-art-api-146224029275.europe-west1.run.app/generate?num_samples=4" -o generated_art.png
+
+# Get model info
+curl https://pixel-art-api-146224029275.europe-west1.run.app/model_info
+```
+Cloud Run automatically handles scaling based on demand, and we only pay for actual usage. The service integrates with Cloud Monitoring and Logging for observability.
 
 ### Question 25
 
@@ -484,7 +513,22 @@ The flexibility of Compute Engine allowed us to implement features like automate
 >
 > Answer:
 
---- question 25 fill here ---
+We conducted comprehensive load testing using Locust, simulating 100 concurrent users performing different API tasks. The test prioritized three main tasks:
+
+1. Loading the page and model (highest priority)
+2. Retrieving model information
+3. Generating pixel art samples (most resource-intensive)
+
+The load testing results showed interesting patterns in API performance under stress:
+
+- Mean response time increased proportionally with user load
+- The model generation endpoint showed the highest latency, as expected
+- The API demonstrated good stability, never crashing despite the load
+- Cloud Run's auto-scaling helped maintain service availability
+
+The test results helped us identify potential bottlenecks and validate our deployment architecture. While response times increased under load, the service remained operational throughout the test, demonstrating the robustness of our Cloud Run deployment and the effectiveness of our async request handling.
+
+For unit testing, we used pytest to test individual API endpoints and model functionality, ensuring reliable service operation.
 
 ### Question 26
 
@@ -499,7 +543,20 @@ The flexibility of Compute Engine allowed us to implement features like automate
 >
 > Answer:
 
---- question 26 fill here ---
+We implemented Prometheus metrics in our API but didn't complete the cloud deployment of the monitoring stack due to time constraints. Our monitoring implementation includes:
+
+- Request metrics: `pixel_art_generate_requests_total`
+- Performance metrics: `pixel_art_generation_time_seconds`
+- Resource usage: `pixel_art_memory_usage_bytes`
+- Data drift monitoring using Evidently AI
+
+While these metrics are accessible through the API's `/metrics` endpoint, we couldn't complete the deployment of a Prometheus sidecar container in Cloud Run to collect and store them long-term. With more time, we would have:
+
+1. Deployed Prometheus alongside our API
+2. Set up regular dashboard for visualization
+3. Implemented alerts for anomalies
+
+This would have enabled us to track model performance degradation, resource utilization patterns, and data drift over time, crucial for maintaining service quality and planning capacity.
 
 ## Overall discussion of project
 
