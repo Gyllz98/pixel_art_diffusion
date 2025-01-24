@@ -103,8 +103,8 @@ will check the repositories and the code to verify your answers.
 
 ### Extra
 
-* [x] Write some documentation for your application (M32)
-* [x] Publish the documentation to GitHub Pages (M32)
+* [ ] Write some documentation for your application (M32)
+* [ ] Publish the documentation to GitHub Pages (M32)
 * [x] Revisit your initial project description. Did the project turn out as you wanted?
 * [ ] Create an architectural diagram over your MLOps pipeline
 * [x] Make sure all group members have an understanding about all parts of the project
@@ -121,8 +121,14 @@ MLOPS 41
 
 ### Question 2
 > **Enter the study number for each member in the group**
+>
+> Example:
+>
+> *sXXXXXX, sXXXXXX, sXXXXXX*
+>
+> Answer:
 
-> *s233353,s195849, s180351*
+s233353, s195849, s180351
 
 ### Question 3
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
@@ -136,7 +142,7 @@ MLOPS 41
 >
 > Answer:
 
-We used the third-party package Hugging Face Diffusers library in our project to be able to generate pixel art images. Specfically we used Denoising Diffusion Probabilistic Models (DDPMscheduler), UNet2DModel and optimization.get_scheduler to denoise, train the model and optimizes the learning.
+We used the third-party package Hugging Face Diffusers library in our project to be able to generate pixel art images. Specfically we used Denoising Diffusion Probabilistic Models (DDPMscheduler), UNet2DModel and optimization.get_scheduler to denoise, train the model and optimizes the learning. 
 
 ## Coding environment
 
@@ -206,13 +212,13 @@ We used the third-party package Hugging Face Diffusers library in our project to
 >
 > Answer:
 
-We implemented 4 test files; data, model, train and api.
+We implemented 4 test files; data, model, train and api. 
 
-- For data, we tested the if the path which contained the data existed, then tested that the images in the 3rd label has the correct amount together with the correct data format.
+- For data, we tested the if the path which contained the data existed, then tested that the images in the 3rd label has the correct amount together with the correct data format. 
 
-- For model, we test if a model checkpoint exists, then tested that the model was correctly initialized and generated sample from the model has the correct output shape.
+- For model, we test if a model checkpoint exists, then tested that the model was correctly initialized and generated sample from the model has the correct output shape. 
 
-- For training, we test if the training directory correctly points to the model directory, then tested that the training ran succesfully with dataset subset with 1 epoch.
+- For training, we test if the training directory correctly points to the model directory, then tested that the training ran succesfully with dataset subset with 1 epoch. 
 
 - For api, we test if the app succesfully starts, a small load test and can generate an image from the model that we worked with.
 
@@ -230,7 +236,7 @@ We implemented 4 test files; data, model, train and api.
 >
 > Answer:
 
-Our total code coverage is at exaclty 50%, which is not nearly enough for us to trust that it is error or bug free. Our highest code coverage percentage for the individual file outside of init, is cloud_function.py at 68% which is responsible for loading the model from GCP and communicationg with the cloud to get samples and visualize them in addition to storing them. The lowest code coverage percentage is 23% for generate_sample.py which is responsible for taking a model and generate samples. From the coverage report, it is clear that additional tests are needed to get 100% code coverage, but even then, it is still difficult to fully trust that the code will be error free as the complexity of the tests depends on our ability to test for edge-cases.
+Our total code coverage is at exaclty 50%, which is not nearly enough for us to trust that it is error or bug free. Our highest code coverage percentage for the individual file outside of init, is cloud_function.py at 68% which is responsible for loading the model from GCP and communicationg with the cloud to get samples and visualize them in addition to storing them. The lowest code coverage percentage is 23% for generate_sample.py which is responsible for taking a model and generate samples. From the coverage report, it is clear that additional tests are needed to get 100% code coverage, but even then, it is still difficult to fully trust that the code will be error free as the complexity of the tests depends on our ability to test for edge-cases. 
 
 ### Question 9
 
@@ -247,7 +253,9 @@ Our total code coverage is at exaclty 50%, which is not nearly enough for us to 
 
 Our workflow utilized branches and pull requests for version control. The '.yaml' files show multiple workflows triggered on both push to the main branch and 'pull_request' to the main branch. This approach allows team members to work on separate branches, making independent changes without directly modifying the main branch.
 
-Pull requests serve as a critical code review mechanism. Before merging any changes into the main branch, our workflows run comprehensive checks including unit tests, type checking (mypy), code linting (Ruff), and data synchronization tests across different operating systems and Python versions. This ensures code quality, catches potential issues early, and maintains the integrity of the main branch by requiring all checks to pass before merging.
+Pull requests serve as a critical code review mechanism. Before merging any changes into the main branch, our workflows run comprehensive checks including unit tests, type checking (mypy), code linting (Ruff), and data synchronization tests across different operating systems and Python versions. 
+This ensures code quality, catches potential issues early, and maintains the integrity of the main branch by requiring all checks to pass before merging.
+
 The pre-commit CI workflow further enhances our version control by automatically checking and potentially fixing code formatting and style before commits are finalized.
 
 ### Question 10
@@ -263,7 +271,7 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 10 fill here ---
+We used 
 
 ### Question 11
 
@@ -299,7 +307,9 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 12 fill here ---
+> We used typer parsing as the CLI. It included run_name, epochs and label_subset. As an example:
+train --epochs 100*
+
 
 ### Question 13
 
@@ -314,7 +324,7 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 13 fill here ---
+> *We made a config file where we specified the model parameters, training parameters, data paths and wandb logging parameters in a yaml file. This was then parsed by hydra.*
 
 ### Question 14
 
@@ -376,7 +386,8 @@ These metrics are important because they help identify training issues early, ve
 >
 > Answer:
 
---- question 16 fill here ---
+> *We added a lot of logging to our script for debugging to see which parts fail. These served as print statements.
+We did profile our training script and generate_sample script to see what parts require optimization the most.*
 
 ## Working in the cloud
 
@@ -508,7 +519,7 @@ We enhanced the API with production-ready features:
 
 We successfully deployed our API using Google Cloud Run for scalable, serverless deployment. The deployment process is automated through our cloudbuild.yaml pipeline, which:
 1. Builds the Docker container from api.dockerfile
-2. Pushes it to Google Container Registry
+2. Pushes it to Google Container Registry 
 3. Deploys to Cloud Run with automatic scaling
 
 The API is accessible at https://pixel-art-api-146224029275.europe-west1.run.app. Users can interact with it through:
@@ -601,8 +612,7 @@ This would have enabled us to track model performance degradation, resource util
 > *costing the most was ... due to ... . Working in the cloud was ...*
 >
 > Answer:
-
---- question 27 fill here ---
+We worked in one cloud for the whole project. We spent 5.44 USD in total. Compute engine training (renting the L4 GPU) drained the credits the most by far. Working in the cloud is very tedious and time consuming, however we understand the benefits of it when thinking about scaling applications.
 
 ### Question 28
 
@@ -618,7 +628,7 @@ This would have enabled us to track model performance degradation, resource util
 >
 > Answer:
 
---- question 28 fill here ---
+We implemented a frontend and a datadrift monitoring system to the build. 
 
 ### Question 29
 
@@ -634,23 +644,25 @@ This would have enabled us to track model performance degradation, resource util
 > *Whenever we commit code and push to GitHub, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
->The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
-Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
->From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
+
+[](figures/overview.jpeg)
+- The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
+- Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
+- From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
 
 >For the training flow:
 
-T>he training pipeline pulls data using DVC from Cloud Storage Runs the training with configurations from Hydra Logs metrics and model artifacts to Weights & Biases Model artifacts are stored back in Cloud Storage.
+- The training pipeline pulls data using DVC from Cloud Storage Runs the training with configurations from Hydra Logs metrics and model artifacts to Weights & Biases Model artifacts are stored back in Cloud Storage.
 
 >For the serving flow:
 
->Cloud Run pulls the latest Docker image from Container Registry
+- Cloud Run pulls the latest Docker image from Container Registry
 It runs the FastAPI backend service
 The Streamlit frontend interacts with this backend
 When users generate images, they're stored back in Cloud Storage
 The entire service is monitored through Cloud Monitoring with alerts set up
 
->All components are connected through GCP, with Cloud Storage acting as a central hub for data, models, and generated images, while Cloud Run handles the serving infrastructure and Cloud Monitoring keeps track of system health.
+- All components are connected through GCP, with Cloud Storage acting as a central hub for data, models, and generated images, while Cloud Run handles the serving infrastructure and Cloud Monitoring keeps track of system health.
 
 ### Question 30
 
