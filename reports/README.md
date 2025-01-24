@@ -142,7 +142,8 @@ s233353, s195849, s180351
 >
 > Answer:
 
-We used the third-party package Hugging Face Diffusers library in our project to be able to generate pixel art images. Specfically we used Denoising Diffusion Probabilistic Models (DDPMscheduler), UNet2DModel and optimization.get_scheduler to denoise, train the model and optimizes the learning. These components were crucial in generating pixel art images by enabling model denoising, training, and learning rate optimization.
+We utilized the Hugging Face Diffusers library, a powerful third-party package, to enable generation of high-quality pixel art images in our project. Specifically, we leveraged key components like Denoising Diffusion Probabilistic Models (DDPMscheduler), UNet2DModel, and optimization.get_scheduler to perform crucial tasks - model denoising, training, and learning rate optimization. These advanced machine learning capabilities from the Diffusers library were pivotal in enhancing our pixel art generation, allowing us to create sophisticated, visually striking results that met the project's requirements. 
+
 
 ## Coding environment
 
@@ -162,14 +163,13 @@ We used the third-party package Hugging Face Diffusers library in our project to
 >
 > Answer:
 
-We updated our requirement.txt in parallel with adding libraries to our code. That was how we managed the dependencies in our project. We also have a pyproject.toml which will go through the necessary steps to copy our environment. 
+We updated our requirement.txt in parallel with adding libraries to our code together with pyproject.toml, it was our way to manage the dependencies in our project. We also have a pyproject.toml which will go through the necessary steps to copy our environment. 
 
 Step 1. Clone our repository.
 
 Step 2. Create your own blank environment. 
 
 Step 3. run 'pip install -e .' to copy our environment dependencies to your environment. 
-
 
 ### Question 5
 
@@ -331,7 +331,7 @@ All workflows utilize GitHub Actions' matrix testing capabilities for cross-plat
 >
 > Answer:
 
-> We used typer parsing as the CLI. It included run_name, epochs and label_subset. As an example:
+We used typer parsing as the CLI. It included run_name, epochs and label_subset. As an example:
 train --epochs 100*
 
 
@@ -348,7 +348,7 @@ train --epochs 100*
 >
 > Answer:
 
-> *We made a config file where we specified the model parameters, training parameters, data paths and wandb logging parameters in a yaml file. This was then parsed by hydra.*
+We made a config file where we specified the model parameters, training parameters, data paths and wandb logging parameters in a yaml file. This was then parsed by hydra.
 
 ### Question 14
 
