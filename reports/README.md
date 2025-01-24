@@ -289,7 +289,13 @@ We use DVC to manage our data in the project. The data that we have contains 890
 >
 > Answer:
 
---- question 11 fill here ---
+We have organized our continuous integration into 5 separate workflow files, each handling a distinct aspect of our testing and deployment pipeline:
+The first workflow handles unit testing (tests.yaml) across multiple operating systems (Ubuntu, Windows, macOS) and Python versions (3.10, 3.11). It utilizes pip caching for efficient dependency management and runs coverage reports through pytest.
+The second workflow (codecheck.yaml) manages code quality through Ruff for linting and formatting, along with mypy for type checking. Like our testing workflow, it runs on multiple OS/Python combinations with caching enabled.
+The third workflow (cml_data.yaml) focuses on our data pipeline, validating our data processing across platforms. It handles Google Cloud authentication and DVC data pulling to ensure our data processing remains consistent.
+For documentation, we have a dedicated workflow (docs.yaml) that automatically deploys our MkDocs documentation when changes are pushed to main.
+Finally, our pre-commit workflow (pre_commit.yaml) enforces code quality standards before commits and can automatically fix formatting issues.
+All workflows utilize GitHub Actions' matrix testing capabilities for cross-platform compatibility and dependency caching to optimize execution time. An example of our testing workflow can be seen [here](https://github.com/Gyllz98/pixel_art_diffusion/actions/runs/12949125106/job/36119190985), which demonstrates our comprehensive approach to ensuring code quality and reliability.
 
 ## Running code and tracking experiments
 
