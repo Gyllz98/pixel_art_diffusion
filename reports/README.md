@@ -597,7 +597,7 @@ This would have enabled us to track model performance degradation, resource util
 > *costing the most was ... due to ... . Working in the cloud was ...*
 >
 > Answer:
-We worked in one cloud for the whole project. We spent 5.44 USD in total. Compute engine training (renting the L4 GPU) drained the credits the most by far. Working in the cloud is very tedious and time consuming, however we understand the benefits of it when thinking about scaling applications.
+- *We worked in one cloud for the whole project. We spent 5.44 USD in total. Compute engine training (renting the L4 GPU) drained the credits the most by far. Working in the cloud is very tedious and time consuming, however we understand the benefits of it when thinking about scaling applications.*
 
 ### Question 28
 
@@ -613,7 +613,7 @@ We worked in one cloud for the whole project. We spent 5.44 USD in total. Comput
 >
 > Answer:
 
-We implemented a frontend and a datadrift monitoring system to the build. 
+- We implemented a frontend and a datadrift monitoring system to the build. 
 
 ### Question 29
 
@@ -631,23 +631,23 @@ We implemented a frontend and a datadrift monitoring system to the build.
 > Answer:
 
 [](figures/overview.jpeg)
-- The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
-- Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
-- From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
+The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
 
->For the training flow:
+Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
 
-- The training pipeline pulls data using DVC from Cloud Storage Runs the training with configurations from Hydra Logs metrics and model artifacts to Weights & Biases Model artifacts are stored back in Cloud Storage.
+From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
 
->For the serving flow:
+- For the training flow:
+The training pipeline pulls data using DVC from Cloud Storage Runs the training with configurations from Hydra Logs metrics and model artifacts to Weights & Biases Model artifacts are stored back in Cloud Storage.
 
-- Cloud Run pulls the latest Docker image from Container Registry
+- For the serving flow:
+Cloud Run pulls the latest Docker image from Container Registry
 It runs the FastAPI backend service
 The Streamlit frontend interacts with this backend
 When users generate images, they're stored back in Cloud Storage
 The entire service is monitored through Cloud Monitoring with alerts set up
 
-- All components are connected through GCP, with Cloud Storage acting as a central hub for data, models, and generated images, while Cloud Run handles the serving infrastructure and Cloud Monitoring keeps track of system health.
+All components are connected through GCP, with Cloud Storage acting as a central hub for data, models, and generated images, while Cloud Run handles the serving infrastructure and Cloud Monitoring keeps track of system health.
 
 ### Question 30
 
@@ -658,10 +658,9 @@ The entire service is monitored through Cloud Monitoring with alerts set up
 >
 > Example:
 > *The biggest challenges in the project was using ... tool to do ... . The reason for this was ...*
->
-> Answer:
 
-> This project the toughes challenge we faced was deploying it to the cloud. We had to spend an exorbitant amount of time in cloud pulling, pushing and deploying the trigger when we pushed to main. This was due not being able to access stuff beacause of policies. Also setting up code-checks and other workflows slowed down the development process quite a bit. Also if these failed it meant a 10 minute setback each time. 
+> Answer:
+This project the toughes challenge we faced was deploying it to the cloud. We had to spend an exorbitant amount of time in cloud pulling, pushing and deploying the trigger when we pushed to main. This was due not being able to access stuff beacause of policies. Also setting up code-checks and other workflows slowed down the development process quite a bit. Also if these failed it meant a 10 minute setback each time.
 
 ### Question 31
 
@@ -679,4 +678,4 @@ The entire service is monitored through Cloud Monitoring with alerts set up
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
-> Student s233353 was in charge of building the docker images both for training and the api, integrating configuration experiments, profiling, setting up CI workflows for the git repo (pre-commit, code-check, dvc code sync, unittests), building the front end, data drift analysis and some parts of deploying it to cloud.
+Student s233353 was in charge of building the docker images both for training and the api, integrating configuration experiments, profiling, setting up CI workflows for the git repo (pre-commit, code-check, dvc code sync, unittests), building the front end, data drift analysis and some parts of deploying it to cloud.
