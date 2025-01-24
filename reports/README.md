@@ -142,7 +142,8 @@ s233353, s195849, s180351
 >
 > Answer:
 
-We utilized the Hugging Face Diffusers library, a powerful third-party package, to enable generation of high-quality pixel art images in our project. Specifically, we leveraged key components like Denoising Diffusion Probabilistic Models (DDPMscheduler), UNet2DModel, and optimization.get_scheduler to perform crucial tasks - model denoising, training, and learning rate optimization. These advanced machine learning capabilities from the Diffusers library were pivotal in enhancing our pixel art generation, allowing us to create sophisticated, visually striking results that met the project's requirements. 
+We utilized the Hugging Face Diffusers library, an advanced third-party package, to generate high-quality pixel art images in our project. This framework provided essential tools and functionality, including Denoising Diffusion Probabilistic Models (DDPMscheduler), UNet2DModel, and optimization.get_scheduler. These components played a crucial role in various stages of the project, such as model denoising, training, and managing the learning rate for optimization. By leveraging these features, we were able to implement sophisticated machine learning techniques to enhance the quality and detail of our generated pixel art. The Diffusers library significantly streamlined complex processes, ensuring efficiency and precision in our workflow. Ultimately, it helped us meet the project's technical and artistic requirements.
+
 
 
 ## Coding environment
@@ -163,13 +164,16 @@ We utilized the Hugging Face Diffusers library, a powerful third-party package, 
 >
 > Answer:
 
-We updated our requirement.txt in parallel with adding libraries to our code together with pyproject.toml, it was our way to manage the dependencies in our project. We also have a pyproject.toml which will go through the necessary steps to copy our environment. 
+To effectively manage dependencies in our project, we updated both requirements.txt and pyproject.toml in parallel with adding libraries to our code. This approach ensured a synchronized and organized way to track and manage the necessary packages. 
 
-Step 1. Clone our repository.
+To replicate our environment, follow these steps:
 
-Step 2. Create your own blank environment. 
+Step 1. Clone our repository to your local machine.
+Step 2. Create a new, blank virtual environment to isolate the project dependencies.
+Step 3. Run 'pip install -e .' within the project directory. This command will install the dependencies listed in 'pyproject.toml' and link the local project for development.
 
-Step 3. run 'pip install -e .' to copy our environment dependencies to your environment. 
+This method ensures all required packages and versions are correctly installed, making it straightforward for collaborators to set up their environment and maintain consistency across development workflows.
+
 
 ### Question 5
 
@@ -185,9 +189,7 @@ Step 3. run 'pip install -e .' to copy our environment dependencies to your envi
 >
 > Answer:
 
-We used cookiecutter template and filled out all of the folders.
-We also added a dvc folder for data version control. In the root folder, we have added cloudbuild.yaml for the GCP and a ruff_cache folder for code check for pull request to GitHub. 
-
+We initialized our project using the cookiecutter template and filled out all the standard folders, ensuring a well-organized project structure. Additionally, we incorporated a '.dvc' folder for data version control, allowing us to efficiently manage datasets and track changes throughout the project. In the root directory, we added a 'cloudbuild.yaml' file to configure continuous integration and deployment using Google Cloud Platform (GCP). Furthermore, we included a '.ruff_cache' folder to enable automated code checks during pull requests to GitHub, ensuring consistent code quality and adherence to project standards. These modifications enhanced the functionality of the template while maintaining its core structure, enabling seamless collaboration and streamlined development processes tailored to our project’s specific requirements.
 
 ### Question 6
 
@@ -229,15 +231,13 @@ These practices are crucial in larger projects because they prevent technical de
 >
 > Answer:
 
-We implemented 4 test files; data, model, train and api. 
+We implemented four test files: 'data', 'model', 'train', and 'api'.
 
-- For data, we tested the if the path which contained the data existed, then tested that the images in the 3rd label has the correct amount together with the correct data format. 
+- Data: Tested if the data path exists, verified the correct number and format of images in the third label.
+- Model: Checked if the model checkpoint exists, ensured proper model initialization, and validated that generated samples had the correct output shape.
+- Training: Confirmed the training directory points to the correct model directory and successfully tested training on a dataset subset with one epoch.
+- API: Verified the app starts successfully, ran a load test, and ensured image generation from the model works as expected.
 
-- For model, we test if a model checkpoint exists, then tested that the model was correctly initialized and generated sample from the model has the correct output shape. 
-
-- For training, we test if the training directory correctly points to the model directory, then tested that the training ran succesfully with dataset subset with 1 epoch. 
-
-- For api, we test if the app succesfully starts, a small load test and can generate an image from the model that we worked with.
 
 
 ### Question 8
@@ -288,7 +288,11 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
-We use DVC to manage our data in the project. The data that we have contains 89000 images, thus zipping it to archive.zip was necessary to utilize DVC efficiently. The version control is improved as using the GitHub DVC workflow automatically syncs changes and updates the data directory. This streamliness our project's data management. 
+We used DVC to manage data in our project, which consisted of 89,000 images. To optimize storage and efficiency, we compressed the data into an 'archive.zip' file, enabling DVC to handle it effectively. 
+
+By integrating the GitHub DVC workflow, we ensured that any changes to the dataset were automatically synchronized and the data directory was consistently updated. This implementation significantly streamlined our data management process, providing version control for seamless collaboration and reproducibility. 
+
+With DVC, tracking data changes alongside code modifications became effortless, ensuring our pipeline remained organized and scalable while avoiding discrepancies or manual overhead during development.
 
 
 ### Question 11
