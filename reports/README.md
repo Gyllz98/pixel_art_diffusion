@@ -59,66 +59,44 @@ will check the repositories and the code to verify your answers.
 * [x] Do a bit of code typing and remember to document essential parts of your code (M7)
 * [x] Setup version control for your data or part of your data (M8)
 * [x] Add command line interfaces and project commands to your code where it makes sense (M9)
-\\ Gustav: Did train and evaluate command line interfaces, still need to to typer arg parser for train and evaluate
 * [x] Construct one or multiple docker files for your code (M10)
-\\ Balazs: Did the train dockerfile just needs some modifications after finishing the training loop
 * [x] Build the docker files locally and make sure they work as intended (M10)
-\\ Balazs:
 * [x] Write one or multiple configurations files for your experiments (M11)
-\\ Balazs: Created 2 experiment file, have to fill out based on training loop
 * [x] Used Hydra to load the configurations and manage your hyperparameters (M11)
-\\ Need to use hydra for importing
 * [x] Use profiling to optimize your code (M12)
-\\ Balazs: Need files first for profiling and checking performance.
 * [x] Use logging to log important events in your code (M14)
-\\ Gustav: Need it in the files, to be done
 * [x] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
-\\ Gustav: need to add the model as an artifact, then do model registry
 * [ ] Consider running a hyperparameter optimization sweep (M14)
-\\ if enough resources
 * [ ] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
 
 ### Week 2
 
 * [x] Write unit tests related to the data part of your code (M16)
-\\ Mickael: test_data.py is almost done
 * [x] Write unit tests related to model construction and or model training (M16)
-\\ Mickael: Working on model training after API.
 * [x] Calculate the code coverage (M16)
-\\ Mickael: TODO
 * [x] Get some continuous integration running on the GitHub repository (M17)
 * [x] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
 * [x] Add a linting step to your continuous integration (M17)
 * [x] Add pre-commit hooks to your version control setup (M18)
 * [x] Add a continues workflow that triggers when data changes (M19)
-
 * [x] Add a continues workflow that triggers when changes to the model registry is made (M19)
 * [x] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
 * [x] Create a trigger workflow for automatically building your docker images (M21)
 * [x] Get your model training in GCP using either the Engine or Vertex AI (M21)
 * [x] Create a FastAPI application that can do inference using your model (M22)
-\\ MICKAEL: TO DO, call model functions
 * [x] Deploy your model in GCP using either Functions or Run as the backend (M23)
-\\ GUSTAV: done but could be refined.
 * [x] Write API tests for your application and setup continues integration for these (M24)
-\\ MICKAEL: TO DO, after FastAPI
 * [x] Load test your application (M24)
-\\ MICKAEL: TO DO, after FastAPI
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
 * [x] Create a frontend for your API (M26)
 
 ### Week 3
 
 * [x] Check how robust your model is towards data drifting (M27)
-\\ Balazs: next, after frontend - can set up, but will not show anything
 * [x] Deploy to the cloud a drift detection API (M27)
-\\ BALAZS + GUSTAV: Basic version
 * [x] Instrument your API with a couple of system metrics (M28)
-\\ MICKAEL: TODO - Application stats, track usage
 * [x] Setup cloud monitoring of your instrumented application (M28)
-\\ Mickael + Gustav: TODO
 * [x] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
-\\ Gustav: TODO - Requires the metrics
 * [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 * [x] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
 * [x] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
