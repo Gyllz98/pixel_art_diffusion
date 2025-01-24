@@ -730,7 +730,25 @@ All components are connected through GCP, with Cloud Storage acting as a central
 >
 > Answer:
 
-This project the toughes challenge we faced was deploying it to the cloud. We had to spend an exorbitant amount of time in cloud pulling, pushing and deploying the trigger when we pushed to main. This was due not being able to access stuff beacause of policies. Also setting up code-checks and other workflows slowed down the development process quite a bit. Also if these failed it meant a 10 minute setback each time. 
+The most significant challenges in our project centered around cloud deployment and CI/CD infrastructure setup. Cloud configuration presented substantial difficulties due to complex service account permissions and obscure access policies. The cloud logging system provided poor visibility for debugging deployment issues, making it challenging to understand why deployments failed or behaved unexpectedly after having succeeded locally.
+Our CI/CD pipeline faced severe performance challenges that significantly impacted development velocity:
+
+- Docker builds were extremely slow without caching (which we attempted but couldn't successfully implement despite multiple approaches)
+- Each failed workflow run resulted in 10+ minute setbacks
+- Matrix testing across different OS/Python versions multiplied build times dramatically
+- Code checks and pre-commit hooks added substantial overhead to every push
+- Building containers with no cache regularly took 15-20 minutes
+
+Infrastructure maintenance posed ongoing challenges throughout the project:
+
+- DVC data pipeline required careful integration with cloud storage
+- Cloud build triggers needed precise configuration with main branch pushes
+- Service account access levels were often unclear and required trial-and-error
+- Debugging cloud deployment issues was particularly difficult due to limited logging visibility
+- Cloud storage permissions had to be carefully balanced between security and accessibility
+
+The most time-consuming aspect was iterating on cloud configurations while dealing with permission issues and lengthy build times. Working around these limitations required careful planning of pushes to main and strategic use of branch development to minimize pipeline triggers. The lack of successful caching implementation meant we had to be extremely selective about when to trigger full rebuilds.
+This experience emphasized the critical importance of early cloud infrastructure planning and the significant impact of build performance on development velocity. It also highlighted how seemingly simple cloud integrations can become complex when dealing with real-world security policies and access controls.
 
 ### Question 31
 
