@@ -676,6 +676,7 @@ All components are connected through GCP, with Cloud Storage acting as a central
 > *The biggest challenges in the project was using ... tool to do ... . The reason for this was ...*
 
 > Answer:
+
 This project the toughes challenge we faced was deploying it to the cloud. We had to spend an exorbitant amount of time in cloud pulling, pushing and deploying the trigger when we pushed to main. This was due not being able to access stuff beacause of policies. Also setting up code-checks and other workflows slowed down the development process quite a bit. Also if these failed it meant a 10 minute setback each time.
 
 ### Question 31
