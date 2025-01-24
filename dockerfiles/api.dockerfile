@@ -14,13 +14,8 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy DVC files
-COPY .dvc/ .dvc/
-COPY .dvcignore .
-COPY dvc.yaml .
-COPY dvc.lock .
-
-# Copy the application code
+# Copy DVC config and application code
+COPY .dvc/config .dvc/
 COPY src/pixel_art_diffusion /app/pixel_art_diffusion/
 
 # Set environment variables
