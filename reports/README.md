@@ -313,8 +313,8 @@ With DVC, tracking data changes alongside code modifications became effortless, 
 We have organized our continuous integration into 5 separate workflow files, each handling a distinct aspect of our testing and deployment pipeline:
 The first workflow handles unit testing (tests.yaml) across multiple operating systems (Ubuntu, Windows, macOS) and Python versions (3.10, 3.11). It utilizes pip caching for efficient dependency management and runs coverage reports through pytest.
 The second workflow (codecheck.yaml) manages code quality through Ruff for linting and formatting, along with mypy for type checking. Like our testing workflow, it runs on multiple OS/Python combinations with caching enabled.
-The third workflow (cml_data.yaml) focuses on our data pipeline, validating our data processing across platforms. It handles Google Cloud authentication and DVC data pulling to ensure our data processing remains consistent.
-For documentation, we have a dedicated workflow (docs.yaml) that automatically deploys our MkDocs documentation when changes are pushed to main.
+The third workflow (cml_data.yaml) focuses on our data pipeline, validating our data processing across platforms. It handles Google Cloud authentication and DVC data pulling to ensure our data processing remains consistent in dimensionality and amount.
+For documentation, we have a dedicated workflow (docs.yaml) that automatically deploys our MkDocs documentation when changes are pushed to main. However, for better CI long term a check should be added to make sure that the documentation is actually updated.
 Finally, our pre-commit workflow (pre_commit.yaml) enforces code quality standards before commits and can automatically fix formatting issues.
 All workflows utilize GitHub Actions' matrix testing capabilities for cross-platform compatibility and dependency caching to optimize execution time. An example of our testing workflow can be seen [here](https://github.com/Gyllz98/pixel_art_diffusion/actions/runs/12949125106/job/36119190985), which demonstrates our comprehensive approach to ensuring code quality and reliability.
 
@@ -384,7 +384,7 @@ Epoch-level metrics:
 
 These metrics are important because they help identify training issues early, verify the model is learning properly, and ensure hyperparameters like learning rate are appropriately tuned. The smooth downward trend in loss curves and stable learning rate decay suggest successful training. But as we have spend the vast majority of the time on cloud, api, and CI/CD we did not run many experiments. Aditionally, we did prototyping in a notebook locally until training was stable.
 
-[](figures/wandb.jpeg)
+![](figures/wandb.jpeg)
 
 ### Question 15
 
@@ -395,11 +395,18 @@ These metrics are important because they help identify training issues early, ve
 >
 > Example:
 > *For our project we developed several images: one for training, inference and deployment. For example to run the*
-> *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>*
+> *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <docker.io/darius0429/pixel-art-app>*
 >
 > Answer:
 
---- question 15 fill here ---
+We dockerized the training script and the api script. One has to build the image with:
+docker build -t pixel-art-app:latest -f dockerfiles/api.dockerfile .
+
+And run it with:
+docker run -p 8080:8080 pixel-art-app
+
+
+
 
 ### Question 16
 
@@ -414,7 +421,7 @@ These metrics are important because they help identify training issues early, ve
 >
 > Answer:
 
-> *We added a lot of logging to our script for debugging to see which parts fail. These served as print statements.
+*We added a lot of logging to our script for debugging to see which parts fail. These served as print statements.
 We did profile our training script and generate_sample script to see what parts require optimization the most.*
 
 ## Working in the cloud
@@ -465,8 +472,8 @@ The configuration was automated through Cloud Build (as seen in cloudbuild.yaml)
 >
 > Answer:
 
-[](figures/bucketshot1.jpeg)
-[](figures/bucketshot2.jpeg)
+![](figures/bucketshot1.jpeg)
+![](figures/bucketshot2.jpeg)
 
 ### Question 20
 
@@ -475,8 +482,8 @@ The configuration was automated through Cloud Build (as seen in cloudbuild.yaml)
 >
 > Answer:
 
-[](figures/ARshot1.jpeg)
-[](figures/ARshot2.jpeg)
+![](figures/ARshot1.jpeg)
+![](figures/ARshot2.jpeg)
 
 ### Question 21
 
@@ -485,7 +492,7 @@ The configuration was automated through Cloud Build (as seen in cloudbuild.yaml)
 >
 > Answer:
 
-[](figures/cloudbuild.jpeg)
+![](figures/cloudbuild.jpeg)
 
 ### Question 22
 
@@ -530,6 +537,8 @@ We enhanced the API with production-ready features:
 - Async context manager for model loading
 - Streaming responses for image delivery
 - Health check endpoint
+
+All of which is intergrated in the cloud deployed api container.
 
 ### Question 24
 
@@ -673,16 +682,16 @@ We implemented a frontend and a datadrift monitoring system to the build.
 >
 > Answer:
 
-[](figures/overview.jpeg)
+![](figures/overview.jpeg)
 - The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
 - Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
 - From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
 
->For the training flow:
+For the training flow:
 
 - The training pipeline pulls data using DVC from Cloud Storage Runs the training with configurations from Hydra Logs metrics and model artifacts to Weights & Biases Model artifacts are stored back in Cloud Storage.
 
->For the serving flow:
+For the serving flow:
 
 - Cloud Run pulls the latest Docker image from Container Registry
 It runs the FastAPI backend service
