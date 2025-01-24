@@ -158,7 +158,7 @@ MLOPS 41
 >
 > Answer:
 
---- question 3 fill here ---
+We used the third-party package Hugging Face Diffusers library in our project to be able to generate pixel art images. Specfically we used Denoising Diffusion Probabilistic Models (DDPMscheduler), UNet2DModel and optimization.get_scheduler to denoise, train the model and optimizes the learning. 
 
 ## Coding environment
 
