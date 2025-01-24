@@ -378,7 +378,14 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 17 fill here ---
+- Bucket: We use Bucket to store our data, model, and generated images for drift detection.
+- Functions: We made a cloud Function to load our model from the bucket. We also made one that does different tasks related to datadrifting such as pushing and pulling generated images.
+- Artifact Registry: Holds our docker images.
+- Build + trigger: Everytime we time new code is pushed to main we rebuild the the api and deploy it.
+- Run: As stated above our api is deployed with cloud Run so that you only need to launch the frontend locally.
+- Monitoring: Monitors cpu usage among other things of our application.
+- Alert: as generation is linked to uploading to the bucket we have set up an alert that triggers if too many uploads are made to the bucket within half an hour.
+- Compute Engine: Our model is trained in a VM using L4 gpu.
 
 ### Question 18
 
@@ -393,7 +400,9 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 18 fill here ---
+The main way we used Google Cloud Platform's Compute Engine was for training our diffusion model. We provisioned a VM instance with an NVIDIA L4 GPU, which offers good performance for ML workloads while being cost-effective. The VM was configured with 16 vCPUs and 64GB RAM to handle our data preprocessing and training pipeline efficiently.
+The instance was launched using our custom Docker container (defined in dockerfiles/train.dockerfile) which contained all necessary dependencies including PyTorch, diffusers library, and our training code. We used Debian as the base OS since it works well with ML workloads.
+The configuration was automated through Cloud Build (as seen in cloudbuild.yaml), allowing us to consistently deploy our training environment. The L4 GPU proved sufficient for training our 16x16 pixel art model, offering a good balance between cost and performance for our relatively small image generation task.
 
 ### Question 19
 
@@ -402,7 +411,8 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 19 fill here ---
+[](figures/bucketshot1.jpeg)
+[](figures/bucketshot2.jpeg)
 
 ### Question 20
 
@@ -411,7 +421,8 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 20 fill here ---
+[](figures/ARshot1.jpeg)
+[](figures/ARshot2.jpeg)
 
 ### Question 21
 
@@ -420,7 +431,7 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 21 fill here ---
+[](figures/cloudbuild.jpeg)
 
 ### Question 22
 
@@ -435,7 +446,9 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 22 fill here ---
+We successfully trained our pixel art diffusion model in Google Cloud Platform using Compute Engine. Our training pipeline was implemented through a multi-stage process using Cloud Build and custom Docker containers. First, we prepared our training container using train.dockerfile which included PyTorch, the diffusers library, and our custom training code. The training data was stored in a Cloud Storage bucket for efficient access.
+We chose Compute Engine over Vertex AI because we needed fine-grained control over the GPU configuration and training environment. Our custom training pipeline required specific dependencies and data preprocessing steps that were easier to implement in a custom container. Additionally, Compute Engine provided better cost optimization for our use case, as we could precisely control when the GPU instance was running and shut it down automatically when training completed.
+The flexibility of Compute Engine allowed us to implement features like automated model checkpointing to Cloud Storage and seamless integration with our monitoring stack, which proved essential for maintaining our MLOps pipeline.
 
 ## Deployment
 
@@ -452,7 +465,17 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 23 fill here ---
+We implemented a comprehensive API using FastAPI for our pixel art generation model. The API (api.py) features several key endpoints: /generate for creating new pixel art images, /samples for retrieving stored samples, /model_info for model status, and /data_drift for monitoring data quality.
+
+We enhanced the API with production-ready features:
+
+- Prometheus metrics tracking generation requests, memory usage, and latency
+- Background task handling for storing generated samples
+- Proper error handling and logging
+- Data drift monitoring using Evidently AI
+- Async context manager for model loading
+- Streaming responses for image delivery
+- Health check endpoint
 
 ### Question 24
 
@@ -468,7 +491,26 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 24 fill here ---
+We successfully deployed our API using Google Cloud Run for scalable, serverless deployment. The deployment process is automated through our cloudbuild.yaml pipeline, which:
+1. Builds the Docker container from api.dockerfile
+2. Pushes it to Google Container Registry 
+3. Deploys to Cloud Run with automatic scaling
+
+The API is accessible at https://pixel-art-api-146224029275.europe-west1.run.app. Users can interact with it through:
+
+1. Web Interface (Streamlit):
+```bash
+pixel-art-app
+```
+2. Direct API calls:
+```bash
+# Generate 4 pixel art images
+curl -X POST "https://pixel-art-api-146224029275.europe-west1.run.app/generate?num_samples=4" -o generated_art.png
+
+# Get model info
+curl https://pixel-art-api-146224029275.europe-west1.run.app/model_info
+```
+Cloud Run automatically handles scaling based on demand, and we only pay for actual usage. The service integrates with Cloud Monitoring and Logging for observability.
 
 ### Question 25
 
@@ -483,7 +525,22 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 25 fill here ---
+We conducted comprehensive load testing using Locust, simulating 100 concurrent users performing different API tasks. The test prioritized three main tasks:
+
+1. Loading the page and model (highest priority)
+2. Retrieving model information
+3. Generating pixel art samples (most resource-intensive)
+
+The load testing results showed interesting patterns in API performance under stress:
+
+- Mean response time increased proportionally with user load
+- The model generation endpoint showed the highest latency, as expected
+- The API demonstrated good stability, never crashing despite the load
+- Cloud Run's auto-scaling helped maintain service availability
+
+The test results helped us identify potential bottlenecks and validate our deployment architecture. While response times increased under load, the service remained operational throughout the test, demonstrating the robustness of our Cloud Run deployment and the effectiveness of our async request handling.
+
+For unit testing, we used pytest to test individual API endpoints and model functionality, ensuring reliable service operation.
 
 ### Question 26
 
@@ -498,7 +555,20 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 26 fill here ---
+We implemented Prometheus metrics in our API but didn't complete the cloud deployment of the monitoring stack due to time constraints. Our monitoring implementation includes:
+
+- Request metrics: `pixel_art_generate_requests_total`
+- Performance metrics: `pixel_art_generation_time_seconds`
+- Resource usage: `pixel_art_memory_usage_bytes`
+- Data drift monitoring using Evidently AI
+
+While these metrics are accessible through the API's `/metrics` endpoint, we couldn't complete the deployment of a Prometheus sidecar container in Cloud Run to collect and store them long-term. With more time, we would have:
+
+1. Deployed Prometheus alongside our API
+2. Set up regular dashboard for visualization
+3. Implemented alerts for anomalies
+
+This would have enabled us to track model performance degradation, resource utilization patterns, and data drift over time, crucial for maintaining service quality and planning capacity.
 
 ## Overall discussion of project
 
