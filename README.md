@@ -39,47 +39,118 @@ Specifically, we plan to use the following models:
 
 The directory structure of the project looks like this:
 ```txt
-├── .github/                  # Github actions and dependabot
-│   ├── dependabot.yaml
-│   └── workflows/
-│       └── tests.yaml
-├── configs/                  # Configuration files
-├── data/                     # Data directory
-│   ├── processed
-│   └── raw
-├── dockerfiles/              # Dockerfiles
-│   ├── api.Dockerfile
-│   └── train.Dockerfile
-├── docs/                     # Documentation
-│   ├── mkdocs.yml
-│   └── source/
-│       └── index.md
-├── models/                   # Trained models
-├── notebooks/                # Jupyter notebooks
-├── reports/                  # Reports
-│   └── figures/
-├── src/                      # Source code
-│   ├── project_name/
-│   │   ├── __init__.py
-│   │   ├── api.py
-│   │   ├── data.py
-│   │   ├── evaluate.py
-│   │   ├── models.py
-│   │   ├── train.py
-│   │   └── visualize.py
-└── tests/                    # Tests
-│   ├── __init__.py
-│   ├── test_api.py
-│   ├── test_data.py
-│   └── test_model.py
-├── .gitignore
-├── .pre-commit-config.yaml
-├── LICENSE
-├── pyproject.toml            # Python project file
-├── README.md                 # Project README
-├── requirements.txt          # Project requirements
-├── requirements_dev.txt      # Development requirements
-└── tasks.py                  # Project tasks
+|   .dvcignore
+|   .gitignore
+|   .pre-commit-config.yaml
+|   cloudbuild.yaml
+|   LICENSE
+|   pyproject.toml
+|   README.md
+|   requirements.txt
+|   requirements_dev.txt
+|   tasks.py
+|
++---.dvc
+|       .gitignore
+|       config
+|
++---.github
+|   |   dependabot.yaml
+|   |
+|   \---workflows
+|           cml_data.yaml
+|           codecheck.yaml
+|           docs.yaml
+|           pre_commit.yaml
+|           tests.yaml
+|
++---configs
+|   |   .gitkeep
+|   |   cloud_config.yaml
+|   |   config.yaml
+|   |   sweep.yaml
+|   |   test_config.yaml
+|   |
+|   \---experiments
+|           exp1.yaml
+|           exp2.yaml
+|
++---data
+|   +---processed
+|   |       .gitkeep
+|   |
+|   \---raw
+|           .gitkeep
+|           archive.zip.dvc
+|
++---dockerfiles
+|       api.dockerfile
+|       train.dockerfile
+|
++---docs
+|   |   mkdocs.yaml
+|   |   README.md
+|   |
+|   \---source
+|           index.md
+|
++---models
+|       .gitkeep
+|       pixel_art_diffusion-checkpoint-epoch-50.pt
+|       pixel_art_diffusion-final.pt
+|
++---notebooks
+|       .gitkeep
+|       generated_samples.png
+|       prototyping.ipynb
+|
++---reports
+|   |   .gitkeep
+|   |   README.md
+|   |   report.html
+|   |   report.py
+|   |
+|   \---figures
+|           .gitkeep
+|           ARshot1.jpeg
+|           ARshot2.jpeg
+|           bucket.png
+|           bucketshot1.jpeg
+|           bucketshot2.jpeg
+|           build.png
+|           cloudbuild.jpeg
+|           overview.png
+|           registry.png
+|           wandb.jpeg
+|           wandb.png
+|
++---src
+|   |   __init__.py
+|   |
+|   \---pixel_art_diffusion
+|           api.py
+|           cloud_function.py
+|           data.py
+|           data_drift.py
+|           frontend.py
+|           generate_sample.py
+|           model.py
+|           run_app.py
+|           run_profiling.py
+|           train.py
+|           visualize.py
+|           __init__.py
+|
+\---tests
+    |   pytest.ini
+    |   test_api.py
+    |   test_data.py
+    |   test_model.py
+    |   test_train.py
+    |   __init__.py
+    |
+    \---performancetests
+            locustfile.py
 ```
 
 
