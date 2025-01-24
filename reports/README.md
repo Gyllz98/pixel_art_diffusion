@@ -678,16 +678,16 @@ We implemented a frontend and a datadrift monitoring system to the build.
 >
 > Answer:
 
-[](figures/overview.jpeg)
+![](figures/overview.jpeg)
 - The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
 - Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
 - From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
 
->For the training flow:
+For the training flow:
 
 - The training pipeline pulls data using DVC from Cloud Storage Runs the training with configurations from Hydra Logs metrics and model artifacts to Weights & Biases Model artifacts are stored back in Cloud Storage.
 
->For the serving flow:
+For the serving flow:
 
 - Cloud Run pulls the latest Docker image from Container Registry
 It runs the FastAPI backend service
