@@ -162,10 +162,14 @@ We used the third-party package Hugging Face Diffusers library in our project to
 >
 > Answer:
 
-We updated our requirement.txt in parallel with adding libraries to our code. That was how we managed the dependencies in our project.  
+We updated our requirement.txt in parallel with adding libraries to our code. That was how we managed the dependencies in our project. We also have a pyproject.toml which will go through the necessary steps to copy our environment. 
 
-Running the code below will install all the dependencies and essentially creating a copy of our environment. 
-'pip install -e .'
+Step 1. Clone our repository.
+
+Step 2. Create your own blank environment. 
+
+Step 3. run 'pip install -e .' to copy our environment dependencies to your environment. 
+
 
 ### Question 5
 
@@ -181,7 +185,9 @@ Running the code below will install all the dependencies and essentially creatin
 >
 > Answer:
 
---- question 5 fill here ---
+We used cookiecutter template and filled out all of the folders.
+We also added a dvc folder for data version control. In the root folder, we have added cloudbuild.yaml for the GCP and a ruff_cache folder for code check for pull request to GitHub. 
+
 
 ### Question 6
 
@@ -196,7 +202,15 @@ Running the code below will install all the dependencies and essentially creatin
 >
 > Answer:
 
---- question 6 fill here ---
+We implementedcode quality and formatting rules using 
+
+- Ruff for linting and formatting
+- mypy for static type checking
+- Pre-commit hooks to enforce these standards
+
+This can be seen in our GitHub workflow and it automatically run these checks on every pull request, ensuring consistent code quality.
+
+These practices are crucial in larger projects because they prevent technical debt, improve code readability, and catch potential errors early. Type checking helps prevent runtime errors, while consistent formatting makes collaboration smoother. Documentation and typing act as built-in code documentation, making the codebase more maintainable and easier for new team members to understand.
 
 ## Version control
 
