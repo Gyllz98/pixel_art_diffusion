@@ -288,11 +288,11 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
-We used DVC to manage data in our project, which consisted of 89,000 images. To optimize storage and efficiency, we compressed the data into an 'archive.zip' file, enabling DVC to handle it effectively. 
+We used DVC to manage data in our project, which included 89,000 images. To optimize storage and efficiency, we archived the dataset into 'archive.zip' before integrating it with DVC. This setup enabled robust version control, allowing us to track changes and updates to the data seamlessly. 
 
-By integrating the GitHub DVC workflow, we ensured that any changes to the dataset were automatically synchronized and the data directory was consistently updated. This implementation significantly streamlined our data management process, providing version control for seamless collaboration and reproducibility. 
+By leveraging the GitHub-DVC workflow, we automated the synchronization of data changes, ensuring the data directory stayed up-to-date across the team. DVC significantly improved our project's data management by streamlining collaboration, reducing redundancy, and enabling precise rollbacks to previous data versions when necessary. 
 
-With DVC, tracking data changes alongside code modifications became effortless, ensuring our pipeline remained organized and scalable while avoiding discrepancies or manual overhead during development.
+This ensured consistency and reliability throughout our pipeline, making it easier to maintain and update the dataset efficiently.
 
 
 ### Question 11
@@ -734,3 +734,5 @@ The entire service is monitored through Cloud Monitoring with alerts set up
 Student s233353 was in charge of building the docker images both for training and the api, integrating configuration experiments, profiling, setting up CI workflows for the git repo (pre-commit, code-check, dvc code sync, unittests), building the front end, data drift analysis and some parts of deploying it to cloud.
 
 Student s195849 was in charge of everything GCP: Compute Engine training, Continous Deployment with Cloud Run/Build, Buckets (and in extension dvc), etc. Also finalized CI (pre-commit, code-Check, unittests). Also set-up the repo and wrote the model, training loop, and dataloader + set-up wandb logging. Also, did the documentation.
+
+Student s180351 was in charge of developing the FastAPI 
