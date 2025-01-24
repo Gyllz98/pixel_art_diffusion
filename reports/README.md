@@ -309,8 +309,8 @@ We use DVC to manage our data in the project. The data that we have contains 890
 We have organized our continuous integration into 5 separate workflow files, each handling a distinct aspect of our testing and deployment pipeline:
 The first workflow handles unit testing (tests.yaml) across multiple operating systems (Ubuntu, Windows, macOS) and Python versions (3.10, 3.11). It utilizes pip caching for efficient dependency management and runs coverage reports through pytest.
 The second workflow (codecheck.yaml) manages code quality through Ruff for linting and formatting, along with mypy for type checking. Like our testing workflow, it runs on multiple OS/Python combinations with caching enabled.
-The third workflow (cml_data.yaml) focuses on our data pipeline, validating our data processing across platforms. It handles Google Cloud authentication and DVC data pulling to ensure our data processing remains consistent.
-For documentation, we have a dedicated workflow (docs.yaml) that automatically deploys our MkDocs documentation when changes are pushed to main.
+The third workflow (cml_data.yaml) focuses on our data pipeline, validating our data processing across platforms. It handles Google Cloud authentication and DVC data pulling to ensure our data processing remains consistent in dimensionality and amount.
+For documentation, we have a dedicated workflow (docs.yaml) that automatically deploys our MkDocs documentation when changes are pushed to main. However, for better CI long term a check should be added to make sure that the documentation is actually updated.
 Finally, our pre-commit workflow (pre_commit.yaml) enforces code quality standards before commits and can automatically fix formatting issues.
 All workflows utilize GitHub Actions' matrix testing capabilities for cross-platform compatibility and dependency caching to optimize execution time. An example of our testing workflow can be seen [here](https://github.com/Gyllz98/pixel_art_diffusion/actions/runs/12949125106/job/36119190985), which demonstrates our comprehensive approach to ensuring code quality and reliability.
 
@@ -380,7 +380,7 @@ Epoch-level metrics:
 
 These metrics are important because they help identify training issues early, verify the model is learning properly, and ensure hyperparameters like learning rate are appropriately tuned. The smooth downward trend in loss curves and stable learning rate decay suggest successful training. But as we have spend the vast majority of the time on cloud, api, and CI/CD we did not run many experiments. Aditionally, we did prototyping in a notebook locally until training was stable.
 
-[](figures/wandb.jpeg)
+![](figures/wandb.jpeg)
 
 ### Question 15
 
@@ -417,7 +417,7 @@ docker run -p 8080:8080 pixel-art-app
 >
 > Answer:
 
-> *We added a lot of logging to our script for debugging to see which parts fail. These served as print statements.
+*We added a lot of logging to our script for debugging to see which parts fail. These served as print statements.
 We did profile our training script and generate_sample script to see what parts require optimization the most.*
 
 ## Working in the cloud
@@ -468,8 +468,8 @@ The configuration was automated through Cloud Build (as seen in cloudbuild.yaml)
 >
 > Answer:
 
-[](figures/bucketshot1.jpeg)
-[](figures/bucketshot2.jpeg)
+![](figures/bucketshot1.jpeg)
+![](figures/bucketshot2.jpeg)
 
 ### Question 20
 
@@ -478,8 +478,8 @@ The configuration was automated through Cloud Build (as seen in cloudbuild.yaml)
 >
 > Answer:
 
-[](figures/ARshot1.jpeg)
-[](figures/ARshot2.jpeg)
+![](figures/ARshot1.jpeg)
+![](figures/ARshot2.jpeg)
 
 ### Question 21
 
@@ -488,7 +488,7 @@ The configuration was automated through Cloud Build (as seen in cloudbuild.yaml)
 >
 > Answer:
 
-[](figures/cloudbuild.jpeg)
+![](figures/cloudbuild.jpeg)
 
 ### Question 22
 
@@ -533,6 +533,8 @@ We enhanced the API with production-ready features:
 - Async context manager for model loading
 - Streaming responses for image delivery
 - Health check endpoint
+
+All of which is intergrated in the cloud deployed api container.
 
 ### Question 24
 
