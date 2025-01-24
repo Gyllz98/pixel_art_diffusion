@@ -164,7 +164,7 @@ We utilized the Hugging Face Diffusers library, an advanced third-party package,
 >
 > Answer:
 
-To effectively manage dependencies in our project, we updated both requirements.txt and pyproject.toml in parallel with adding libraries to our code. This approach ensured a synchronized and organized way to track and manage the necessary packages. 
+To effectively manage dependencies in our project, we updated both requirements.txt and pyproject.toml in parallel with adding libraries to our code. This approach ensured a synchronized and organized way to track and manage the necessary packages.
 
 To replicate our environment, follow these steps:
 
@@ -204,7 +204,7 @@ We initialized our project using the cookiecutter template and filled out all th
 >
 > Answer:
 
-We implementedcode quality and formatting rules using 
+We implementedcode quality and formatting rules using
 
 - Ruff for linting and formatting
 - mypy for static type checking
@@ -253,7 +253,7 @@ We implemented four test files: 'data', 'model', 'train', and 'api'.
 >
 > Answer:
 
-Our total code coverage is at exaclty 50%, which is not nearly enough for us to trust that it is error or bug free. Our highest code coverage percentage for the individual file outside of init, is cloud_function.py at 68% which is responsible for loading the model from GCP and communicationg with the cloud to get samples and visualize them in addition to storing them. The lowest code coverage percentage is 23% for generate_sample.py which is responsible for taking a model and generate samples. From the coverage report, it is clear that additional tests are needed to get 100% code coverage, but even then, it is still difficult to fully trust that the code will be error free as the complexity of the tests depends on our ability to test for edge-cases. 
+Our total code coverage is at exaclty 50%, which is not nearly enough for us to trust that it is error or bug free. Our highest code coverage percentage for the individual file outside of init, is cloud_function.py at 68% which is responsible for loading the model from GCP and communicationg with the cloud to get samples and visualize them in addition to storing them. The lowest code coverage percentage is 23% for generate_sample.py which is responsible for taking a model and generate samples. From the coverage report, it is clear that additional tests are needed to get 100% code coverage, but even then, it is still difficult to fully trust that the code will be error free as the complexity of the tests depends on our ability to test for edge-cases.
 
 ### Question 9
 
@@ -270,7 +270,7 @@ Our total code coverage is at exaclty 50%, which is not nearly enough for us to 
 
 Our workflow utilized branches and pull requests for version control. The '.yaml' files show multiple workflows triggered on both push to the main branch and 'pull_request' to the main branch. This approach allows team members to work on separate branches, making independent changes without directly modifying the main branch.
 
-Pull requests serve as a critical code review mechanism. Before merging any changes into the main branch, our workflows run comprehensive checks including unit tests, type checking (mypy), code linting (Ruff), and data synchronization tests across different operating systems and Python versions. 
+Pull requests serve as a critical code review mechanism. Before merging any changes into the main branch, our workflows run comprehensive checks including unit tests, type checking (mypy), code linting (Ruff), and data synchronization tests across different operating systems and Python versions.
 This ensures code quality, catches potential issues early, and maintains the integrity of the main branch by requiring all checks to pass before merging.
 
 The pre-commit CI workflow further enhances our version control by automatically checking and potentially fixing code formatting and style before commits are finalized.
@@ -288,9 +288,9 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
-We used DVC to manage data in our project, which included 89,000 images. To optimize storage and efficiency, we archived the dataset into 'archive.zip' before integrating it with DVC. This setup enabled robust version control, allowing us to track changes and updates to the data seamlessly. 
+We used DVC to manage data in our project, which included 89,000 images. To optimize storage and efficiency, we archived the dataset into 'archive.zip' before integrating it with DVC. This setup enabled robust version control, allowing us to track changes and updates to the data seamlessly.
 
-By leveraging the GitHub-DVC workflow, we automated the synchronization of data changes, ensuring the data directory stayed up-to-date across the team. DVC significantly improved our project's data management by streamlining collaboration, reducing redundancy, and enabling precise rollbacks to previous data versions when necessary. 
+By leveraging the GitHub-DVC workflow, we automated the synchronization of data changes, ensuring the data directory stayed up-to-date across the team. DVC significantly improved our project's data management by streamlining collaboration, reducing redundancy, and enabling precise rollbacks to previous data versions when necessary.
 
 This ensured consistency and reliability throughout our pipeline, making it easier to maintain and update the dataset efficiently.
 
@@ -564,7 +564,7 @@ All of which is intergrated in the cloud deployed api container.
 
 We successfully deployed our API using Google Cloud Run for scalable, serverless deployment. The deployment process is automated through our cloudbuild.yaml pipeline, which:
 1. Builds the Docker container from api.dockerfile
-2. Pushes it to Google Container Registry 
+2. Pushes it to Google Container Registry
 3. Deploys to Cloud Run with automatic scaling
 
 The API is accessible at https://pixel-art-api-146224029275.europe-west1.run.app. Users can interact with it through:
@@ -765,4 +765,4 @@ Student s233353 was in charge of building the docker images both for training an
 
 Student s195849 was in charge of everything GCP: Compute Engine training, Continous Deployment with Cloud Run/Build, Buckets (and in extension dvc), etc. Also finalized CI (pre-commit, code-Check, unittests). Also set-up the repo and wrote the model, training loop, and dataloader + set-up wandb logging. Also, did the documentation.
 
-Student s180351 was in charge of developing the back end (FastAPI), creating unit testing for the data, model, training and api together with code coverage. Also load testing our application and instrumented system metrics for the API. 
+Student s180351 was in charge of developing the back end (FastAPI), creating unit testing for the data, model, training and api together with code coverage. Also load testing our application and instrumented system metrics for the API.
