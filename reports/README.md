@@ -307,7 +307,9 @@ We used
 >
 > Answer:
 
---- question 12 fill here ---
+> We used typer parsing as the CLI. It included run_name, epochs and label_subset. As an example:
+train --epochs 100*
+
 
 ### Question 13
 
@@ -322,7 +324,7 @@ We used
 >
 > Answer:
 
---- question 13 fill here ---
+> *We made a config file where we specified the model parameters, training parameters, data paths and wandb logging parameters in a yaml file. This was then parsed by hydra.*
 
 ### Question 14
 
@@ -369,7 +371,8 @@ We used
 >
 > Answer:
 
---- question 16 fill here ---
+> *We added a lot of logging to our script for debugging to see which parts fail. These served as print statements.
+We did profile our training script and generate_sample script to see what parts require optimization the most.*
 
 ## Working in the cloud
 
@@ -628,23 +631,23 @@ We implemented a frontend and a datadrift monitoring system to the build.
 > Answer:
 
 [](figures/overview.jpeg)
->The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
-Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
->From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
+- The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
+- Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
+- From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
 
 >For the training flow:
 
-T>he training pipeline pulls data using DVC from Cloud Storage Runs the training with configurations from Hydra Logs metrics and model artifacts to Weights & Biases Model artifacts are stored back in Cloud Storage.
+- The training pipeline pulls data using DVC from Cloud Storage Runs the training with configurations from Hydra Logs metrics and model artifacts to Weights & Biases Model artifacts are stored back in Cloud Storage.
 
 >For the serving flow:
 
->Cloud Run pulls the latest Docker image from Container Registry
+- Cloud Run pulls the latest Docker image from Container Registry
 It runs the FastAPI backend service
 The Streamlit frontend interacts with this backend
 When users generate images, they're stored back in Cloud Storage
 The entire service is monitored through Cloud Monitoring with alerts set up
 
->All components are connected through GCP, with Cloud Storage acting as a central hub for data, models, and generated images, while Cloud Run handles the serving infrastructure and Cloud Monitoring keeps track of system health.
+- All components are connected through GCP, with Cloud Storage acting as a central hub for data, models, and generated images, while Cloud Run handles the serving infrastructure and Cloud Monitoring keeps track of system health.
 
 ### Question 30
 
