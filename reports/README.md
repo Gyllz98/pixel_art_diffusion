@@ -331,9 +331,21 @@ All workflows utilize GitHub Actions' matrix testing capabilities for cross-plat
 >
 > Answer:
 
-We used typer parsing as the CLI. It included run_name, epochs and label_subset. As an example:
-train --epochs 100*
+We configured experiments using both Hydra config files and Typer CLI. Our main configuration uses Hydra's configs/config.yaml, with CLI support through Typer:
 
+Using Hydra config override:
+```bash
+python train.py optimizer.params.lr=1e-4 training.batch_size=32
+```
+
+Using Typer CLI:
+```bash
+python -m pixel_art_diffusion.train train-model --run-name="experiment_1" --num-epochs=100 --label-subset=[3]
+```
+
+Both approaches are integrated in our codebase (see train.py), allowing flexible experiment configuration while maintaining reproducibility through version-controlled configs.
+
+The combination gives us structured config management with Hydra while preserving simple CLI accessibility through Typer.
 
 ### Question 13
 
