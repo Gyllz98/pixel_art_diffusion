@@ -8,5 +8,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
-      - run: pip install mkdocs-material
+      - run: |
+          pip install mkdocs-material
+          pip install mkdocstrings
+          pip install mkdocstrings-python
       - run: mkdocs gh-deploy --force --config-file docs/mkdocs.yml
