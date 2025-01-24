@@ -11,13 +11,25 @@ from PIL import Image
 from loguru import logger
 from numpy.typing import NDArray
 from torch import Tensor
+import os
 
 app = typer.Typer()
 
 
 def get_data_dir() -> Path:
     """Helper function to get the data directory path"""
-    return Path(__file__).parent.parent.parent / "data"
+    current = Path(__file__).parent  # Start at current file's directory
+    
+    # Search up to 3 levels up for a data directory with the expected structure
+    for _ in range(3):
+        data_dir = current / "data"
+        if data_dir.exists() and \
+           (data_dir / "raw").exists() and \
+           (data_dir / "processed").exists():
+            return data_dir
+        current = current.parent
+    
+    raise FileNotFoundError("Could not find data directory with raw and processed subdirectories")
 
 
 class PixelArtDataset(Dataset):

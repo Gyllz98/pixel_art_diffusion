@@ -36,7 +36,7 @@ def main() -> None:
 
     # Add number of samples input
     num_samples = st.number_input(
-        "Number of Samples", min_value=1, max_value=64, value=64, help="Number of images to generate in the grid"
+        "Number of Samples", min_value=1, max_value=64, value=8, help="Number of images to generate in the grid"
     )
 
     # Generate button
