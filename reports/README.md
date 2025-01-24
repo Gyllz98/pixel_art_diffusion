@@ -613,7 +613,7 @@ This would have enabled us to track model performance degradation, resource util
 > *costing the most was ... due to ... . Working in the cloud was ...*
 >
 > Answer:
-- *We worked in one cloud for the whole project. We spent 5.44 USD in total. Compute engine training (renting the L4 GPU) drained the credits the most by far. Working in the cloud is very tedious and time consuming, however we understand the benefits of it when thinking about scaling applications.*
+We worked in one cloud for the whole project. We spent 5.44 USD in total. Compute engine training (renting the L4 GPU) drained the credits the most by far. Working in the cloud is very tedious and time consuming, however we understand the benefits of it when thinking about scaling applications.
 
 ### Question 28
 
@@ -629,7 +629,7 @@ This would have enabled us to track model performance degradation, resource util
 >
 > Answer:
 
-- We implemented a frontend and a datadrift monitoring system to the build. 
+We implemented a frontend and a datadrift monitoring system to the build. 
 
 ### Question 29
 
