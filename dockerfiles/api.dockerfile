@@ -16,6 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy DVC config and application code
 COPY .dvc/config .dvc/
+COPY data/raw/archive.zip.dvc data/raw/
 COPY src/pixel_art_diffusion /app/pixel_art_diffusion/
 
 # Set environment variables
