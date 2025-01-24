@@ -366,7 +366,14 @@ We used the third-party package Hugging Face Diffusers library in our project to
 >
 > Answer:
 
---- question 17 fill here ---
+- Bucket: We use Bucket to store our data, model, and generated images for drift detection.
+- Functions: We made a cloud Function to load our model from the bucket. We also made one that does different tasks related to datadrifting such as pushing and pulling generated images.
+- Artifact Registry: Holds our docker images.
+- Build + trigger: Everytime we time new code is pushed to main we rebuild the the api and deploy it.
+- Run: As stated above our api is deployed with cloud Run so that you only need to launch the frontend locally.
+- Monitoring: Monitors cpu usage among other things of our application.
+- Alert: as generation is linked to uploading to the bucket we have set up an alert that triggers if too many uploads are made to the bucket within half an hour.
+- Compute Engine: Our model is trained in a VM using L4 gpu.
 
 ### Question 18
 
@@ -381,7 +388,9 @@ We used the third-party package Hugging Face Diffusers library in our project to
 >
 > Answer:
 
---- question 18 fill here ---
+The main way we used Google Cloud Platform's Compute Engine was for training our diffusion model. We provisioned a VM instance with an NVIDIA L4 GPU, which offers good performance for ML workloads while being cost-effective. The VM was configured with 16 vCPUs and 64GB RAM to handle our data preprocessing and training pipeline efficiently.
+The instance was launched using our custom Docker container (defined in dockerfiles/train.dockerfile) which contained all necessary dependencies including PyTorch, diffusers library, and our training code. We used Debian as the base OS since it works well with ML workloads.
+The configuration was automated through Cloud Build (as seen in cloudbuild.yaml), allowing us to consistently deploy our training environment. The L4 GPU proved sufficient for training our 16x16 pixel art model, offering a good balance between cost and performance for our relatively small image generation task.
 
 ### Question 19
 
@@ -390,7 +399,8 @@ We used the third-party package Hugging Face Diffusers library in our project to
 >
 > Answer:
 
---- question 19 fill here ---
+[](figures/bucketshot1.jpeg)
+[](figures/bucketshot2.jpeg)
 
 ### Question 20
 
@@ -399,7 +409,8 @@ We used the third-party package Hugging Face Diffusers library in our project to
 >
 > Answer:
 
---- question 20 fill here ---
+[](figures/ARshot1.jpeg)
+[](figures/ARshot2.jpeg)
 
 ### Question 21
 
@@ -408,7 +419,7 @@ We used the third-party package Hugging Face Diffusers library in our project to
 >
 > Answer:
 
---- question 21 fill here ---
+[](figures/cloudbuild.jpeg)
 
 ### Question 22
 
@@ -423,7 +434,9 @@ We used the third-party package Hugging Face Diffusers library in our project to
 >
 > Answer:
 
---- question 22 fill here ---
+We successfully trained our pixel art diffusion model in Google Cloud Platform using Compute Engine. Our training pipeline was implemented through a multi-stage process using Cloud Build and custom Docker containers. First, we prepared our training container using train.dockerfile which included PyTorch, the diffusers library, and our custom training code. The training data was stored in a Cloud Storage bucket for efficient access.
+We chose Compute Engine over Vertex AI because we needed fine-grained control over the GPU configuration and training environment. Our custom training pipeline required specific dependencies and data preprocessing steps that were easier to implement in a custom container. Additionally, Compute Engine provided better cost optimization for our use case, as we could precisely control when the GPU instance was running and shut it down automatically when training completed.
+The flexibility of Compute Engine allowed us to implement features like automated model checkpointing to Cloud Storage and seamless integration with our monitoring stack, which proved essential for maintaining our MLOps pipeline.
 
 ## Deployment
 
