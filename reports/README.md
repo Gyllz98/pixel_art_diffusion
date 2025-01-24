@@ -142,7 +142,7 @@ s233353, s195849, s180351
 >
 > Answer:
 
-We used the third-party package Hugging Face Diffusers library in our project to be able to generate pixel art images. Specfically we used Denoising Diffusion Probabilistic Models (DDPMscheduler), UNet2DModel and optimization.get_scheduler to denoise, train the model and optimizes the learning. 
+We used the third-party package Hugging Face Diffusers library in our project to be able to generate pixel art images. Specfically we used Denoising Diffusion Probabilistic Models (DDPMscheduler), UNet2DModel and optimization.get_scheduler to denoise, train the model and optimizes the learning. These components were crucial in generating pixel art images by enabling model denoising, training, and learning rate optimization.
 
 ## Coding environment
 
@@ -271,7 +271,8 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
-We used 
+We use DVC to manage our data in the project. The data that we have contains 89000 images, thus zipping it to archive.zip was necessary to utilize DVC efficiently. The version control is improved as using the GitHub DVC workflow automatically syncs changes and updates the data directory. This streamliness our project's data management. 
+
 
 ### Question 11
 
@@ -612,6 +613,7 @@ This would have enabled us to track model performance degradation, resource util
 > *costing the most was ... due to ... . Working in the cloud was ...*
 >
 > Answer:
+
 We worked in one cloud for the whole project. We spent 5.44 USD in total. Compute engine training (renting the L4 GPU) drained the credits the most by far. Working in the cloud is very tedious and time consuming, however we understand the benefits of it when thinking about scaling applications.
 
 ### Question 28
@@ -646,23 +648,23 @@ We implemented a frontend and a datadrift monitoring system to the build.
 > Answer:
 
 [](figures/overview.jpeg)
-- The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
-- Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
-- From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
+The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
 
->For the training flow:
+Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
 
-- The training pipeline pulls data using DVC from Cloud Storage Runs the training with configurations from Hydra Logs metrics and model artifacts to Weights & Biases Model artifacts are stored back in Cloud Storage.
+From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
 
->For the serving flow:
+- For the training flow:
+The training pipeline pulls data using DVC from Cloud Storage Runs the training with configurations from Hydra Logs metrics and model artifacts to Weights & Biases Model artifacts are stored back in Cloud Storage.
 
-- Cloud Run pulls the latest Docker image from Container Registry
+- For the serving flow:
+Cloud Run pulls the latest Docker image from Container Registry
 It runs the FastAPI backend service
 The Streamlit frontend interacts with this backend
 When users generate images, they're stored back in Cloud Storage
 The entire service is monitored through Cloud Monitoring with alerts set up
 
-- All components are connected through GCP, with Cloud Storage acting as a central hub for data, models, and generated images, while Cloud Run handles the serving infrastructure and Cloud Monitoring keeps track of system health.
+All components are connected through GCP, with Cloud Storage acting as a central hub for data, models, and generated images, while Cloud Run handles the serving infrastructure and Cloud Monitoring keeps track of system health.
 
 ### Question 30
 
@@ -673,10 +675,10 @@ The entire service is monitored through Cloud Monitoring with alerts set up
 >
 > Example:
 > *The biggest challenges in the project was using ... tool to do ... . The reason for this was ...*
->
+
 > Answer:
 
-> This project the toughes challenge we faced was deploying it to the cloud. We had to spend an exorbitant amount of time in cloud pulling, pushing and deploying the trigger when we pushed to main. This was due not being able to access stuff beacause of policies. Also setting up code-checks and other workflows slowed down the development process quite a bit. Also if these failed it meant a 10 minute setback each time. 
+This project the toughes challenge we faced was deploying it to the cloud. We had to spend an exorbitant amount of time in cloud pulling, pushing and deploying the trigger when we pushed to main. This was due not being able to access stuff beacause of policies. Also setting up code-checks and other workflows slowed down the development process quite a bit. Also if these failed it meant a 10 minute setback each time.
 
 ### Question 31
 
