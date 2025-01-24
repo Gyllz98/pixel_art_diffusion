@@ -41,6 +41,11 @@ jobs:
       - name: Run mypy
         run: mypy .
 
+      - name: Pull & extract data
+        run: |
+          dvc pull
+          python -m src.pixel_art_diffusion.data
+
       - name: Run tests & coverage
         run: |
           coverage run -m pytest tests/
