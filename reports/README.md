@@ -412,14 +412,9 @@ These metrics are important because they help identify training issues early, ve
 >
 > Answer:
 
-We dockerized the training script and the api script. One has to build the image with:
-docker build -t pixel-art-app:latest -f dockerfiles/api.dockerfile .
-
-And run it with:
-docker run -p 8080:8080 pixel-art-app
-
-
-
+We implemented Docker containerization for both our training and API scripts to ensure consistent environments and easy deployment. The process begins with building the Docker image using our Dockerfile located in the dockerfiles directory. The command docker build -t pixel-art-app:latest -f dockerfiles/api.dockerfile . creates an image tagged as 'pixel-art-app:latest', encapsulating all necessary dependencies and configurations.
+To run the containerized application, users simply execute docker run -p 8080:8080 pixel-art-app, which maps port 8080 from the container to the host machine, making the application accessible via localhost. This containerization approach ensures consistent behavior across different environments and simplifies deployment procedures.
+For accessing the backend we maintained a direct Python script (src/run_app.py) that allows users to run a frontend.
 
 ### Question 16
 
