@@ -308,7 +308,9 @@ We use DVC to manage our data in the project. The data that we have contains 890
 >
 > Answer:
 
---- question 12 fill here ---
+> We used typer parsing as the CLI. It included run_name, epochs and label_subset. As an example:
+train --epochs 100*
+
 
 ### Question 13
 
@@ -323,7 +325,7 @@ We use DVC to manage our data in the project. The data that we have contains 890
 >
 > Answer:
 
---- question 13 fill here ---
+> *We made a config file where we specified the model parameters, training parameters, data paths and wandb logging parameters in a yaml file. This was then parsed by hydra.*
 
 ### Question 14
 
@@ -340,7 +342,22 @@ We use DVC to manage our data in the project. The data that we have contains 890
 >
 > Answer:
 
---- question 14 fill here ---
+The screenshots show training metrics from my diffusion model experiments tracked in Weights & Biases. I'm tracking:
+
+Batch-level metrics:
+
+- Learning rate: Monitors optimizer behavior and learning schedule
+- Loss: Shows model convergence
+- Epochs: Tracks training progress
+
+Epoch-level metrics:
+
+- Average loss: Indicates overall training stability
+- Epoch count: Shows training duration
+
+These metrics are important because they help identify training issues early, verify the model is learning properly, and ensure hyperparameters like learning rate are appropriately tuned. The smooth downward trend in loss curves and stable learning rate decay suggest successful training. But as we have spend the vast majority of the time on cloud, api, and CI/CD we did not run many experiments. Aditionally, we did prototyping in a notebook locally until training was stable.
+
+[](figures/wandb.jpeg)
 
 ### Question 15
 
@@ -370,7 +387,8 @@ We use DVC to manage our data in the project. The data that we have contains 890
 >
 > Answer:
 
---- question 16 fill here ---
+> *We added a lot of logging to our script for debugging to see which parts fail. These served as print statements.
+We did profile our training script and generate_sample script to see what parts require optimization the most.*
 
 ## Working in the cloud
 
@@ -595,8 +613,7 @@ This would have enabled us to track model performance degradation, resource util
 > *costing the most was ... due to ... . Working in the cloud was ...*
 >
 > Answer:
-
---- question 27 fill here ---
+We worked in one cloud for the whole project. We spent 5.44 USD in total. Compute engine training (renting the L4 GPU) drained the credits the most by far. Working in the cloud is very tedious and time consuming, however we understand the benefits of it when thinking about scaling applications.
 
 ### Question 28
 
@@ -612,7 +629,7 @@ This would have enabled us to track model performance degradation, resource util
 >
 > Answer:
 
---- question 28 fill here ---
+We implemented a frontend and a datadrift monitoring system to the build. 
 
 ### Question 29
 
@@ -628,23 +645,25 @@ This would have enabled us to track model performance degradation, resource util
 > *Whenever we commit code and push to GitHub, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
->The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
-Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
->From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
+
+[](figures/overview.jpeg)
+- The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
+- Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
+- From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
 
 >For the training flow:
 
-T>he training pipeline pulls data using DVC from Cloud Storage Runs the training with configurations from Hydra Logs metrics and model artifacts to Weights & Biases Model artifacts are stored back in Cloud Storage.
+- The training pipeline pulls data using DVC from Cloud Storage Runs the training with configurations from Hydra Logs metrics and model artifacts to Weights & Biases Model artifacts are stored back in Cloud Storage.
 
 >For the serving flow:
 
->Cloud Run pulls the latest Docker image from Container Registry
+- Cloud Run pulls the latest Docker image from Container Registry
 It runs the FastAPI backend service
 The Streamlit frontend interacts with this backend
 When users generate images, they're stored back in Cloud Storage
 The entire service is monitored through Cloud Monitoring with alerts set up
 
->All components are connected through GCP, with Cloud Storage acting as a central hub for data, models, and generated images, while Cloud Run handles the serving infrastructure and Cloud Monitoring keeps track of system health.
+- All components are connected through GCP, with Cloud Storage acting as a central hub for data, models, and generated images, while Cloud Run handles the serving infrastructure and Cloud Monitoring keeps track of system health.
 
 ### Question 30
 
