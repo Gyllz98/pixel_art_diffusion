@@ -331,7 +331,22 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 14 fill here ---
+The screenshots show training metrics from my diffusion model experiments tracked in Weights & Biases. I'm tracking:
+
+Batch-level metrics:
+
+- Learning rate: Monitors optimizer behavior and learning schedule
+- Loss: Shows model convergence
+- Epochs: Tracks training progress
+
+Epoch-level metrics:
+
+- Average loss: Indicates overall training stability
+- Epoch count: Shows training duration
+
+These metrics are important because they help identify training issues early, verify the model is learning properly, and ensure hyperparameters like learning rate are appropriately tuned. The smooth downward trend in loss curves and stable learning rate decay suggest successful training. But as we have spend the vast majority of the time on cloud, api, and CI/CD we did not run many experiments. Aditionally, we did prototyping in a notebook locally until training was stable.
+
+[](figures/wandb.jpeg)
 
 ### Question 15
 
