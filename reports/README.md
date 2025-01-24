@@ -382,20 +382,22 @@ When an experiment was initiated, our system automatically logged the complete c
 >
 > Answer:
 
-The screenshots show training metrics from my diffusion model experiments tracked in Weights & Biases. I'm tracking:
+In our Weights & Biases tracking for the diffusion model training pipeline, we monitored several crucial metrics that provided insights into model performance and training stability:
+At the batch level, we tracked:
 
-Batch-level metrics:
+- Learning rate progression throughout training to ensure proper optimizer behavior
+- Loss per batch to monitor fine-grained convergence patterns
+- Batch indices to verify training progression and identify any stalling issues
 
-- Learning rate: Monitors optimizer behavior and learning schedule
-- Loss: Shows model convergence
-- Epochs: Tracks training progress
+At the epoch level, we monitored:
 
-Epoch-level metrics:
+- Average loss across epochs to assess overall model stability
+- Epoch count to track training duration and convergence speed
+- Final model performance metrics including generation quality indicators
 
-- Average loss: Indicates overall training stability
-- Epoch count: Shows training duration
-
-These metrics are important because they help identify training issues early, verify the model is learning properly, and ensure hyperparameters like learning rate are appropriately tuned. The smooth downward trend in loss curves and stable learning rate decay suggest successful training. But as we have spend the vast majority of the time on cloud, api, and CI/CD we did not run many experiments. Aditionally, we did prototyping in a notebook locally until training was stable.
+These metrics proved essential for monitoring model health and stability during training. The loss curves demonstrated clear downward trends, indicating successful learning, while the learning rate decay matched our scheduled expectations. The epoch-level metrics helped us identify any plateau issues or training instabilities early in the process.
+However, our experimental tracking was somewhat limited since we invested heavily in infrastructure development. The majority of our time and resources went into cloud deployment configuration, API development, and setting up robust CI/CD pipelines. Initial model prototyping was conducted locally in notebooks until we achieved stable training performance before transitioning to the cloud infrastructure.
+These visualizations helped validate our training approach and hyperparameter choices, despite the limited experimental scope due to our focus on infrastructure development. The metrics tracked were chosen specifically to help diagnose common issues in diffusion model training, such as mode collapse or poor convergence.
 
 ![](figures/wandb.jpeg)
 
