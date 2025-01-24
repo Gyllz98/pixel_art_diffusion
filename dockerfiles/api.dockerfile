@@ -14,6 +14,12 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy DVC files
+COPY .dvc/ .dvc/
+COPY .dvcignore .
+COPY dvc.yaml .
+COPY dvc.lock .
+
 # Copy the application code
 COPY src/pixel_art_diffusion /app/pixel_art_diffusion/
 
@@ -25,4 +31,4 @@ ENV HOST=0.0.0.0
 EXPOSE 8080
 
 # Run the FastAPI server
-CMD ["uvicorn", "pixel_art_diffusion.api:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD dvc pull && uvicorn pixel_art_diffusion.api:app --host 0.0.0.0 --port 8080
