@@ -1,6 +1,6 @@
+import numpy as np
 import matplotlib.pyplot as plt
 from torchvision.utils import make_grid
-import numpy as np
 
 
 def visualize_samples(samples, save_path=None, api=False):

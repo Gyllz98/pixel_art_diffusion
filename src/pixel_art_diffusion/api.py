@@ -1,3 +1,9 @@
+import os
+import psutil
+import time
+import logging
+import traceback
+import uvicorn
 from pathlib import Path
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.responses import StreamingResponse
@@ -6,19 +12,13 @@ from contextlib import asynccontextmanager
 from typing import Optional, Dict, Any, AsyncGenerator
 from io import BytesIO
 from PIL import Image
-import logging
-import traceback
-import time
-import psutil
 from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
-import os
 from evidently.metric_preset import (
     DataDriftPreset,
     DataQualityPreset,
 )
 from evidently.report import Report
 import pickle
-import uvicorn
 
 from pixel_art_diffusion.cloud_function import (
     load_model_from_cloud,
@@ -29,16 +29,18 @@ from pixel_art_diffusion.cloud_function import (
 from pixel_art_diffusion.visualize import visualize_samples
 from pixel_art_diffusion.data_drift import create_generated_dataframe, create_image_dataframe
 
-# Global variables
-GENERATE_REQUESTS = Counter("pixel_art_generate_requests_total", "Total number of image generation requests")
+# Initialize Prometheus metrics
+GENERATE_REQUESTS = Counter("pixel_art_generate_requests_total", "Total number of image generation requests:")
 
-MEMORY_USAGE = Gauge("pixel_art_memory_usage_bytes", "Memory usage of the application")
+MEMORY_USAGE = Gauge("pixel_art_memory_usage_bytes", "Memory usage of the application:")
 
-GENERATION_TIME = Histogram(
-    "pixel_art_generation_time_seconds",
-    "Time taken to generate images",
-    buckets=[0.1, 0.5, 1.0, 2.0, 5.0, 10.0, float("inf")],  # Buckets in seconds
+CURRENT_NUM_SAMPLES = Gauge("pixel_art_current_num_samples", "Number of samples generated in the last request:")
+
+CURRENT_GENERATION_TIME = Gauge(
+    "pixel_art_current_generation_time_seconds", "Time taken to generate the last batch of images (seconds):"
 )
+
+GENERATION_TIME = Histogram("pixel_art_generation_time_seconds", "Time taken to generate images (seconds):")
 
 REFERENCE_DATA_PATH = "reference_data.pkl"
 
@@ -113,7 +115,7 @@ async def get_stored_samples(limit: Optional[int] = 10):
 
 
 @app.post("/generate")
-async def generate_images(background_tasks: BackgroundTasks, num_samples: Optional[int] = 4) -> StreamingResponse:
+async def generate_images(background_tasks: BackgroundTasks, num_samples: int = 4) -> StreamingResponse:
     if model is None:
         logger.error("Model not loaded")
         raise HTTPException(status_code=503, detail="Model is not loaded.")
@@ -125,6 +127,7 @@ async def generate_images(background_tasks: BackgroundTasks, num_samples: Option
         logger.info(f"Generating {num_samples} samples...")
 
         samples = model.generate_samples(num_samples=num_samples)
+
         logger.info(f"Samples generated. Shape: {samples.shape if samples is not None else None}")
 
         if samples is None:
@@ -138,6 +141,8 @@ async def generate_images(background_tasks: BackgroundTasks, num_samples: Option
 
         generation_time = time.time() - start_time
         GENERATION_TIME.observe(generation_time)
+        CURRENT_GENERATION_TIME.set(generation_time)
+        CURRENT_NUM_SAMPLES.set(num_samples)
         update_memory_usage()
 
         logger.info(f"Grid array shape: {grid_array.shape}")
