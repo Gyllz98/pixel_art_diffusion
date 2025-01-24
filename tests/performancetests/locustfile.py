@@ -6,10 +6,12 @@ locust -f tests/performancetests/locustfile.py \
     --headless --users 10 --spawn-rate 1 --run-time 1m --host %MYENDPOINT%
 """
 
+
 class PixelArtUser(HttpUser):
     """
     A Locust user class that simulates users interacting with the Pixel Art Diffusion API.
     """
+
     # Wait between 1 to 3 seconds between tasks
     wait_time = between(1, 3)
 
@@ -36,10 +38,7 @@ class PixelArtUser(HttpUser):
         """Simulates users generating images"""
         # Randomly choose number of samples between 1 and 16
         num_samples = random.randint(1, 16)
-        with self.client.post(
-            f"/generate?num_samples={num_samples}", 
-            catch_response=True
-        ) as response:
+        with self.client.post(f"/generate?num_samples={num_samples}", catch_response=True) as response:
             if response.status_code == 200:
                 response.success()
             else:

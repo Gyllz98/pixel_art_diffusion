@@ -103,8 +103,8 @@ will check the repositories and the code to verify your answers.
 
 ### Extra
 
-* [x] Write some documentation for your application (M32)
-* [x] Publish the documentation to GitHub Pages (M32)
+* [ ] Write some documentation for your application (M32)
+* [ ] Publish the documentation to GitHub Pages (M32)
 * [x] Revisit your initial project description. Did the project turn out as you wanted?
 * [ ] Create an architectural diagram over your MLOps pipeline
 * [x] Make sure all group members have an understanding about all parts of the project
@@ -121,8 +121,14 @@ MLOPS 41
 
 ### Question 2
 > **Enter the study number for each member in the group**
+>
+> Example:
+>
+> *sXXXXXX, sXXXXXX, sXXXXXX*
+>
+> Answer:
 
-> *s233353,s195849, s180351*
+s233353, s195849, s180351
 
 ### Question 3
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
@@ -247,7 +253,9 @@ Our total code coverage is at exaclty 50%, which is not nearly enough for us to 
 
 Our workflow utilized branches and pull requests for version control. The '.yaml' files show multiple workflows triggered on both push to the main branch and 'pull_request' to the main branch. This approach allows team members to work on separate branches, making independent changes without directly modifying the main branch.
 
-Pull requests serve as a critical code review mechanism. Before merging any changes into the main branch, our workflows run comprehensive checks including unit tests, type checking (mypy), code linting (Ruff), and data synchronization tests across different operating systems and Python versions. This ensures code quality, catches potential issues early, and maintains the integrity of the main branch by requiring all checks to pass before merging.
+Pull requests serve as a critical code review mechanism. Before merging any changes into the main branch, our workflows run comprehensive checks including unit tests, type checking (mypy), code linting (Ruff), and data synchronization tests across different operating systems and Python versions. 
+This ensures code quality, catches potential issues early, and maintains the integrity of the main branch by requiring all checks to pass before merging.
+
 The pre-commit CI workflow further enhances our version control by automatically checking and potentially fixing code formatting and style before commits are finalized.
 
 ### Question 10
@@ -263,7 +271,7 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
---- question 10 fill here ---
+We used 
 
 ### Question 11
 
