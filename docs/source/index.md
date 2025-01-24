@@ -43,6 +43,26 @@ The project uses Hydra for configuration management. Key config files:
 - `configs/model/`: Model-specific configurations
 - `configs/training/`: Training configurations
 
+## Data Setup
+
+To set up the dataset for training:
+
+1. Pull data from DVC:
+```bash
+dvc pull
+```
+
+2. Extract and preprocess data:
+```bash
+python -m src.pixel_art_diffusion.data
+```
+
+This will:
+
+- Download the raw pixel art dataset from cloud storage
+- Extract the archive to data/processed/
+- Create necessary data structures for training
+
 ## Usage
 
 ### Training
