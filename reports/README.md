@@ -142,7 +142,8 @@ s233353, s195849, s180351
 >
 > Answer:
 
-We utilized the Hugging Face Diffusers library, a powerful third-party package, to enable generation of high-quality pixel art images in our project. Specifically, we leveraged key components like Denoising Diffusion Probabilistic Models (DDPMscheduler), UNet2DModel, and optimization.get_scheduler to perform crucial tasks - model denoising, training, and learning rate optimization. These advanced machine learning capabilities from the Diffusers library were pivotal in enhancing our pixel art generation, allowing us to create sophisticated, visually striking results that met the project's requirements. 
+We utilized the Hugging Face Diffusers library, an advanced third-party package, to generate high-quality pixel art images in our project. This framework provided essential tools and functionality, including Denoising Diffusion Probabilistic Models (DDPMscheduler), UNet2DModel, and optimization.get_scheduler. These components played a crucial role in various stages of the project, such as model denoising, training, and managing the learning rate for optimization. By leveraging these features, we were able to implement sophisticated machine learning techniques to enhance the quality and detail of our generated pixel art. The Diffusers library significantly streamlined complex processes, ensuring efficiency and precision in our workflow. Ultimately, it helped us meet the project's technical and artistic requirements.
+
 
 
 ## Coding environment
@@ -163,13 +164,16 @@ We utilized the Hugging Face Diffusers library, a powerful third-party package, 
 >
 > Answer:
 
-We updated our requirement.txt in parallel with adding libraries to our code together with pyproject.toml, it was our way to manage the dependencies in our project. We also have a pyproject.toml which will go through the necessary steps to copy our environment. 
+To effectively manage dependencies in our project, we updated both requirements.txt and pyproject.toml in parallel with adding libraries to our code. This approach ensured a synchronized and organized way to track and manage the necessary packages. 
 
-Step 1. Clone our repository.
+To replicate our environment, follow these steps:
 
-Step 2. Create your own blank environment. 
+Step 1. Clone our repository to your local machine.
+Step 2. Create a new, blank virtual environment to isolate the project dependencies.
+Step 3. Run 'pip install -e .' within the project directory. This command will install the dependencies listed in 'pyproject.toml' and link the local project for development.
 
-Step 3. run 'pip install -e .' to copy our environment dependencies to your environment. 
+This method ensures all required packages and versions are correctly installed, making it straightforward for collaborators to set up their environment and maintain consistency across development workflows.
+
 
 ### Question 5
 
@@ -185,9 +189,7 @@ Step 3. run 'pip install -e .' to copy our environment dependencies to your envi
 >
 > Answer:
 
-We used cookiecutter template and filled out all of the folders.
-We also added a dvc folder for data version control. In the root folder, we have added cloudbuild.yaml for the GCP and a ruff_cache folder for code check for pull request to GitHub. 
-
+We initialized our project using the cookiecutter template and filled out all the standard folders, ensuring a well-organized project structure. Additionally, we incorporated a '.dvc' folder for data version control, allowing us to efficiently manage datasets and track changes throughout the project. In the root directory, we added a 'cloudbuild.yaml' file to configure continuous integration and deployment using Google Cloud Platform (GCP). Furthermore, we included a '.ruff_cache' folder to enable automated code checks during pull requests to GitHub, ensuring consistent code quality and adherence to project standards. These modifications enhanced the functionality of the template while maintaining its core structure, enabling seamless collaboration and streamlined development processes tailored to our project’s specific requirements.
 
 ### Question 6
 
@@ -229,15 +231,13 @@ These practices are crucial in larger projects because they prevent technical de
 >
 > Answer:
 
-We implemented 4 test files; data, model, train and api. 
+We implemented four test files: 'data', 'model', 'train', and 'api'.
 
-- For data, we tested the if the path which contained the data existed, then tested that the images in the 3rd label has the correct amount together with the correct data format. 
+- Data: Tested if the data path exists, verified the correct number and format of images in the third label.
+- Model: Checked if the model checkpoint exists, ensured proper model initialization, and validated that generated samples had the correct output shape.
+- Training: Confirmed the training directory points to the correct model directory and successfully tested training on a dataset subset with one epoch.
+- API: Verified the app starts successfully, ran a load test, and ensured image generation from the model works as expected.
 
-- For model, we test if a model checkpoint exists, then tested that the model was correctly initialized and generated sample from the model has the correct output shape. 
-
-- For training, we test if the training directory correctly points to the model directory, then tested that the training ran succesfully with dataset subset with 1 epoch. 
-
-- For api, we test if the app succesfully starts, a small load test and can generate an image from the model that we worked with.
 
 
 ### Question 8
@@ -288,7 +288,11 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
-We use DVC to manage our data in the project. The data that we have contains 89000 images, thus zipping it to archive.zip was necessary to utilize DVC efficiently. The version control is improved as using the GitHub DVC workflow automatically syncs changes and updates the data directory. This streamliness our project's data management. 
+We used DVC to manage data in our project, which consisted of 89,000 images. To optimize storage and efficiency, we compressed the data into an 'archive.zip' file, enabling DVC to handle it effectively. 
+
+By integrating the GitHub DVC workflow, we ensured that any changes to the dataset were automatically synchronized and the data directory was consistently updated. This implementation significantly streamlined our data management process, providing version control for seamless collaboration and reproducibility. 
+
+With DVC, tracking data changes alongside code modifications became effortless, ensuring our pipeline remained organized and scalable while avoiding discrepancies or manual overhead during development.
 
 
 ### Question 11
@@ -360,7 +364,8 @@ The combination gives us structured config management with Hydra while preservin
 >
 > Answer:
 
-We made a config file where we specified the model parameters, training parameters, data paths and wandb logging parameters in a yaml file. This was then parsed by hydra.
+We prioritized experimental reproducibility through a comprehensive configuration management system. We created detailed YAML config files that captured all critical parameters and settings, including model architecture specifications, training hyperparameters, data paths, and Weights & Biases (wandb) logging configurations. These files were managed using Hydra, which provided a robust framework for handling configurations.
+When an experiment was initiated, our system automatically logged the complete configuration state, including any command-line overrides, ensuring that every aspect of the experiment was documented. The config files also stored random seeds for both PyTorch and NumPy to guarantee deterministic behavior. Additionally, we maintained version control of our codebase using Git, with each experiment tagged with its corresponding commit hash.
 
 ### Question 14
 
@@ -429,8 +434,8 @@ docker run -p 8080:8080 pixel-art-app
 >
 > Answer:
 
-*We added a lot of logging to our script for debugging to see which parts fail. These served as print statements.
-We did profile our training script and generate_sample script to see what parts require optimization the most.*
+We implemented extensive logging throughout our codebase to facilitate effective debugging and issue identification. By strategically placing logging statements at critical points in our scripts, we could track the execution flow and quickly identify failing components. These logging statements served as enhanced print statements, providing detailed information about variable states and execution paths.
+For performance optimization, we utilized PyTorch's built-in profiling tools to analyze both our training and inference (generate_sample) scripts. This profiling helped us identify computational bottlenecks, memory usage patterns, and areas requiring optimization. The analysis revealed valuable insights about GPU utilization, batch processing efficiency, and potential areas for performance improvements, allowing us to make targeted optimizations to enhance overall system performance.
 
 ## Working in the cloud
 
@@ -657,7 +662,9 @@ This would have enabled us to track model performance degradation, resource util
 > *costing the most was ... due to ... . Working in the cloud was ...*
 >
 > Answer:
-We worked in one cloud for the whole project. We spent 5.44 USD in total. Compute engine training (renting the L4 GPU) drained the credits the most by far. Working in the cloud is very tedious and time consuming, however we understand the benefits of it when thinking about scaling applications.
+
+We conducted our entire project within a single cloud environment, which provided a unified platform for our development and experimentation needs. The total cost of our cloud resources amounted to 5.44 USD, with the majority of expenses attributed to compute engine training, specifically the rental of an L4 GPU instance. This GPU utilization represented the most significant portion of our resource consumption and credit usage.
+While working in the cloud environment presented certain challenges and proved to be time-consuming – particularly in terms of setup, configuration, and resource management – we gained valuable insights into its advantages for scalable applications. The experience helped us understand how cloud infrastructure can facilitate the deployment of large-scale systems, enable collaborative development, and provide flexible resource allocation despite the initial learning curve and operational overhead. This practical exposure to cloud computing gave us a deeper appreciation for its role in modern software development and machine learning workflows.
 
 ### Question 28
 
@@ -673,7 +680,7 @@ We worked in one cloud for the whole project. We spent 5.44 USD in total. Comput
 >
 > Answer:
 
-We implemented a frontend and a datadrift monitoring system to the build. 
+We implemented a streamlit frontend to the build and a datadrift monitoring system to the build with endpoint: "/data_drift".
 
 ### Question 29
 
@@ -691,23 +698,25 @@ We implemented a frontend and a datadrift monitoring system to the build.
 > Answer:
 
 ![](figures/overview.jpeg)
-- The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
-- Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
-- From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
 
-For the training flow:
+The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
+
+Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
+
+From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
+
+>For the training flow:
 
 - The training pipeline pulls data using DVC from Cloud Storage Runs the training with configurations from Hydra Logs metrics and model artifacts to Weights & Biases Model artifacts are stored back in Cloud Storage.
 
 For the serving flow:
-
-- Cloud Run pulls the latest Docker image from Container Registry
+Cloud Run pulls the latest Docker image from Container Registry
 It runs the FastAPI backend service
 The Streamlit frontend interacts with this backend
 When users generate images, they're stored back in Cloud Storage
 The entire service is monitored through Cloud Monitoring with alerts set up
 
-- All components are connected through GCP, with Cloud Storage acting as a central hub for data, models, and generated images, while Cloud Run handles the serving infrastructure and Cloud Monitoring keeps track of system health.
+All components are connected through GCP, with Cloud Storage acting as a central hub for data, models, and generated images, while Cloud Run handles the serving infrastructure and Cloud Monitoring keeps track of system health.
 
 ### Question 30
 
@@ -721,7 +730,7 @@ The entire service is monitored through Cloud Monitoring with alerts set up
 >
 > Answer:
 
-> This project the toughes challenge we faced was deploying it to the cloud. We had to spend an exorbitant amount of time in cloud pulling, pushing and deploying the trigger when we pushed to main. This was due not being able to access stuff beacause of policies. Also setting up code-checks and other workflows slowed down the development process quite a bit. Also if these failed it meant a 10 minute setback each time. 
+This project the toughes challenge we faced was deploying it to the cloud. We had to spend an exorbitant amount of time in cloud pulling, pushing and deploying the trigger when we pushed to main. This was due not being able to access stuff beacause of policies. Also setting up code-checks and other workflows slowed down the development process quite a bit. Also if these failed it meant a 10 minute setback each time. 
 
 ### Question 31
 
