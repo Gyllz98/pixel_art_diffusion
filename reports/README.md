@@ -142,7 +142,7 @@ s233353, s195849, s180351
 >
 > Answer:
 
-We used the third-party package Hugging Face Diffusers library in our project to be able to generate pixel art images. Specfically we used Denoising Diffusion Probabilistic Models (DDPMscheduler), UNet2DModel and optimization.get_scheduler to denoise, train the model and optimizes the learning. 
+We used the third-party package Hugging Face Diffusers library in our project to be able to generate pixel art images. Specfically we used Denoising Diffusion Probabilistic Models (DDPMscheduler), UNet2DModel and optimization.get_scheduler to denoise, train the model and optimizes the learning. These components were crucial in generating pixel art images by enabling model denoising, training, and learning rate optimization.
 
 ## Coding environment
 
@@ -271,7 +271,8 @@ The pre-commit CI workflow further enhances our version control by automatically
 >
 > Answer:
 
-We used 
+We use DVC to manage our data in the project. The data that we have contains 89000 images, thus zipping it to archive.zip was necessary to utilize DVC efficiently. The version control is improved as using the GitHub DVC workflow automatically syncs changes and updates the data directory. This streamliness our project's data management. 
+
 
 ### Question 11
 
