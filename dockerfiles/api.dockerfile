@@ -1,4 +1,4 @@
-# Use Python 3.10 slim image as base
+# syntax=docker/dockerfile:1.4
 FROM python:3.10-slim
 
 # Set working directory
