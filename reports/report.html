@@ -211,7 +211,7 @@ corporate and increase the quality of your code.</p>
 <p>Answer:</p>
 </blockquote>
 <p>Our workflow utilized branches and pull requests for version control. The '.yaml' files show multiple workflows triggered on both push to the main branch and 'pull_request' to the main branch. This approach allows team members to work on separate branches, making independent changes without directly modifying the main branch.</p>
-<p>Pull requests serve as a critical code review mechanism. Before merging any changes into the main branch, our workflows run comprehensive checks including unit tests, type checking (mypy), code linting (Ruff), and data synchronization tests across different operating systems and Python versions. 
+<p>Pull requests serve as a critical code review mechanism. Before merging any changes into the main branch, our workflows run comprehensive checks including unit tests, type checking (mypy), code linting (Ruff), and data synchronization tests across different operating systems and Python versions.
 This ensures code quality, catches potential issues early, and maintains the integrity of the main branch by requiring all checks to pass before merging.</p>
 <p>The pre-commit CI workflow further enhances our version control by automatically checking and potentially fixing code formatting and style before commits are finalized.</p>
 <h3>Question 10</h3>
@@ -432,7 +432,7 @@ The flexibility of Compute Engine allowed us to implement features like automate
 </blockquote>
 <p>We successfully deployed our API using Google Cloud Run for scalable, serverless deployment. The deployment process is automated through our cloudbuild.yaml pipeline, which:
 1. Builds the Docker container from api.dockerfile
-2. Pushes it to Google Container Registry 
+2. Pushes it to Google Container Registry
 3. Deploys to Cloud Run with automatic scaling</p>
 <p>The API is accessible at https://pixel-art-api-146224029275.europe-west1.run.app. Users can interact with it through:</p>
 <ol>
