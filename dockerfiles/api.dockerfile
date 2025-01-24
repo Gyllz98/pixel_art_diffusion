@@ -27,4 +27,4 @@ ENV HOST=0.0.0.0
 EXPOSE 8080
 
 # Run the FastAPI server
-CMD dvc pull && uvicorn pixel_art_diffusion.api:app --host 0.0.0.0 --port 8080
+CMD dvc pull data/raw/archive.zip.dvc && uvicorn pixel_art_diffusion.api:app --host 0.0.0.0 --port 8080
