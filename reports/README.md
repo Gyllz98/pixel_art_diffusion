@@ -368,11 +368,18 @@ These metrics are important because they help identify training issues early, ve
 >
 > Example:
 > *For our project we developed several images: one for training, inference and deployment. For example to run the*
-> *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <weblink>*
+> *training docker image: `docker run trainer:latest lr=1e-3 batch_size=64`. Link to docker file: <docker.io/darius0429/pixel-art-app>*
 >
 > Answer:
 
---- question 15 fill here ---
+We dockerized the training script and the api script. One has to build the image with:
+docker build -t pixel-art-app:latest -f dockerfiles/api.dockerfile .
+
+And run it with:
+docker run -p 8080:8080 pixel-art-app
+
+
+
 
 ### Question 16
 
