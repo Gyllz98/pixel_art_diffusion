@@ -739,4 +739,4 @@ Student s233353 was in charge of building the docker images both for training an
 
 Student s195849 was in charge of everything GCP: Compute Engine training, Continous Deployment with Cloud Run/Build, Buckets (and in extension dvc), etc. Also finalized CI (pre-commit, code-Check, unittests). Also set-up the repo and wrote the model, training loop, and dataloader + set-up wandb logging. Also, did the documentation.
 
-Student s180351 was in charge of developing the FastAPI 
+Student s180351 was in charge of developing the back end (FastAPI), creating unit testing for the data, model, training and api together with code coverage. Also load testing our application and instrumented system metrics for the API. 
