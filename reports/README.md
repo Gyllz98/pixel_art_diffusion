@@ -692,7 +692,7 @@ We implemented a streamlit frontend to the build and a datadrift monitoring syst
 >
 > Answer:
 
-![](figures/overview.jpeg)
+![](figures/overview.png)
 
 The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
 
