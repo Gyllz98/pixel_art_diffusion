@@ -586,8 +586,7 @@ This would have enabled us to track model performance degradation, resource util
 > *costing the most was ... due to ... . Working in the cloud was ...*
 >
 > Answer:
-
---- question 27 fill here ---
+We worked in one cloud for the whole project. We spent 5.44 USD in total. Compute engine training (renting the L4 GPU) drained the credits the most by far. Working in the cloud is very tedious and time consuming, however we understand the benefits of it when thinking about scaling applications.
 
 ### Question 28
 
@@ -603,7 +602,7 @@ This would have enabled us to track model performance degradation, resource util
 >
 > Answer:
 
---- question 28 fill here ---
+We implemented a frontend and a datadrift monitoring system to the build. 
 
 ### Question 29
 
@@ -619,6 +618,8 @@ This would have enabled us to track model performance degradation, resource util
 > *Whenever we commit code and push to GitHub, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
+
+[](figures/overview.jpeg)
 >The starting point of the diagram is our local setup, where we integrated DVC for data management, Hydra for configuration, and the core model components (data.py, model.py, train.py) into our code.
 Whenever we commit code, pre-commit hooks run first to check linting and code formatting. After pushing to GitHub, it automatically triggers our CI/CD workflows which include Unit tests (data, model, and API tests), Code quality checks (PEP8 and type checking), Coverage reporting and Dependabot checks for dependencies.
 >From there, if all checks pass, the diagram shows a build trigger that initiates the Docker image build and pushes it to the Container Registry in Google Cloud Platform.
