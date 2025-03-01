@@ -1,5 +1,5 @@
 diffusers==0.32.2
-dvc==3.48.4
+dvc==3.59.1
 dvc-gdrive==3.0.1
 dvc-gs==3.0.1
 evidently==0.5.1
